@@ -1,0 +1,123 @@
+{
+  "@@locale": "lg",
+  "appTitle": "MIND AWARE",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "welcome": "Tukusanyukireko",
+  "@welcome": {
+    "description": "Welcome message"
+  },
+  "login": "Yingira",
+  "@login": {
+    "description": "Login button text"
+  },
+  "signup": "Wandiise",
+  "@signup": {
+    "description": "Sign up button text"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email field label"
+  },
+  "password": "Ekisumuluzo",
+  "@password": {
+    "description": "Password field label"
+  },
+  "forgotPassword": "Weerabira ekisumuluzo?",
+  "@forgotPassword": {
+    "description": "Forgot password link text"
+  },
+  "home": "Awaka",
+  "@home": {
+    "description": "Home tab label"
+  },
+  "profile": "Ebikukwatako",
+  "@profile": {
+    "description": "Profile tab label"
+  },
+  "settings": "Enteekateeka",
+  "@settings": {
+    "description": "Settings tab label"
+  },
+  "mentalHealth": "Obulamu bw'Ebirowoozo",
+  "@mentalHealth": {
+    "description": "Mental health section title"
+  },
+  "howAreYouFeeling": "Owulira otya leero?",
+  "@howAreYouFeeling": {
+    "description": "Feeling check-in question"
+  },
+  "mood": "Embeera y'omutima",
+  "@mood": {
+    "description": "Mood section title"
+  },
+  "articles": "Ebiwandiiko",
+  "@articles": {
+    "description": "Articles section title"
+  },
+  "consultation": "Okubuuza",
+  "@consultation": {
+    "description": "Consultation section title"
+  },
+  "chat": "Okwogera",
+  "@chat": {
+    "description": "Chat section title"
+  },
+  "language": "Olulimi",
+  "@language": {
+    "description": "Language settings label"
+  },
+  "selectLanguage": "Londa Olulimi",
+  "@selectLanguage": {
+    "description": "Language selection title"
+  },
+  "english": "Olungereza",
+  "@english": {
+    "description": "English language option"
+  },
+  "luganda": "Oluganda",
+  "@luganda": {
+    "description": "Luganda language option"
+  },
+  "luyankole": "Oluyankole",
+  "@luyankole": {
+    "description": "Luyankole language option"
+  },
+  "save": "Kwata",
+  "@save": {
+    "description": "Save button text"
+  },
+  "cancel": "Sazaamu",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "logout": "Fuluma",
+  "@logout": {
+    "description": "Logout button text"
+  },
+  "loginButton": "YINGIRA",
+  "@loginButton": {
+    "description": "Login button text"
+  },
+  "signUpButton": "KWEWANDIISA",
+  "@signUpButton": {
+    "description": "Sign up button text"
+  },
+  "welcomeTo": "Tusanyuse nyo",
+  "@welcomeTo": {
+    "description": "Welcome greeting text"
+  },
+  "mindAware": "Mind Aware",
+  "@mindAware": {
+    "description": "App name"
+  },
+  "tagline": "Okumanya • Okukula • Amaanyi",
+  "@tagline": {
+    "description": "App tagline"
+  },
+  "getStarted": "TANDIKA",
+  "@getStarted": {
+    "description": "Get started button text"
+  }
+}

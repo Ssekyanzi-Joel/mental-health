@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "914919015452",
+    "project_id": "mind-aware-b89c3",
+    "storage_bucket": "mind-aware-b89c3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914919015452:android:e9607ca0239bb9b68ccbd9",
+        "android_client_info": {
+          "package_name": "com.example.mind_aware_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBhVXcJYvdKaWSLgFQjuLywRfMIA3Dh6Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

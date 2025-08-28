@@ -1,0 +1,123 @@
+{
+  "@@locale": "en",
+  "appTitle": "Mind Aware",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "welcome": "Welcome",
+  "@welcome": {
+    "description": "Welcome message"
+  },
+  "login": "Login",
+  "@login": {
+    "description": "Login button text"
+  },
+  "signup": "Sign Up",
+  "@signup": {
+    "description": "Sign up button text"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email field label"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password field label"
+  },
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Forgot password link text"
+  },
+  "home": "Home",
+  "@home": {
+    "description": "Home tab label"
+  },
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile tab label"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings tab label"
+  },
+  "mentalHealth": "Mental Health",
+  "@mentalHealth": {
+    "description": "Mental health section title"
+  },
+  "howAreYouFeeling": "How are you feeling today?",
+  "@howAreYouFeeling": {
+    "description": "Feeling check-in question"
+  },
+  "mood": "Mood",
+  "@mood": {
+    "description": "Mood section title"
+  },
+  "articles": "Articles",
+  "@articles": {
+    "description": "Articles section title"
+  },
+  "consultation": "Consultation",
+  "@consultation": {
+    "description": "Consultation section title"
+  },
+  "chat": "Chat",
+  "@chat": {
+    "description": "Chat section title"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language settings label"
+  },
+  "selectLanguage": "Select Language",
+  "@selectLanguage": {
+    "description": "Language selection title"
+  },
+  "english": "English",
+  "@english": {
+    "description": "English language option"
+  },
+  "luganda": "Luganda",
+  "@luganda": {
+    "description": "Luganda language option"
+  },
+  "luyankole": "Luyankole",
+  "@luyankole": {
+    "description": "Luyankole language option"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Save button text"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout button text"
+  },
+  "loginButton": "LOGIN",
+  "@loginButton": {
+    "description": "Login button text"
+  },
+  "signUpButton": "SIGN UP",
+  "@signUpButton": {
+    "description": "Sign up button text"
+  },
+  "welcomeTo": "Welcome to",
+  "@welcomeTo": {
+    "description": "Welcome greeting text"
+  },
+  "mindAware": "Mind Aware",
+  "@mindAware": {
+    "description": "App name"
+  },
+  "tagline": "Awareness • Growth • Strength",
+  "@tagline": {
+    "description": "App tagline"
+  },
+  "getStarted": "GET STARTED",
+  "@getStarted": {
+    "description": "Get started button text"
+  }
+}
