@@ -1,0 +1,127 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Testimonies collection rules
+    match /testimonies/{testimonyId} {
+      
+      // Allow read access for approved testimonies to all authenticated users
+      allow read: if request.auth != null 
+        && (resource.data.status == 'approved' 
+            || isAuthorOrModerator());
+      
+      // Allow create for authenticated users (status will be 'pending' by default)
+      allow create: if request.auth != null 
+        && isValidTestimonyData()
+        && request.resource.data.status == 'pending'
+        && request.resource.data.authorId == request.auth.uid;
+      
+      // Allow update only for moderators (admin/therapist) to change status
+      allow update: if request.auth != null 
+        && isModerator()
+        && onlyStatusAndModerationFieldsChanged();
+      
+      // Allow delete only for admins or the original author (if pending)
+      allow delete: if request.auth != null 
+        && (isAdmin() 
+            || (resource.data.authorId == request.auth.uid 
+                && resource.data.status == 'pending'));
+      
+      // Helper functions
+      function isAuthorOrModerator() {
+        return resource.data.authorId == request.auth.uid 
+          || isModerator();
+      }
+      
+      function isModerator() {
+        return isAdmin() || isTherapist();
+      }
+      
+      function isAdmin() {
+        return request.auth.token.role == 'admin';
+      }
+      
+      function isTherapist() {
+        return request.auth.token.role == 'therapist';
+      }
+      
+      function isValidTestimonyData() {
+        let data = request.resource.data;
+        return data.keys().hasAll(['text', 'authorType', 'authorId', 'status', 'isAnonymous', 'createdAt'])
+          && data.text is string
+          && data.text.size() >= 10
+          && data.text.size() <= 1000
+          && data.authorType in ['user', 'therapist', 'admin']
+          && data.authorId is string
+          && data.status in ['pending', 'approved', 'rejected', 'flagged', 'archived']
+          && data.isAnonymous is bool
+          && data.createdAt == request.time
+          && (!data.keys().hasAny(['mediaUrl']) || data.mediaUrl is string)
+          && (!data.keys().hasAny(['isVideo']) || data.isVideo is bool)
+          && (!data.keys().hasAny(['displayName']) || data.displayName is string)
+          && (!data.keys().hasAny(['tags']) || data.tags is list)
+          && (!data.keys().hasAny(['helpfulCount']) || data.helpfulCount is number)
+          && (!data.keys().hasAny(['reportCount']) || data.reportCount is number);
+      }
+      
+      function onlyStatusAndModerationFieldsChanged() {
+        let allowedFields = ['status', 'moderatedBy', 'moderationNotes', 'publishedAt', 'updatedAt', 'helpfulCount', 'reportCount'];
+        return request.resource.data.diff(resource.data).affectedKeys().hasOnly(allowedFields)
+          && request.resource.data.updatedAt == request.time;
+      }
+    }
+    
+    // User profiles collection (for role checking)
+    match /users/{userId} {
+      allow read: if request.auth != null 
+        && (request.auth.uid == userId || isModerator());
+      allow write: if request.auth != null 
+        && request.auth.uid == userId;
+    }
+    
+    // Admin/Therapist role management
+    match /roles/{userId} {
+      allow read: if request.auth != null 
+        && (request.auth.uid == userId || isAdmin());
+      allow write: if request.auth != null 
+        && isAdmin();
+    }
+    
+    // Testimony reports collection (for flagging inappropriate content)
+    match /testimony_reports/{reportId} {
+      allow create: if request.auth != null
+        && request.resource.data.reporterId == request.auth.uid
+        && request.resource.data.keys().hasAll(['testimonyId', 'reason', 'reporterId', 'createdAt'])
+        && request.resource.data.createdAt == request.time;
+      
+      allow read, update, delete: if request.auth != null 
+        && isModerator();
+    }
+    
+    // Helpful votes collection (for user engagement)
+    match /testimony_votes/{voteId} {
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.keys().hasAll(['testimonyId', 'userId', 'isHelpful', 'createdAt'])
+        && request.resource.data.createdAt == request.time;
+      
+      allow read: if request.auth != null;
+      
+      allow update, delete: if request.auth != null
+        && resource.data.userId == request.auth.uid;
+    }
+    
+    // Global helper functions
+    function isModerator() {
+      return isAdmin() || isTherapist();
+    }
+    
+    function isAdmin() {
+      return request.auth.token.role == 'admin';
+    }
+    
+    function isTherapist() {
+      return request.auth.token.role == 'therapist';
+    }
+  }
+}

@@ -15,10 +15,16 @@ class JournalingPage extends StatefulWidget {
 
 class _JournalingPageState extends State<JournalingPage>
     with TickerProviderStateMixin {
-  // Custom dark green color
-  static const Color primaryGreen = Color(0xFF19351E);
-  static const Color lightGreen = Color(0xFF2A4A2F);
-  static const Color accentGreen = Color(0xFF3D6B42);
+  // Bright colorful theme matching other pages
+  static const Color primaryBackground = Color(0xFFF8F9FA);
+  static const Color cardBackground = Color(0xFFFFFFFF);
+  static const Color mainThemeColor = Color(0xFF2D5A3D);
+  static const Color accentGreen = Color(0xFF6BCF7F);
+  static const Color lightGreen = Color(0xFF9CDBA6);
+  static const Color softBlue = Color(0xFF87CEEB);
+  static const Color softPurple = Color(0xFFB19CD9);
+  static const Color softOrange = Color(0xFFFFB347);
+  static const Color creamWhite = Color(0xFFFFFDF7);
 
   final TextEditingController _journalController = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
@@ -163,35 +169,54 @@ class _JournalingPageState extends State<JournalingPage>
       SnackBar(
         content: Row(
           children: [
-            Icon(icon, color: Colors.white),
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(icon, color: Colors.white, size: 18),
+            ),
             const SizedBox(width: 12),
-            Text(message),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
           ],
         ),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: accentGreen,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         margin: const EdgeInsets.all(16),
+        elevation: 8,
       ),
     );
   }
 
   Widget _buildDeleteDialog() {
     return AlertDialog(
-      backgroundColor: primaryGreen,
+      backgroundColor: cardBackground,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      title: const Text(
+      title: Text(
         "Delete Entry?",
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        style: TextStyle(color: mainThemeColor, fontWeight: FontWeight.bold),
       ),
-      content: const Text(
+      content: Text(
         "This action cannot be undone.",
-        style: TextStyle(color: Colors.white70),
+        style: TextStyle(color: mainThemeColor.withOpacity(0.7)),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: const Text("Cancel", style: TextStyle(color: Colors.white70)),
+          child: Text(
+            "Cancel",
+            style: TextStyle(color: mainThemeColor.withOpacity(0.7)),
+          ),
         ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(true),
@@ -215,12 +240,13 @@ class _JournalingPageState extends State<JournalingPage>
           margin: const EdgeInsets.all(16),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: primaryGreen,
+            color: cardBackground,
             borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: accentGreen.withOpacity(0.2), width: 1),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                blurRadius: 15,
+                color: accentGreen.withOpacity(0.1),
+                blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
             ],
@@ -230,23 +256,39 @@ class _JournalingPageState extends State<JournalingPage>
               // Header with expand/collapse button
               Row(
                 children: [
-                  const Icon(Icons.edit, color: Colors.white, size: 24),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: accentGreen.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(Icons.edit, color: mainThemeColor, size: 20),
+                  ),
                   const SizedBox(width: 12),
-                  const Text(
+                  Text(
                     "New Entry",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: mainThemeColor,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const Spacer(),
-                  IconButton(
-                    onPressed: _toggleExpanded,
-                    icon: AnimatedRotation(
-                      turns: _isExpanded ? 0.5 : 0,
-                      duration: const Duration(milliseconds: 300),
-                      child: const Icon(Icons.expand_more, color: Colors.white),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: mainThemeColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: IconButton(
+                      onPressed: _toggleExpanded,
+                      icon: AnimatedRotation(
+                        turns: _isExpanded ? 0.5 : 0,
+                        duration: const Duration(milliseconds: 300),
+                        child: Icon(
+                          Icons.expand_more,
+                          color: mainThemeColor.withOpacity(0.7),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -262,22 +304,32 @@ class _JournalingPageState extends State<JournalingPage>
                           const SizedBox(height: 16),
 
                           // Text input
-                          TextField(
-                            controller: _journalController,
-                            maxLines: 5,
-                            style: const TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                              hintText: "What's on your mind?",
-                              hintStyle: TextStyle(
-                                color: Colors.white.withOpacity(0.7),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: primaryBackground,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: mainThemeColor.withOpacity(0.2),
+                                width: 1,
                               ),
-                              filled: true,
-                              fillColor: lightGreen,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide.none,
+                            ),
+                            child: TextField(
+                              controller: _journalController,
+                              maxLines: 5,
+                              style: TextStyle(
+                                color: mainThemeColor,
+                                fontSize: 14,
                               ),
-                              contentPadding: const EdgeInsets.all(16),
+                              decoration: InputDecoration(
+                                hintText:
+                                    "What's on your mind today? Share your thoughts, feelings, or experiences...",
+                                hintStyle: TextStyle(
+                                  color: mainThemeColor.withOpacity(0.5),
+                                  fontSize: 14,
+                                ),
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.all(16),
+                              ),
                             ),
                           ),
 
@@ -327,50 +379,78 @@ class _JournalingPageState extends State<JournalingPage>
                           Row(
                             children: [
                               Expanded(
-                                child: ElevatedButton.icon(
-                                  onPressed: _pickImage,
-                                  icon: const Icon(Icons.image),
-                                  label: const Text("Add Photo"),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: accentGreen,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 12,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [softBlue, softPurple],
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
                                     ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: ElevatedButton.icon(
+                                    onPressed: _pickImage,
+                                    icon: const Icon(
+                                      Icons.image_rounded,
+                                      size: 18,
+                                    ),
+                                    label: const Text("Add Photo"),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                      foregroundColor: Colors.white,
+                                      shadowColor: Colors.transparent,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 14,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
-                                child: ElevatedButton.icon(
-                                  onPressed: _isLoading ? null : _saveJournal,
-                                  icon: _isLoading
-                                      ? const SizedBox(
-                                          width: 20,
-                                          height: 20,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            valueColor:
-                                                AlwaysStoppedAnimation<Color>(
-                                                  Colors.white,
-                                                ),
-                                          ),
-                                        )
-                                      : const Icon(Icons.save),
-                                  label: Text(
-                                    _isLoading ? "Saving..." : "Save",
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 12,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [accentGreen, lightGreen],
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
                                     ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: ElevatedButton.icon(
+                                    onPressed: _isLoading ? null : _saveJournal,
+                                    icon: _isLoading
+                                        ? const SizedBox(
+                                            width: 18,
+                                            height: 18,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                    Colors.white,
+                                                  ),
+                                            ),
+                                          )
+                                        : const Icon(
+                                            Icons.save_rounded,
+                                            size: 18,
+                                          ),
+                                    label: Text(
+                                      _isLoading ? "Saving..." : "Save Entry",
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                      foregroundColor: Colors.white,
+                                      shadowColor: Colors.transparent,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 14,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -398,13 +478,14 @@ class _JournalingPageState extends State<JournalingPage>
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: lightGreen,
+        color: cardBackground,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: lightGreen.withOpacity(0.3), width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: accentGreen.withOpacity(0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -414,24 +495,52 @@ class _JournalingPageState extends State<JournalingPage>
           // Header with date and delete button
           Row(
             children: [
-              Text(
-                createdAt != null
-                    ? DateFormat(
-                        'MMM dd, yyyy • hh:mm a',
-                      ).format(createdAt.toDate())
-                    : 'Just now',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
-                  fontSize: 14,
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: accentGreen.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.access_time_rounded,
+                      color: mainThemeColor.withOpacity(0.7),
+                      size: 14,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      createdAt != null
+                          ? DateFormat(
+                              'MMM dd, yyyy • hh:mm a',
+                            ).format(createdAt.toDate())
+                          : 'Just now',
+                      style: TextStyle(
+                        color: mainThemeColor.withOpacity(0.8),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const Spacer(),
-              IconButton(
-                onPressed: () => _deleteJournal(doc.id),
-                icon: const Icon(
-                  Icons.delete_outline,
-                  color: Colors.red,
-                  size: 20,
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: IconButton(
+                  onPressed: () => _deleteJournal(doc.id),
+                  icon: const Icon(
+                    Icons.delete_outline_rounded,
+                    color: Colors.red,
+                    size: 18,
+                  ),
                 ),
               ),
             ],
@@ -439,13 +548,25 @@ class _JournalingPageState extends State<JournalingPage>
 
           // Text content
           if (text.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            Text(
-              text,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                height: 1.5,
+            const SizedBox(height: 16),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: primaryBackground,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: accentGreen.withOpacity(0.2),
+                  width: 1,
+                ),
+              ),
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: mainThemeColor,
+                  fontSize: 15,
+                  height: 1.6,
+                ),
               ),
             ),
           ],
@@ -463,16 +584,30 @@ class _JournalingPageState extends State<JournalingPage>
                   if (loadingProgress == null) return child;
                   return Container(
                     height: 200,
-                    color: Colors.grey[800],
-                    child: const Center(child: CircularProgressIndicator()),
+                    decoration: BoxDecoration(
+                      color: primaryBackground,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: accentGreen,
+                        strokeWidth: 2,
+                      ),
+                    ),
                   );
                 },
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     height: 200,
-                    color: Colors.grey[800],
-                    child: const Center(
-                      child: Icon(Icons.error, color: Colors.white),
+                    decoration: BoxDecoration(
+                      color: primaryBackground,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.error_outline,
+                        color: mainThemeColor.withOpacity(0.5),
+                      ),
                     ),
                   );
                 },
@@ -487,35 +622,96 @@ class _JournalingPageState extends State<JournalingPage>
   @override
   Widget build(BuildContext context) {
     if (user == null) {
-      return const Scaffold(
-        backgroundColor: Colors.black,
+      return Scaffold(
+        backgroundColor: primaryBackground,
         body: Center(
-          child: Text(
-            "Please sign in to continue",
-            style: TextStyle(color: Colors.white, fontSize: 18),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: accentGreen.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.person_outline_rounded,
+                  size: 48,
+                  color: mainThemeColor.withOpacity(0.7),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                "Please sign in to continue",
+                style: TextStyle(
+                  color: mainThemeColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
         ),
       );
     }
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: primaryBackground,
       body: CustomScrollView(
         slivers: [
-          // App bar
-          const SliverAppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            floating: true,
-            title: Text(
-              "My Journal",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
+          // App bar with gradient header
+          SliverToBoxAdapter(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(24, 60, 24, 20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [creamWhite, primaryBackground],
+                ),
+              ),
+              child: SafeArea(
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: accentGreen.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Icon(
+                        Icons.book_rounded,
+                        color: mainThemeColor,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "My Journal",
+                            style: TextStyle(
+                              color: mainThemeColor,
+                              fontSize: 28,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Text(
+                            "Capture your thoughts and memories",
+                            style: TextStyle(
+                              color: mainThemeColor.withOpacity(0.7),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            centerTitle: false,
           ),
 
           // Input section
@@ -533,20 +729,46 @@ class _JournalingPageState extends State<JournalingPage>
               if (snapshot.hasError) {
                 return SliverToBoxAdapter(
                   child: Center(
-                    child: Text(
-                      "Error loading entries",
-                      style: TextStyle(color: Colors.red[400]),
+                    child: Container(
+                      margin: const EdgeInsets.all(24),
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: cardBackground,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.red.withOpacity(0.2)),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.error_outline_rounded,
+                            size: 48,
+                            color: Colors.red.withOpacity(0.7),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            "Error loading entries",
+                            style: TextStyle(
+                              color: mainThemeColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SliverToBoxAdapter(
+                return SliverToBoxAdapter(
                   child: Center(
                     child: Padding(
-                      padding: EdgeInsets.all(50),
-                      child: CircularProgressIndicator(),
+                      padding: const EdgeInsets.all(50),
+                      child: CircularProgressIndicator(
+                        color: accentGreen,
+                        strokeWidth: 2,
+                      ),
                     ),
                   ),
                 );
@@ -557,29 +779,81 @@ class _JournalingPageState extends State<JournalingPage>
               if (docs.isEmpty) {
                 return SliverToBoxAdapter(
                   child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(50),
+                    child: Container(
+                      margin: const EdgeInsets.all(24),
+                      padding: const EdgeInsets.all(32),
+                      decoration: BoxDecoration(
+                        color: cardBackground,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: accentGreen.withOpacity(0.2)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: accentGreen.withOpacity(0.1),
+                            blurRadius: 20,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
                       child: Column(
                         children: [
-                          Icon(
-                            Icons.book_outlined,
-                            size: 64,
-                            color: Colors.white.withOpacity(0.5),
+                          Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: accentGreen.withOpacity(0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.book_outlined,
+                              size: 48,
+                              color: accentGreen.withOpacity(0.7),
+                            ),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 20),
                           Text(
                             "No journal entries yet",
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.7),
+                              color: mainThemeColor,
                               fontSize: 18,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            "Tap above to create your first entry",
+                            "Start documenting your journey and thoughts",
+                            textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.5),
+                              color: mainThemeColor.withOpacity(0.6),
                               fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: accentGreen.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.arrow_upward_rounded,
+                                  size: 16,
+                                  color: accentGreen,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  "Tap above to create your first entry",
+                                  style: TextStyle(
+                                    color: accentGreen,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],

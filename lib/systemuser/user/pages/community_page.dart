@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:mind_aware_application/systemuser/user/drawer_pages/testimonies_page.dart';
 
 class CommunityPage extends StatefulWidget {
   const CommunityPage({super.key});
@@ -15,36 +16,30 @@ class CommunityPage extends StatefulWidget {
 
 class _CommunityPageState extends State<CommunityPage>
     with TickerProviderStateMixin {
-  // Custom dark green colors
-  static const Color primaryGreen = Color(0xFF19351E);
-  static const Color lightGreen = Color(0xFF2A4A2F);
-  static const Color accentGreen = Color(0xFF3D6B42);
-  static const Color darkGreen = Color(0xFF0F1F14);
+  // Discord-inspired calming color palette for mental health
+  static const Color primaryBackground = Color(0xFFF8F9FA);
+  static const Color cardBackground = Color(0xFFFFFFFF);
+  static const Color mainThemeColor = Color(0xFF2D5A3D);
+  static const Color accentGreen = Color(0xFF6BCF7F);
+  static const Color lightGreen = Color(0xFF9CDBA6);
+  static const Color softBlue = Color(0xFF87CEEB);
+  static const Color softPurple = Color(0xFFB19CD9);
+  static const Color softOrange = Color(0xFFFFB347);
+  static const Color creamWhite = Color(0xFFFFFDF7);
 
   final TextEditingController _postController = TextEditingController();
   File? _mediaFile;
   String? _mediaType;
   bool _isPosting = false;
   bool _isPostExpanded = false;
-  late AnimationController _postAnimationController;
-  late Animation<double> _postAnimation;
 
   @override
   void initState() {
     super.initState();
-    _postAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _postAnimation = CurvedAnimation(
-      parent: _postAnimationController,
-      curve: Curves.easeOutCubic,
-    );
   }
 
   @override
   void dispose() {
-    _postAnimationController.dispose();
     _postController.dispose();
     super.dispose();
   }
@@ -53,11 +48,6 @@ class _CommunityPageState extends State<CommunityPage>
     setState(() {
       _isPostExpanded = !_isPostExpanded;
     });
-    if (_isPostExpanded) {
-      _postAnimationController.forward();
-    } else {
-      _postAnimationController.reverse();
-    }
   }
 
   // Pick image or video
@@ -122,7 +112,6 @@ class _CommunityPageState extends State<CommunityPage>
         _mediaType = null;
         _isPostExpanded = false;
       });
-      _postAnimationController.reverse();
 
       _showSnackBar("Post shared successfully!", Icons.check_circle);
     } catch (e) {
@@ -183,15 +172,31 @@ class _CommunityPageState extends State<CommunityPage>
       SnackBar(
         content: Row(
           children: [
-            Icon(icon, color: Colors.white),
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(icon, color: Colors.white, size: 18),
+            ),
             const SizedBox(width: 12),
-            Expanded(child: Text(message)),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
           ],
         ),
-        backgroundColor: lightGreen,
+        backgroundColor: accentGreen,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         margin: const EdgeInsets.all(16),
+        elevation: 8,
       ),
     );
   }
@@ -205,13 +210,20 @@ class _CommunityPageState extends State<CommunityPage>
       backgroundColor: Colors.transparent,
       builder: (ctx) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.8,
-          decoration: const BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.only(
+          height: MediaQuery.of(context).size.height * 0.85,
+          decoration: BoxDecoration(
+            color: cardBackground,
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(24),
               topRight: Radius.circular(24),
             ),
+            boxShadow: [
+              BoxShadow(
+                color: mainThemeColor.withOpacity(0.1),
+                blurRadius: 20,
+                offset: const Offset(0, -8),
+              ),
+            ],
           ),
           child: Column(
             children: [
@@ -221,34 +233,64 @@ class _CommunityPageState extends State<CommunityPage>
                 height: 4,
                 margin: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: Colors.white54,
+                  color: mainThemeColor.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
 
               // Header
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Row(
                   children: [
-                    const Text(
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: accentGreen.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        Icons.chat_bubble_outline_rounded,
+                        color: accentGreen,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
                       "Comments",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: mainThemeColor,
                         fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     const Spacer(),
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close, color: Colors.white54),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: mainThemeColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: Icon(
+                          Icons.close_rounded,
+                          color: mainThemeColor.withOpacity(0.7),
+                          size: 20,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
 
-              const Divider(color: Colors.white12),
+              const SizedBox(height: 16),
+              Divider(
+                color: mainThemeColor.withOpacity(0.1),
+                height: 1,
+                indent: 24,
+                endIndent: 24,
+              ),
+              const SizedBox(height: 16),
 
               // Comments list
               Expanded(
@@ -261,8 +303,11 @@ class _CommunityPageState extends State<CommunityPage>
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return const Center(
-                        child: CircularProgressIndicator(color: accentGreen),
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: accentGreen,
+                          strokeWidth: 2,
+                        ),
                       );
                     }
 
@@ -273,24 +318,33 @@ class _CommunityPageState extends State<CommunityPage>
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              Icons.chat_bubble_outline,
-                              size: 64,
-                              color: Colors.white.withOpacity(0.3),
+                            Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: accentGreen.withOpacity(0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.chat_bubble_outline_rounded,
+                                size: 48,
+                                color: accentGreen.withOpacity(0.7),
+                              ),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 20),
                             Text(
                               "No comments yet",
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.6),
+                                color: mainThemeColor,
                                 fontSize: 18,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              "Be the first to comment!",
+                              "Start the conversation and share your thoughts",
+                              textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.4),
+                                color: mainThemeColor.withOpacity(0.6),
                                 fontSize: 14,
                               ),
                             ),
@@ -300,7 +354,7 @@ class _CommunityPageState extends State<CommunityPage>
                     }
 
                     return ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
                       itemCount: comments.length,
                       itemBuilder: (context, index) {
                         final data =
@@ -309,11 +363,11 @@ class _CommunityPageState extends State<CommunityPage>
                           margin: const EdgeInsets.only(bottom: 16),
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: primaryGreen.withOpacity(0.8),
+                            color: primaryBackground,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: lightGreen.withOpacity(0.3),
-                              width: 0.5,
+                              color: accentGreen.withOpacity(0.2),
+                              width: 1,
                             ),
                           ),
                           child: Column(
@@ -322,36 +376,53 @@ class _CommunityPageState extends State<CommunityPage>
                               Row(
                                 children: [
                                   CircleAvatar(
-                                    radius: 16,
-                                    backgroundColor: accentGreen,
+                                    radius: 18,
+                                    backgroundColor: accentGreen.withOpacity(
+                                      0.2,
+                                    ),
                                     child: Text(
                                       "${data['firstName']?[0] ?? ''}${data['lastName']?[0] ?? ''}",
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Text(
-                                      "${data['firstName'] ?? ''} ${data['lastName'] ?? ''}",
-                                      style: const TextStyle(
-                                        color: Colors.white,
+                                      style: TextStyle(
+                                        color: mainThemeColor,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14,
                                       ),
                                     ),
                                   ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "${data['firstName'] ?? ''} ${data['lastName'] ?? ''}",
+                                          style: TextStyle(
+                                            color: mainThemeColor,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        Text(
+                                          _formatTimeAgo(data['createdAt']),
+                                          style: TextStyle(
+                                            color: mainThemeColor.withOpacity(
+                                              0.5,
+                                            ),
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 12),
                               Text(
                                 data['text'] ?? "",
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
+                                style: TextStyle(
+                                  color: mainThemeColor,
+                                  fontSize: 14,
                                   height: 1.4,
                                 ),
                               ),
@@ -367,36 +438,54 @@ class _CommunityPageState extends State<CommunityPage>
               // Comment input
               Container(
                 padding: EdgeInsets.only(
-                  left: 20,
-                  right: 20,
+                  left: 24,
+                  right: 24,
                   top: 16,
-                  bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 24,
                 ),
                 decoration: BoxDecoration(
-                  color: darkGreen,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+                  color: cardBackground,
+                  border: Border(
+                    top: BorderSide(
+                      color: mainThemeColor.withOpacity(0.1),
+                      width: 1,
+                    ),
                   ),
                 ),
                 child: Row(
                   children: [
+                    CircleAvatar(
+                      radius: 18,
+                      backgroundColor: accentGreen.withOpacity(0.2),
+                      child: Icon(
+                        Icons.person_rounded,
+                        color: mainThemeColor,
+                        size: 18,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: primaryGreen,
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(color: lightGreen, width: 1),
+                          color: primaryBackground,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: mainThemeColor.withOpacity(0.2),
+                            width: 1,
+                          ),
                         ),
                         child: TextField(
                           controller: commentController,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: const InputDecoration(
-                            hintText: "Add a comment...",
-                            hintStyle: TextStyle(color: Colors.white54),
+                          style: TextStyle(color: mainThemeColor, fontSize: 14),
+                          decoration: InputDecoration(
+                            hintText: "Add a supportive comment...",
+                            hintStyle: TextStyle(
+                              color: mainThemeColor.withOpacity(0.5),
+                              fontSize: 14,
+                            ),
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 20,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
                               vertical: 12,
                             ),
                           ),
@@ -417,9 +506,9 @@ class _CommunityPageState extends State<CommunityPage>
                           }
                         },
                         icon: const Icon(
-                          Icons.send,
+                          Icons.send_rounded,
                           color: Colors.white,
-                          size: 20,
+                          size: 18,
                         ),
                       ),
                     ),
@@ -453,335 +542,200 @@ class _CommunityPageState extends State<CommunityPage>
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: CustomScrollView(
-        slivers: [
-          // Modern App Bar
-          SliverAppBar(
-            expandedHeight: 120,
-            floating: false,
-            pinned: true,
-            backgroundColor: Colors.black,
-            flexibleSpace: FlexibleSpaceBar(
-              title: const Text(
-                "Community",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 28,
-                ),
-              ),
-              titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [primaryGreen.withOpacity(0.3), Colors.black],
+  // Discord-inspired header section
+  Widget _buildHeaderSection() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 60, 24, 20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [creamWhite, primaryBackground],
+        ),
+      ),
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: accentGreen.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(
+                    Icons.people_rounded,
+                    color: mainThemeColor,
+                    size: 24,
                   ),
                 ),
-              ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Community",
+                        style: TextStyle(
+                          color: mainThemeColor,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        "Connect, share, and support each other",
+                        style: TextStyle(
+                          color: mainThemeColor.withOpacity(0.7),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Support groups section
+  Widget _buildSupportGroups() {
+    final groups = [
+      {
+        "name": "Anxiety Support",
+        "members": "2.3k",
+        "description": "Safe space for anxiety discussions",
+        "color": softBlue,
+        "icon": "🫂",
+      },
+      {
+        "name": "Depression Care",
+        "members": "1.8k",
+        "description": "Understanding and healing together",
+        "color": softPurple,
+        "icon": "💜",
+      },
+      {
+        "name": "Mindfulness Circle",
+        "members": "3.1k",
+        "description": "Daily mindfulness practices",
+        "color": accentGreen,
+        "icon": "🧘",
+      },
+      {
+        "name": "Stress Relief",
+        "members": "1.5k",
+        "description": "Coping strategies and support",
+        "color": softOrange,
+        "icon": "🌅",
+      },
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Support Groups",
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              color: mainThemeColor,
             ),
           ),
-
-          // Post Creation Section
-          SliverToBoxAdapter(
-            child: AnimatedBuilder(
-              animation: _postAnimation,
-              builder: (context, child) {
+          const SizedBox(height: 16),
+          SizedBox(
+            height: 160,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: groups.length,
+              itemBuilder: (context, index) {
+                final group = groups[index];
                 return Container(
-                  margin: const EdgeInsets.all(20),
+                  width: 200,
+                  margin: EdgeInsets.only(
+                    right: index < groups.length - 1 ? 16 : 0,
+                  ),
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: primaryGreen.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(24),
+                    color: cardBackground,
+                    borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: accentGreen.withOpacity(0.3),
+                      color: (group['color'] as Color).withOpacity(0.2),
                       width: 1,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: accentGreen.withOpacity(0.1),
+                        color: (group['color'] as Color).withOpacity(0.1),
                         blurRadius: 20,
-                        spreadRadius: 0,
                         offset: const Offset(0, 8),
                       ),
                     ],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Header Row
                       Row(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: accentGreen.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Icon(
-                              Icons.edit,
-                              color: accentGreen,
-                              size: 20,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          const Text(
-                            "Share with community",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          Text(
+                            group['icon'] as String,
+                            style: const TextStyle(fontSize: 24),
                           ),
                           const Spacer(),
-                          IconButton(
-                            onPressed: _togglePostExpanded,
-                            icon: AnimatedRotation(
-                              turns: _isPostExpanded ? 0.25 : 0,
-                              duration: const Duration(milliseconds: 300),
-                              child: const Icon(
-                                Icons.chevron_right,
-                                color: accentGreen,
+                          Flexible(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: (group['color'] as Color).withOpacity(
+                                  0.1,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                "${group['members']} members",
+                                style: TextStyle(
+                                  color: group['color'] as Color,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ),
                         ],
                       ),
-
-                      // Expandable Content
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeOutCubic,
-                        height: _isPostExpanded ? null : 0,
-                        child: _isPostExpanded
-                            ? Column(
-                                children: [
-                                  const SizedBox(height: 20),
-                                  // Text Input
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.5),
-                                      borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(
-                                        color: lightGreen,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: TextField(
-                                      controller: _postController,
-                                      maxLines: 4,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        height: 1.5,
-                                      ),
-                                      decoration: const InputDecoration(
-                                        hintText: "What's on your mind?",
-                                        hintStyle: TextStyle(
-                                          color: Colors.white54,
-                                          fontSize: 16,
-                                        ),
-                                        border: InputBorder.none,
-                                        contentPadding: EdgeInsets.all(16),
-                                      ),
-                                    ),
-                                  ),
-
-                                  // Media Preview
-                                  if (_mediaFile != null) ...[
-                                    const SizedBox(height: 16),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(
-                                              0.3,
-                                            ),
-                                            blurRadius: 10,
-                                            offset: const Offset(0, 4),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                              16,
-                                            ),
-                                            child: Image.file(
-                                              _mediaFile!,
-                                              height: 200,
-                                              width: double.infinity,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          Positioned(
-                                            right: 8,
-                                            top: 8,
-                                            child: GestureDetector(
-                                              onTap: () => setState(
-                                                () => _mediaFile = null,
-                                              ),
-                                              child: Container(
-                                                padding: const EdgeInsets.all(
-                                                  6,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black
-                                                      .withOpacity(0.7),
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: const Icon(
-                                                  Icons.close,
-                                                  color: Colors.white,
-                                                  size: 18,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-
-                                  const SizedBox(height: 20),
-
-                                  // Action Buttons
-                                  Row(
-                                    children: [
-                                      // Media Button
-                                      Expanded(
-                                        flex: 1,
-                                        child: Container(
-                                          height: 48,
-                                          decoration: BoxDecoration(
-                                            color: accentGreen.withOpacity(0.1),
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                            border: Border.all(
-                                              color: accentGreen.withOpacity(
-                                                0.3,
-                                              ),
-                                              width: 1,
-                                            ),
-                                          ),
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            child: InkWell(
-                                              onTap: () => _pickMedia(true),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              child: const Center(
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Icon(
-                                                      Icons.image,
-                                                      color: accentGreen,
-                                                      size: 20,
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Text(
-                                                      "Photo",
-                                                      style: TextStyle(
-                                                        color: accentGreen,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-
-                                      const SizedBox(width: 12),
-
-                                      // Post Button
-                                      Expanded(
-                                        flex: 2,
-                                        child: AnimatedContainer(
-                                          duration: const Duration(
-                                            milliseconds: 300,
-                                          ),
-                                          height: 48,
-                                          child: _isPosting
-                                              ? Container(
-                                                  decoration: BoxDecoration(
-                                                    color: accentGreen
-                                                        .withOpacity(0.3),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          12,
-                                                        ),
-                                                  ),
-                                                  child: const Center(
-                                                    child: SizedBox(
-                                                      width: 24,
-                                                      height: 24,
-                                                      child:
-                                                          CircularProgressIndicator(
-                                                            color: accentGreen,
-                                                            strokeWidth: 2,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                )
-                                              : Material(
-                                                  color: accentGreen,
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  child: InkWell(
-                                                    onTap: _uploadPost,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          12,
-                                                        ),
-                                                    child: const Center(
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Icon(
-                                                            Icons.send,
-                                                            color: Colors.white,
-                                                            size: 20,
-                                                          ),
-                                                          SizedBox(width: 8),
-                                                          Text(
-                                                            "Share Post",
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 16,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            : const SizedBox.shrink(),
+                      const SizedBox(height: 12),
+                      Text(
+                        group['name'] as String,
+                        style: TextStyle(
+                          color: mainThemeColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                      const SizedBox(height: 4),
+                      Expanded(
+                        child: Text(
+                          group['description'] as String,
+                          style: TextStyle(
+                            color: mainThemeColor.withOpacity(0.6),
+                            fontSize: 12,
+                            height: 1.3,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
                       ),
                     ],
                   ),
@@ -789,360 +743,452 @@ class _CommunityPageState extends State<CommunityPage>
               },
             ),
           ),
+          const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
 
-          // Feed Section
-          StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection("posts")
-                .orderBy("createdAt", descending: true)
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return SliverToBoxAdapter(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(32),
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.error_outline,
-                            color: Colors.red,
-                            size: 48,
-                          ),
-                          const SizedBox(height: 16),
-                          const Text(
-                            "Something went wrong",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }
+  // Community feed section
+  Widget _buildCommunityFeed() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                "Community Feed",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: mainThemeColor,
+                ),
+              ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: accentGreen.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(Icons.add_rounded, color: accentGreen, size: 20),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          _buildCreatePostCard(),
+          const SizedBox(height: 20),
+          _buildFeedPosts(),
+        ],
+      ),
+    );
+  }
 
-              if (!snapshot.hasData) {
-                return const SliverToBoxAdapter(
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(32),
-                      child: CircularProgressIndicator(color: accentGreen),
-                    ),
-                  ),
-                );
-              }
-
-              final posts = snapshot.data!.docs;
-
-              if (posts.isEmpty) {
-                return SliverToBoxAdapter(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(64),
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(32),
-                            decoration: BoxDecoration(
-                              color: primaryGreen.withOpacity(0.5),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.people,
-                              size: 64,
-                              color: accentGreen.withOpacity(0.7),
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          const Text(
-                            "No posts yet",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            "Be the first to share something!",
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }
-
-              return SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  final data = posts[index].data() as Map<String, dynamic>;
-                  final postId = posts[index].id;
-                  final likes = List.from(data['likes'] ?? []);
-                  final isLiked = likes.contains(
-                    FirebaseAuth.instance.currentUser?.uid,
-                  );
-
-                  return Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 8,
+  // Create post card
+  Widget _buildCreatePostCard() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: cardBackground,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: accentGreen.withOpacity(0.2), width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: accentGreen.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundColor: accentGreen.withOpacity(0.2),
+                child: Icon(
+                  Icons.person_rounded,
+                  color: mainThemeColor,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: GestureDetector(
+                  onTap: _togglePostExpanded,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
                     ),
                     decoration: BoxDecoration(
-                      color: primaryGreen.withOpacity(0.8),
+                      color: primaryBackground,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: lightGreen.withOpacity(0.5),
-                        width: 0.5,
+                        color: mainThemeColor.withOpacity(0.1),
+                        width: 1,
                       ),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // User Info Header
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 20,
-                                backgroundColor: accentGreen,
-                                child: Text(
-                                  "${data['firstName']?[0] ?? ''}${data['lastName']?[0] ?? ''}",
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${data['firstName'] ?? ''} ${data['lastName'] ?? ''}",
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                            vertical: 2,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: accentGreen.withOpacity(0.2),
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            data['role'] ?? 'User',
-                                            style: const TextStyle(
-                                              color: accentGreen,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          _formatTimeAgo(data['createdAt']),
-                                          style: const TextStyle(
-                                            color: Colors.white54,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          // Post Content
-                          if (data['content'] != null &&
-                              data['content'].toString().trim().isNotEmpty) ...[
-                            const SizedBox(height: 16),
-                            Text(
-                              data['content'],
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                height: 1.5,
-                              ),
-                            ),
-                          ],
-
-                          // Media Content
-                          if (data['mediaUrl'] != null &&
-                              data['mediaType'] == "image") ...[
-                            const SizedBox(height: 16),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.network(
-                                data['mediaUrl'],
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                      if (loadingProgress == null) return child;
-                                      return Container(
-                                        height: 200,
-                                        decoration: BoxDecoration(
-                                          color: lightGreen,
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                        ),
-                                        child: const Center(
-                                          child: CircularProgressIndicator(
-                                            color: accentGreen,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    height: 200,
-                                    decoration: BoxDecoration(
-                                      color: lightGreen,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.broken_image,
-                                        color: Colors.white54,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-
-                          const SizedBox(height: 16),
-
-                          // Engagement Section
-                          Row(
-                            children: [
-                              // Like Button
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () => _toggleLike(postId, likes),
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: isLiked
-                                          ? Colors.red.withOpacity(0.1)
-                                          : Colors.transparent,
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                        color: isLiked
-                                            ? Colors.red.withOpacity(0.3)
-                                            : Colors.white24,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          isLiked
-                                              ? Icons.favorite
-                                              : Icons.favorite_border,
-                                          color: isLiked
-                                              ? Colors.red
-                                              : Colors.white54,
-                                          size: 18,
-                                        ),
-                                        if (likes.isNotEmpty) ...[
-                                          const SizedBox(width: 6),
-                                          Text(
-                                            "${likes.length}",
-                                            style: TextStyle(
-                                              color: isLiked
-                                                  ? Colors.red
-                                                  : Colors.white54,
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ],
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              const SizedBox(width: 16),
-
-                              // Comment Button
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () => _showCommentsModal(postId),
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                        color: Colors.white24,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: const Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          Icons.chat_bubble_outline,
-                                          color: Colors.white54,
-                                          size: 18,
-                                        ),
-                                        SizedBox(width: 6),
-                                        Text(
-                                          "Comment",
-                                          style: TextStyle(
-                                            color: Colors.white54,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                    child: Text(
+                      "Share your thoughts with the community...",
+                      style: TextStyle(
+                        color: mainThemeColor.withOpacity(0.6),
+                        fontSize: 14,
                       ),
                     ),
-                  );
-                }, childCount: posts.length),
-              );
-            },
+                  ),
+                ),
+              ),
+            ],
           ),
+          if (_isPostExpanded) ...[
+            const SizedBox(height: 16),
+            Container(
+              decoration: BoxDecoration(
+                color: primaryBackground,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: mainThemeColor.withOpacity(0.1),
+                  width: 1,
+                ),
+              ),
+              child: TextField(
+                controller: _postController,
+                maxLines: 4,
+                style: TextStyle(color: mainThemeColor, fontSize: 14),
+                decoration: const InputDecoration(
+                  hintText:
+                      "What's on your mind? Share your experience, ask for support, or offer encouragement...",
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.all(16),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () => _pickMedia(true),
+                    icon: const Icon(Icons.image_rounded, size: 18),
+                    label: const Text("Photo"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: softBlue.withOpacity(0.1),
+                      foregroundColor: softBlue,
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(
+                          color: softBlue.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 2,
+                  child: ElevatedButton(
+                    onPressed: _isPosting ? null : _uploadPost,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: accentGreen,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: _isPosting
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Text("Share"),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  // Feed posts
+  Widget _buildFeedPosts() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection("posts")
+          .orderBy("createdAt", descending: true)
+          .limit(10)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final posts = snapshot.data!.docs;
+
+        if (posts.isEmpty) {
+          return _buildEmptyState();
+        }
+
+        return Column(
+          children: posts.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            return _buildPostCard(doc.id, data);
+          }).toList(),
+        );
+      },
+    );
+  }
+
+  // Empty state
+  Widget _buildEmptyState() {
+    return Container(
+      padding: const EdgeInsets.all(40),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: accentGreen.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.people_outline_rounded,
+              size: 48,
+              color: accentGreen,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            "Welcome to the Community!",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: mainThemeColor,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "Be the first to share your story and connect with others on their mental health journey.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: mainThemeColor.withOpacity(0.6),
+              fontSize: 14,
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Post card
+  Widget _buildPostCard(String postId, Map<String, dynamic> data) {
+    final likes = List<String>.from(data['likes'] ?? []);
+    final isLiked = likes.contains(FirebaseAuth.instance.currentUser?.uid);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: cardBackground,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: mainThemeColor.withOpacity(0.1), width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: mainThemeColor.withOpacity(0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // User info
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundColor: accentGreen.withOpacity(0.2),
+                child: Text(
+                  "${data['firstName']?[0] ?? ''}${data['lastName']?[0] ?? ''}",
+                  style: TextStyle(
+                    color: mainThemeColor,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${data['firstName'] ?? ''} ${data['lastName'] ?? ''}",
+                      style: TextStyle(
+                        color: mainThemeColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      _formatTimeAgo(data['createdAt']),
+                      style: TextStyle(
+                        color: mainThemeColor.withOpacity(0.5),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Content
+          if (data['content']?.isNotEmpty == true)
+            Text(
+              data['content'],
+              style: TextStyle(
+                color: mainThemeColor,
+                fontSize: 14,
+                height: 1.4,
+              ),
+            ),
+          // Media
+          if (data['mediaUrl'] != null) ...[
+            const SizedBox(height: 12),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                data['mediaUrl'],
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ],
+          const SizedBox(height: 16),
+          // Actions
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () => _toggleLike(postId, likes),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isLiked
+                        ? accentGreen.withOpacity(0.1)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: isLiked
+                          ? accentGreen
+                          : mainThemeColor.withOpacity(0.2),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border,
+                        color: isLiked
+                            ? accentGreen
+                            : mainThemeColor.withOpacity(0.6),
+                        size: 16,
+                      ),
+                      if (likes.isNotEmpty) ...[
+                        const SizedBox(width: 4),
+                        Text(
+                          "${likes.length}",
+                          style: TextStyle(
+                            color: isLiked
+                                ? accentGreen
+                                : mainThemeColor.withOpacity(0.6),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              GestureDetector(
+                onTap: () => _showCommentsModal(postId),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: mainThemeColor.withOpacity(0.2),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.chat_bubble_outline,
+                        color: mainThemeColor.withOpacity(0.6),
+                        size: 16,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        "Comment",
+                        style: TextStyle(
+                          color: mainThemeColor.withOpacity(0.6),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: primaryBackground,
+      body: CustomScrollView(
+        slivers: [
+          // Clean header section
+          SliverToBoxAdapter(child: _buildHeaderSection()),
+
+          // Support Groups Section
+          SliverToBoxAdapter(child: _buildSupportGroups()),
+
+          // Community Feed
+          SliverToBoxAdapter(child: _buildCommunityFeed()),
         ],
       ),
     );

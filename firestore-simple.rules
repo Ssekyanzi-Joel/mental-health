@@ -1,0 +1,33 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Simple testimonies collection rules for reading approved testimonies
+    match /testimonies/{testimonyId} {
+      
+      // Allow read access to all authenticated users for approved testimonies
+      allow read: if request.auth != null 
+        && resource.data.status == 'approved';
+      
+      // Allow create for authenticated users
+      allow create: if request.auth != null 
+        && request.resource.data.text is string
+        && request.resource.data.text.size() >= 10
+        && request.resource.data.text.size() <= 1000;
+      
+      // Allow update for admins and therapists only
+      allow update: if request.auth != null 
+        && (request.auth.token.role == 'admin' 
+            || request.auth.token.role == 'therapist');
+      
+      // Allow delete for admins only
+      allow delete: if request.auth != null 
+        && request.auth.token.role == 'admin';
+    }
+    
+    // Allow read access to other collections as needed
+    match /{document=**} {
+      allow read: if request.auth != null;
+    }
+  }
+}

@@ -3,6 +3,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
+// Modern therapy booking color palette
+const Color primaryBackground = Color(0xFFF8F9FA);
+const Color cardBackground = Color(0xFFFFFFFF);
+const Color mainThemeColor = Color(0xFF2D5A3D);
+const Color accentGreen = Color(0xFF6BCF7F);
+const Color lightGreen = Color(0xFF9CDBA6);
+const Color softOrange = Color(0xFFFF6B35);
+const Color softBlue = Color(0xFF4A90E2);
+const Color creamBackground = Color(0xFFFFF8E7);
+const Color textSecondary = Color(0xFF6B7280);
+const Color borderGreen = Color(0xFF9CDBA6);
+
 class UserBookingPage extends StatefulWidget {
   const UserBookingPage({super.key});
 
@@ -12,14 +24,17 @@ class UserBookingPage extends StatefulWidget {
 
 class _UserBookingPageState extends State<UserBookingPage>
     with TickerProviderStateMixin {
-  // Modern green color palette
-  static const Color primaryGreen = Color(0xFF19351E);
-  static const Color lightGreen = Color(0xFF2A4A2F);
-  static const Color accentGreen = Color(0xFF3D6B42);
-  static const Color darkGreen = Color(0xFF0F1F12);
-  static const Color mintGreen = Color(0xFF4A7C59);
-  static const Color surfaceGreen = Color(0xFF1E3A23);
-  static const Color borderGreen = Color(0xFF345A39);
+  // Modern therapy booking color palette
+  static const Color primaryBackground = Color(0xFFF8F9FA);
+  static const Color cardBackground = Color(0xFFFFFFFF);
+  static const Color mainThemeColor = Color(0xFF2D5A3D);
+  static const Color accentGreen = Color(0xFF6BCF7F);
+  static const Color lightGreen = Color(0xFF9CDBA6);
+  static const Color softOrange = Color(0xFFFF6B35);
+  static const Color softBlue = Color(0xFF4A90E2);
+  static const Color creamBackground = Color(0xFFFFF8E7);
+  static const Color textSecondary = Color(0xFF6B7280);
+  static const Color borderGreen = Color(0xFF9CDBA6);
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -136,7 +151,7 @@ class _UserBookingPageState extends State<UserBookingPage>
               primary: accentGreen,
               onPrimary: Colors.white,
               surface: Colors.white,
-              onSurface: primaryGreen,
+              onSurface: mainThemeColor,
             ),
           ),
           child: child!,
@@ -155,7 +170,7 @@ class _UserBookingPageState extends State<UserBookingPage>
                 primary: accentGreen,
                 onPrimary: Colors.white,
                 surface: Colors.white,
-                onSurface: primaryGreen,
+                onSurface: mainThemeColor,
               ),
             ),
             child: child!,
@@ -246,7 +261,7 @@ class _UserBookingPageState extends State<UserBookingPage>
     return showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: surfaceGreen,
+        backgroundColor: cardBackground,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text(
           'Delete Booking?',
@@ -358,9 +373,9 @@ class _UserBookingPageState extends State<UserBookingPage>
             color: Colors.white.withOpacity(0.8),
             fontSize: 14,
           ),
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+          hintStyle: TextStyle(color: mainThemeColor.withOpacity(0.5)),
           filled: true,
-          fillColor: surfaceGreen,
+          fillColor: primaryBackground,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
             borderSide: BorderSide(color: borderGreen),
@@ -397,7 +412,7 @@ class _UserBookingPageState extends State<UserBookingPage>
         value: value,
         onChanged: onChanged,
         style: const TextStyle(color: Colors.white, fontSize: 16),
-        dropdownColor: surfaceGreen,
+        dropdownColor: cardBackground,
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(
@@ -405,7 +420,7 @@ class _UserBookingPageState extends State<UserBookingPage>
             fontSize: 14,
           ),
           filled: true,
-          fillColor: surfaceGreen,
+          fillColor: primaryBackground,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
             borderSide: BorderSide(color: borderGreen),
@@ -438,7 +453,7 @@ class _UserBookingPageState extends State<UserBookingPage>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [primaryGreen, primaryGreen.withOpacity(0.95)],
+          colors: [mainThemeColor, mainThemeColor.withOpacity(0.95)],
         ),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: borderGreen),
@@ -732,7 +747,7 @@ class _UserBookingPageState extends State<UserBookingPage>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [lightGreen, lightGreen.withOpacity(0.9)],
+          colors: [cardBackground, cardBackground],
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: borderGreen.withOpacity(0.5)),
@@ -880,13 +895,13 @@ class _UserBookingPageState extends State<UserBookingPage>
   Widget build(BuildContext context) {
     if (userId == null) {
       return Scaffold(
-        backgroundColor: primaryGreen,
+        backgroundColor: primaryBackground,
         body: Center(
           child: Container(
             margin: const EdgeInsets.all(24),
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              color: surfaceGreen,
+              color: cardBackground,
               borderRadius: BorderRadius.circular(24),
               border: Border.all(color: borderGreen),
             ),
@@ -911,185 +926,543 @@ class _UserBookingPageState extends State<UserBookingPage>
     }
 
     return Scaffold(
-      backgroundColor: primaryGreen,
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [primaryGreen, darkGreen],
-          ),
-        ),
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: CustomScrollView(
-            slivers: [
-              // App Bar
-              SliverAppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                floating: true,
-                flexibleSpace: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        primaryGreen.withOpacity(0.9),
-                        Colors.transparent,
-                      ],
+      backgroundColor: primaryBackground,
+      body: CustomScrollView(
+        slivers: [
+          // Clean header section
+          SliverToBoxAdapter(child: _buildHeaderSection()),
+
+          // Upcoming session card
+          SliverToBoxAdapter(child: _buildUpcomingSession()),
+
+          // Session filter
+          SliverToBoxAdapter(child: _buildSessionFilter()),
+
+          // Sessions list
+          StreamBuilder<QuerySnapshot>(
+            stream: _firestore
+                .collection('bookings')
+                .where('userId', isEqualTo: userId)
+                .orderBy('createdAt', descending: true)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SliverToBoxAdapter(
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32),
+                      child: CircularProgressIndicator(),
                     ),
                   ),
+                );
+              }
+
+              if (snapshot.hasError) {
+                return SliverToBoxAdapter(child: _buildErrorState());
+              }
+
+              final bookings = snapshot.data?.docs ?? [];
+
+              if (bookings.isEmpty) {
+                return SliverToBoxAdapter(child: _buildEmptyState());
+              }
+
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => _buildTherapistCard(bookings[index]),
+                  childCount: bookings.length,
                 ),
-                title: const Text(
-                  'My Therapy Bookings',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                centerTitle: false,
-              ),
-
-              // Booking Form
-              SliverToBoxAdapter(child: _buildBookingForm()),
-
-              // Bookings List
-              StreamBuilder<QuerySnapshot>(
-                stream: _firestore
-                    .collection('bookings')
-                    .where('userId', isEqualTo: userId)
-                    .orderBy('createdAt', descending: true)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return SliverToBoxAdapter(
-                      child: Center(
-                        child: Container(
-                          margin: const EdgeInsets.all(24),
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: surfaceGreen,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: borderGreen),
-                          ),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.error_outline_rounded,
-                                color: Colors.red.shade400,
-                                size: 32,
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                'Error loading bookings',
-                                style: TextStyle(
-                                  color: Colors.red.shade400,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return SliverToBoxAdapter(
-                      child: Center(
-                        child: Container(
-                          margin: const EdgeInsets.all(48),
-                          child: Column(
-                            children: [
-                              const CircularProgressIndicator(
-                                color: mintGreen,
-                                strokeWidth: 3,
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'Loading your bookings...',
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.8),
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-
-                  final bookings = snapshot.data?.docs ?? [];
-
-                  if (bookings.isEmpty) {
-                    return SliverToBoxAdapter(
-                      child: Center(
-                        child: Container(
-                          margin: const EdgeInsets.all(24),
-                          padding: const EdgeInsets.all(32),
-                          decoration: BoxDecoration(
-                            color: surfaceGreen.withOpacity(0.7),
-                            borderRadius: BorderRadius.circular(24),
-                            border: Border.all(color: borderGreen),
-                          ),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  color: accentGreen.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: const Icon(
-                                  Icons.event_available_rounded,
-                                  size: 48,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              const Text(
-                                'No bookings yet',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Create your first therapy appointment by using the form above',
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.7),
-                                  fontSize: 14,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-
-                  return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) => _buildBookingCard(bookings[index]),
-                      childCount: bookings.length,
-                    ),
-                  );
-                },
-              ),
-
-              // Bottom spacing
-              const SliverToBoxAdapter(child: SizedBox(height: 100)),
-            ],
+              );
+            },
           ),
+
+          // Bottom padding
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _toggleForm,
+        backgroundColor: softOrange,
+        icon: const Icon(Icons.add_rounded, color: Colors.white),
+        label: const Text(
+          "Book Session",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),
     );
   }
+}
+
+// Modern header section
+Widget _buildHeaderSection() {
+  return Container(
+    padding: const EdgeInsets.fromLTRB(24, 60, 24, 20),
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [cardBackground, primaryBackground],
+      ),
+    ),
+    child: SafeArea(
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 24,
+            backgroundColor: accentGreen.withOpacity(0.2),
+            child: Icon(Icons.person_rounded, color: mainThemeColor, size: 24),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "My Sessions",
+                  style: TextStyle(
+                    color: mainThemeColor,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  "Manage your therapy appointments",
+                  style: TextStyle(color: textSecondary, fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: softOrange.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Stack(
+              children: [
+                Icon(
+                  Icons.notifications_none_rounded,
+                  color: softOrange,
+                  size: 24,
+                ),
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: softOrange,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+// Upcoming session card
+Widget _buildUpcomingSession() {
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+    padding: const EdgeInsets.all(24),
+    decoration: BoxDecoration(
+      color: creamBackground,
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color: mainThemeColor.withOpacity(0.1),
+          blurRadius: 20,
+          offset: const Offset(0, 8),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Upcoming Session",
+          style: TextStyle(
+            color: mainThemeColor,
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            CircleAvatar(
+              radius: 24,
+              backgroundImage: NetworkImage(
+                "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop&crop=face",
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Sahana V",
+                    style: TextStyle(
+                      color: mainThemeColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    "Msc in Clinical Psychology",
+                    style: TextStyle(color: textSecondary, fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Text(
+          "7:30 PM - 8:30 PM",
+          style: TextStyle(
+            color: mainThemeColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 20),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            onPressed: () {
+              // Join session logic
+            },
+            icon: const Icon(Icons.videocam_rounded, size: 20),
+            label: const Text("Join Now"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: softOrange,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+// Session filter
+Widget _buildSessionFilter() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+    child: Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: cardBackground,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: mainThemeColor.withOpacity(0.2)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "All Sessions",
+                style: TextStyle(
+                  color: mainThemeColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: mainThemeColor,
+                size: 20,
+              ),
+            ],
+          ),
+        ),
+        const Spacer(),
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: cardBackground,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: mainThemeColor.withOpacity(0.2)),
+          ),
+          child: Icon(
+            Icons.filter_list_rounded,
+            color: mainThemeColor,
+            size: 20,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+// Therapist card (redesigned booking card)
+Widget _buildTherapistCard(QueryDocumentSnapshot booking) {
+  final data = booking.data() as Map<String, dynamic>;
+  final status = data['status'] ?? 'Pending';
+  final dateTime = data['dateTime'] as String?;
+  final sessionType = data['sessionType'] ?? 'Therapy Session';
+
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: cardBackground,
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: mainThemeColor.withOpacity(0.1)),
+      boxShadow: [
+        BoxShadow(
+          color: mainThemeColor.withOpacity(0.05),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: Column(
+      children: [
+        Row(
+          children: [
+            CircleAvatar(
+              radius: 24,
+              backgroundImage: NetworkImage(
+                "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop&crop=face",
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Sahana V",
+                    style: TextStyle(
+                      color: mainThemeColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    "Msc in Clinical Psychology",
+                    style: TextStyle(color: textSecondary, fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Icon(Icons.calendar_today_rounded, color: textSecondary, size: 16),
+            const SizedBox(width: 8),
+            Text(
+              dateTime != null
+                  ? DateFormat('dd MMM \'yy').format(DateTime.parse(dateTime))
+                  : "Date TBD",
+              style: TextStyle(color: textSecondary, fontSize: 14),
+            ),
+            const SizedBox(width: 24),
+            Icon(Icons.access_time_rounded, color: textSecondary, size: 16),
+            const SizedBox(width: 8),
+            Text(
+              dateTime != null
+                  ? DateFormat('h:mm a').format(DateTime.parse(dateTime))
+                  : "Time TBD",
+              style: TextStyle(color: textSecondary, fontSize: 14),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            if (status.toLowerCase() == 'accepted') ...[
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    // Reschedule logic
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: softOrange),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    "Reschedule",
+                    style: TextStyle(color: softOrange),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Join now logic
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: softOrange,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text(
+                    "Join Now",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ] else if (status.toLowerCase() == 'completed') ...[
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    // Re-book logic
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: softOrange),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text("Re-book", style: TextStyle(color: softOrange)),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    // View profile logic
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: mainThemeColor.withOpacity(0.3)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    "View Profile",
+                    style: TextStyle(color: mainThemeColor),
+                  ),
+                ),
+              ),
+            ] else ...[
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: Text(
+                      status.toUpperCase(),
+                      style: TextStyle(
+                        color: Colors.orange,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+// Error state
+Widget _buildErrorState() {
+  return Center(
+    child: Container(
+      margin: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: cardBackground,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            Icons.error_outline_rounded,
+            size: 48,
+            color: Colors.red.shade400,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Error loading sessions',
+            style: TextStyle(
+              color: mainThemeColor,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Please try again later',
+            style: TextStyle(color: textSecondary, fontSize: 14),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+// Empty state
+Widget _buildEmptyState() {
+  return Center(
+    child: Container(
+      margin: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: cardBackground,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: accentGreen.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.calendar_month_rounded,
+              size: 48,
+              color: accentGreen,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            'No sessions yet',
+            style: TextStyle(
+              color: mainThemeColor,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Book your first therapy session to get started',
+            style: TextStyle(color: textSecondary, fontSize: 14),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    ),
+  );
 }

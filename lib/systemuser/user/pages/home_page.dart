@@ -12,14 +12,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  // Your specified green theme colors
-  static const Color primaryBackground = Color.fromRGBO(15, 40, 20, 1);
-  static const Color mainThemeColor = Color.fromRGBO(25, 53, 30, 1);
-  static const Color cardContainer = Color.fromRGBO(35, 70, 40, 1);
-  static const Color accentGreen = Color.fromRGBO(76, 175, 80, 1);
-  static const Color lightGreen = Color.fromRGBO(129, 199, 132, 1);
-  static const Color creamWhite = Color(0xFFF7F5F3);
-  static const Color lightCream = Color(0xFFE8F5E8);
+  // Headspace-inspired calming color palette
+  static const Color primaryBackground = Color(0xFFF8F9FA);
+  static const Color mainThemeColor = Color(0xFF2D5A3D);
+  static const Color accentGreen = Color(0xFF6BCF7F);
+  static const Color lightGreen = Color(0xFF9CDBA6);
+  static const Color creamWhite = Color(0xFFFFFDF7);
+  static const Color softOrange = Color(0xFFFFB347);
+  static const Color softBlue = Color(0xFF87CEEB);
+  static const Color softPurple = Color(0xFFB19CD9);
 
   final user = FirebaseAuth.instance.currentUser;
   Map<String, dynamic> userData = {};
@@ -85,167 +86,191 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return "Good Evening";
   }
 
-  // Bigger hero header with more background coverage
-  Widget _buildHeroHeader() {
+  // Clean header section integrated into body
+  Widget _buildHeaderSection() {
     return Container(
-      height:
-          MediaQuery.of(context).size.height *
-          0.65, // Increased from 0.5 to 0.65
-      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(24, 60, 24, 20),
       decoration: BoxDecoration(
-        image: const DecorationImage(
-          image: AssetImage("assets/images/sara5.png"),
-          fit: BoxFit.cover,
-        ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [creamWhite, primaryBackground],
         ),
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          color: mainThemeColor.withOpacity(0.65),
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(30),
-            bottomRight: Radius.circular(30),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            children: [
-              const SizedBox(height: 40), // Top padding for status bar
-              // User info row
-              Row(
+      child: SafeArea(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // User greeting section
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.white.withOpacity(0.2),
-                    child: Text(
-                      isLoading
-                          ? 'U'
-                          : '${userData['firstName']?[0] ?? 'U'}${userData['lastName']?[0] ?? ''}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _getGreeting(),
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
-                            fontSize: 16,
-                          ),
-                        ),
-                        Text(
-                          isLoading
-                              ? 'Loading...'
-                              : '${userData['firstName'] ?? 'User'}!',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: const Icon(
-                      Icons.notifications_outlined,
-                      color: Colors.white,
-                      size: 24,
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              // Centered main message
-              Column(
-                children: [
-                  const Text(
-                    "Your Mental Health Matters 💚",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
                   Text(
-                    "How are you feeling today?",
-                    textAlign: TextAlign.center,
+                    _getGreeting(),
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 18,
+                      color: mainThemeColor.withOpacity(0.7),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    isLoading
+                        ? 'Loading...'
+                        : '${userData['firstName'] ?? 'User'}',
+                    style: const TextStyle(
+                      color: mainThemeColor,
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],
               ),
-              const Spacer(),
-            ],
-          ),
+            ),
+            // Profile and notifications
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: accentGreen.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(
+                    Icons.notifications_none_rounded,
+                    color: mainThemeColor,
+                    size: 22,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                CircleAvatar(
+                  radius: 22,
+                  backgroundColor: accentGreen.withOpacity(0.2),
+                  child: Text(
+                    isLoading
+                        ? 'U'
+                        : '${userData['firstName']?[0] ?? 'U'}${userData['lastName']?[0] ?? ''}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: mainThemeColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
+      ),
+    );
+  }
+
+  // Mindful check-in hero section
+  Widget _buildHeroSection() {
+    return Container(
+      margin: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [accentGreen, lightGreen],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: accentGreen.withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          const Text("🌱", style: TextStyle(fontSize: 32)),
+          const SizedBox(height: 12),
+          const Text(
+            "How are you feeling?",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "Take a moment to check in with yourself",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.9),
+              fontSize: 16,
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildQuickActions() {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Quick Actions",
+          Text(
+            "Today's Focus",
             style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
               color: mainThemeColor,
             ),
           ),
-          const SizedBox(height: 16),
-          Row(
+          const SizedBox(height: 20),
+          // Grid of wellness activities
+          GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 1.1,
             children: [
-              Expanded(
-                child: _buildActionCard(
-                  "AI Assistant",
-                  "Chat with our AI therapist",
-                  Icons.psychology,
-                  accentGreen,
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ChatScreen()),
+              _buildWellnessCard(
+                "Mindful Chat",
+                "AI Companion",
+                "🤖",
+                softBlue,
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ChatScreen()),
+                ),
+              ),
+              _buildWellnessCard(
+                "Mood Check",
+                "Track feelings",
+                "😊",
+                softOrange,
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const EnhancedMoodTrackerPage(),
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildActionCard(
-                  "Mood Check",
-                  "Track your emotions",
-                  Icons.mood,
-                  cardContainer,
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MoodTrackerPage(),
-                    ),
-                  ),
-                ),
+              _buildWellnessCard(
+                "Breathe",
+                "5 min session",
+                "🫁",
+                accentGreen,
+                () => _showBreathingExercise(),
+              ),
+              _buildWellnessCard(
+                "Reflect",
+                "Daily journal",
+                "📝",
+                softPurple,
+                () => _showJournalPrompt(),
               ),
             ],
           ),
@@ -254,52 +279,47 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildActionCard(
+  Widget _buildWellnessCard(
     String title,
     String subtitle,
-    IconData icon,
+    String emoji,
     Color color,
     VoidCallback onTap,
   ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: color,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: color.withOpacity(0.2), width: 1),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: color.withOpacity(0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: Colors.white, size: 24),
-            ),
+            Text(emoji, style: const TextStyle(fontSize: 32)),
             const SizedBox(height: 12),
             Text(
               title,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: mainThemeColor,
                 fontSize: 16,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
             ),
+            const SizedBox(height: 4),
             Text(
               subtitle,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.8),
+                color: mainThemeColor.withOpacity(0.6),
                 fontSize: 12,
               ),
             ),
@@ -309,83 +329,237 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  // Expanded daily tips section with more tips
-  Widget _buildDailyTips() {
-    final tips = [
+  void _showBreathingExercise() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                "Breathing Exercise",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: mainThemeColor,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                "Follow the circle to breathe mindfully",
+                style: TextStyle(
+                  color: mainThemeColor.withOpacity(0.7),
+                  fontSize: 16,
+                ),
+              ),
+              const Spacer(),
+              Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(colors: [accentGreen, lightGreen]),
+                ),
+                child: const Center(
+                  child: Text("🫁", style: TextStyle(fontSize: 48)),
+                ),
+              ),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: accentGreen,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                child: const Text(
+                  "Start Session",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showJournalPrompt() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                "Daily Reflection",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: mainThemeColor,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                "What are three things you're grateful for today?",
+                style: TextStyle(
+                  color: mainThemeColor.withOpacity(0.7),
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: primaryBackground,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: const TextField(
+                    maxLines: null,
+                    expands: true,
+                    decoration: InputDecoration(
+                      hintText: "Write your thoughts here...",
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: softPurple,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                child: const Text(
+                  "Save Reflection",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Mindful moments section with gentle wisdom
+  Widget _buildMindfulMoments() {
+    final moments = [
       {
-        "title": "Breathing Exercise",
-        "tip": "Take 5 deep breaths when feeling overwhelmed",
-        "icon": Icons.air,
+        "title": "Mindful Breathing",
+        "tip":
+            "Notice your breath. Each inhale brings calm, each exhale releases tension.",
+        "emoji": "🌬️",
+        "color": softBlue,
       },
       {
-        "title": "Gratitude Practice",
-        "tip": "List 3 things you're thankful for today",
-        "icon": Icons.favorite,
+        "title": "Gratitude Pause",
+        "tip":
+            "Name three small things that brought you joy today, however tiny.",
+        "emoji": "🙏",
+        "color": softOrange,
       },
       {
-        "title": "Movement Therapy",
-        "tip": "Take a 10-minute walk to clear your mind",
-        "icon": Icons.directions_walk,
+        "title": "Body Awareness",
+        "tip": "Gently scan from your toes to your head. What do you notice?",
+        "emoji": "🧘",
+        "color": softPurple,
       },
       {
-        "title": "Social Connection",
-        "tip": "Reach out to a friend or loved one today",
-        "icon": Icons.people,
+        "title": "Present Moment",
+        "tip":
+            "Right now, you are exactly where you need to be. That's enough.",
+        "emoji": "⭐",
+        "color": accentGreen,
       },
       {
-        "title": "Mindfulness",
-        "tip": "Practice mindfulness for just 2 minutes",
-        "icon": Icons.self_improvement,
-      },
-      {
-        "title": "Hydration",
-        "tip": "Drink a glass of water mindfully",
-        "icon": Icons.local_drink,
-      },
-      {
-        "title": "Nature Time",
-        "tip": "Spend 5 minutes outside in fresh air",
-        "icon": Icons.eco,
-      },
-      {
-        "title": "Self-Compassion",
-        "tip": "Speak to yourself as kindly as you would a friend",
-        "icon": Icons.psychology,
-      },
-      {
-        "title": "Digital Detox",
-        "tip": "Take a 30-minute break from screens",
-        "icon": Icons.phone_locked,
-      },
-      {
-        "title": "Creative Expression",
-        "tip": "Draw, write, or create something for 10 minutes",
-        "icon": Icons.brush,
+        "title": "Self Compassion",
+        "tip":
+            "Speak to yourself with the same kindness you'd show a dear friend.",
+        "emoji": "💚",
+        "color": lightGreen,
       },
     ];
 
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Daily Mental Health Tips",
+          Text(
+            "Mindful Moments",
             style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
               color: mainThemeColor,
             ),
           ),
-          const SizedBox(height: 16),
-          // Display 3 random tips
-          ...List.generate(3, (index) {
-            final randomTip = tips[(DateTime.now().day + index) % tips.length];
-            return _buildTipCard(
-              randomTip['title'] as String,
-              randomTip['tip'] as String,
-              randomTip['icon'] as IconData,
-              index,
+          const SizedBox(height: 20),
+          // Display 2 rotating mindful moments
+          ...List.generate(2, (index) {
+            final moment =
+                moments[(DateTime.now().day + index) % moments.length];
+            return _buildMindfulCard(
+              moment['title'] as String,
+              moment['tip'] as String,
+              moment['emoji'] as String,
+              moment['color'] as Color,
             );
           }),
         ],
@@ -393,27 +567,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildTipCard(String title, String tip, IconData icon, int index) {
-    // Alternate colors for variety
-    final colors = [mainThemeColor, cardContainer, accentGreen];
-    final color = colors[index % colors.length];
-
+  Widget _buildMindfulCard(
+    String title,
+    String tip,
+    String emoji,
+    Color color,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [lightCream, Colors.white],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: color.withOpacity(0.2), width: 1),
         boxShadow: [
           BoxShadow(
             color: color.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -423,33 +594,34 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                child: Icon(icon, color: color, size: 20),
+                child: Text(emoji, style: const TextStyle(fontSize: 24)),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 16),
               Expanded(
                 child: Text(
                   title,
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: color,
+                    fontWeight: FontWeight.w600,
+                    color: mainThemeColor,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Text(
             tip,
             style: TextStyle(
               fontSize: 16,
-              color: color.withOpacity(0.8),
-              height: 1.4,
+              color: mainThemeColor.withOpacity(0.7),
+              height: 1.5,
+              fontStyle: FontStyle.italic,
             ),
           ),
         ],
@@ -460,19 +632,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     if (user == null) {
-      return const Scaffold(
-        backgroundColor: Colors.white,
+      return Scaffold(
+        backgroundColor: primaryBackground,
         body: Center(
           child: Text(
             "Please sign in to continue",
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 18, color: mainThemeColor),
           ),
         ),
       );
     }
 
     return Scaffold(
-      backgroundColor: creamWhite,
+      backgroundColor: primaryBackground,
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SlideTransition(
@@ -481,29 +653,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildHeroHeader(), // Bigger background coverage
-                const SizedBox(height: 20),
-                _buildQuickActions(), // Maintained as requested
-                const SizedBox(height: 20),
-                _buildDailyTips(), // Expanded daily tips section
-                const SizedBox(height: 20),
+                _buildHeaderSection(),
+                _buildHeroSection(),
+                _buildQuickActions(),
+                const SizedBox(height: 32),
+                _buildMindfulMoments(),
+                const SizedBox(height: 40),
               ],
             ),
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const ChatScreen()),
         ),
-        backgroundColor: mainThemeColor,
-        icon: const Icon(Icons.psychology, color: Colors.white),
-        label: const Text(
-          "AI Chat",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
+        backgroundColor: accentGreen,
         elevation: 8,
+        child: const Icon(
+          Icons.psychology_rounded,
+          color: Colors.white,
+          size: 28,
+        ),
       ),
     );
   }

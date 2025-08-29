@@ -1,0 +1,44 @@
+// Add these rules to your Firestore Security Rules in Firebase Console
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow users to read/write their own mood tracker data
+    match /mood_tracker/{document} {
+      allow read, write: if request.auth != null && 
+                        request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && 
+                   request.auth.uid == request.resource.data.userId;
+    }
+    
+    // Allow users to read/write their own user data
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow users to read/write their own chat messages
+    match /chats/{userId}/messages/{messageId} {
+      allow read, write, create, delete: if request.auth != null && 
+                                        request.auth.uid == userId;
+    }
+    
+    // Allow users to read/write their own journal entries
+    match /journals/{userId}/entries/{entryId} {
+      allow read, write, create, delete: if request.auth != null && 
+                                        request.auth.uid == userId;
+    }
+    
+    // Allow users to read/write their own bookings
+    match /bookings/{bookingId} {
+      allow read, write, delete: if request.auth != null && 
+                                request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && 
+                   request.auth.uid == request.resource.data.userId;
+    }
+    
+    // Allow all authenticated users to read education content (read-only for users)
+    match /education/{educationId} {
+      allow read: if request.auth != null;
+    }
+  }
+}

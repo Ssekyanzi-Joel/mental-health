@@ -1,105 +1,277 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// ignore: unnecessary_import
-import 'dart:ui';
+import 'package:intl/intl.dart';
+import 'dart:async';
 
 class GalleryPage extends StatelessWidget {
   const GalleryPage({super.key});
 
-  static const Color deepGreen = Color.fromARGB(255, 25, 53, 30);
-  static const Color sectionLightGreen = Color.fromARGB(255, 180, 220, 190);
-  static const Color listTileCream = Color.fromARGB(255, 245, 245, 220);
-  static const Color accentGreen = Color.fromARGB(255, 76, 175, 80);
+  // Modern minimalist color scheme
+  static const Color primaryBackground = Color(0xFFFAFBFC);
+  static const Color cardBackground = Color(0xFFFFFFFF);
+  static const Color primaryText = Color(0xFF1A1D29);
+  static const Color secondaryText = Color(0xFF6B7280);
+  static const Color accent = Color(0xFF10B981);
+  static const Color lightGray = Color(0xFFF3F4F6);
+  static const Color borderColor = Color(0xFFE5E7EB);
+  static const Color gradientStart = Color(0xFF059669);
+  static const Color gradientEnd = Color(0xFF34D399);
 
   @override
   Widget build(BuildContext context) {
-    // Try both collections to handle existing and new data
     return Scaffold(
-      backgroundColor: deepGreen,
-      appBar: AppBar(
-        title: const Text(
-          'Education & Resources',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-        ),
-        backgroundColor: deepGreen,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                const Color.fromRGBO(25, 53, 30, 1),
-                const Color.fromRGBO(46, 125, 50, 1),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+      backgroundColor: primaryBackground,
+      body: CustomScrollView(
+        slivers: [
+          // Clean modern header
+          SliverToBoxAdapter(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(24, 60, 24, 32),
+              child: SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header with back button and title
+                    Row(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: cardBackground,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: borderColor),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.04),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(12),
+                              onTap: () => Navigator.pop(context),
+                              child: const Icon(
+                                Icons.arrow_back_ios_new,
+                                color: primaryText,
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Education Hub",
+                                style: TextStyle(
+                                  color: primaryText,
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                "Discover knowledge and insights",
+                                style: TextStyle(
+                                  color: secondaryText,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 32),
+
+                    // Stats cards
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildStatCard(
+                            icon: Icons.article_outlined,
+                            title: "Articles",
+                            subtitle: "Latest content",
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildStatCard(
+                            icon: Icons.trending_up,
+                            title: "Learning",
+                            subtitle: "Keep growing",
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        // Read from education collection (from AdminTherapyPage)
-        stream: FirebaseFirestore.instance
-            .collection('education')
-            .orderBy('createdAt', descending: true)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(color: accentGreen),
-            );
-          }
 
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(24),
+          // Content section
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('education')
+                .orderBy('createdAt', descending: true)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return SliverToBoxAdapter(
+                  child: Container(
+                    padding: const EdgeInsets.all(50),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: 32,
+                            height: 32,
+                            child: CircularProgressIndicator(
+                              color: accent,
+                              strokeWidth: 3,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            "Loading content...",
+                            style: TextStyle(
+                              color: secondaryText,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return SliverToBoxAdapter(
+                  child: Container(
+                    margin: const EdgeInsets.all(24),
+                    padding: const EdgeInsets.all(40),
                     decoration: BoxDecoration(
-                      color: sectionLightGreen.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
+                      color: cardBackground,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: borderColor),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.04),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                    child: Icon(
-                      Icons.school_outlined,
-                      size: 64,
-                      color: sectionLightGreen.withOpacity(0.7),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 64,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            color: lightGray,
+                            borderRadius: BorderRadius.circular(32),
+                          ),
+                          child: Icon(
+                            Icons.school_outlined,
+                            size: 32,
+                            color: secondaryText,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          'No content available yet',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: primaryText,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Educational content will appear here when published',
+                          style: TextStyle(fontSize: 14, color: secondaryText),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  Text(
-                    'No educational content yet',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: sectionLightGreen.withOpacity(0.8),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Content will appear here when posted',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: sectionLightGreen.withOpacity(0.6),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
+                );
+              }
 
-          final docs = snapshot.data!.docs;
+              final docs = snapshot.data!.docs;
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: docs.length,
-            itemBuilder: (context, index) {
-              final data = docs[index].data() as Map<String, dynamic>;
-              return _buildEducationCard(context, data);
+              return SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final data = docs[index].data() as Map<String, dynamic>;
+                    return _buildEducationCard(context, data);
+                  }, childCount: docs.length),
+                ),
+              );
             },
-          );
-        },
+          ),
+
+          // Bottom spacing
+          const SliverToBoxAdapter(child: SizedBox(height: 32)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: cardBackground,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderColor),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: accent.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: accent, size: 20),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: primaryText,
+            ),
+          ),
+          Text(subtitle, style: TextStyle(fontSize: 12, color: secondaryText)),
+        ],
       ),
     );
   }
@@ -108,17 +280,20 @@ class GalleryPage extends StatelessWidget {
     final String title = data['title'] ?? 'Untitled';
     final String notes = data['notes'] ?? '';
     final String? mediaUrl = data['mediaUrl'];
+    final String? mediaPath =
+        data['mediaPath']; // Alternative: direct storage path
     final Timestamp? timestamp = data['createdAt'];
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: listTileCream,
-        borderRadius: BorderRadius.circular(20),
+        color: cardBackground,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderColor),
         boxShadow: [
           BoxShadow(
-            color: deepGreen.withOpacity(0.15),
-            blurRadius: 10,
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 12,
             offset: const Offset(0, 4),
           ),
         ],
@@ -126,70 +301,52 @@ class GalleryPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image section (if available)
-          if (mediaUrl != null)
+          // Smart Image section with multiple fallback strategies
+          if (mediaUrl != null || mediaPath != null)
             GestureDetector(
-              onTap: () => _showFullScreenImage(context, mediaUrl, title),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
+              onTap: () => _showFullScreenImage(
+                context,
+                mediaUrl ?? mediaPath!,
+                title,
+                isStoragePath: mediaPath != null && mediaUrl == null,
+              ),
+              child: Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
                 ),
                 child: Stack(
                   children: [
-                    Image.network(
-                      mediaUrl,
-                      width: double.infinity,
-                      height: 200,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Container(
-                          height: 200,
-                          decoration: BoxDecoration(
-                            color: sectionLightGreen.withOpacity(0.1),
-                          ),
-                          child: const Center(
-                            child: CircularProgressIndicator(
-                              color: accentGreen,
-                            ),
-                          ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          height: 200,
-                          decoration: BoxDecoration(
-                            color: sectionLightGreen.withOpacity(0.1),
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.broken_image_outlined,
-                              size: 48,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        );
-                      },
+                    ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16),
+                      ),
+                      child: SmartImageWidget(
+                        mediaUrl: mediaUrl,
+                        mediaPath: mediaPath,
+                        width: double.infinity,
+                        height: 200,
+                      ),
                     ),
-                    // Gradient overlay for better text readability
+                    // Overlay with expand icon
                     Positioned(
-                      top: 0,
-                      right: 0,
+                      top: 12,
+                      right: 12,
                       child: Container(
-                        padding: const EdgeInsets.all(12),
+                        width: 36,
+                        height: 36,
                         decoration: BoxDecoration(
-                          gradient: RadialGradient(
-                            colors: [
-                              Colors.black.withOpacity(0.3),
-                              Colors.transparent,
-                            ],
-                          ),
+                          color: Colors.black.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(18),
                         ),
-                        child: Icon(
-                          Icons.zoom_in,
-                          color: Colors.white.withOpacity(0.8),
-                          size: 24,
+                        child: const Icon(
+                          Icons.zoom_out_map,
+                          color: Colors.white,
+                          size: 18,
                         ),
                       ),
                     ),
@@ -204,125 +361,169 @@ class GalleryPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: deepGreen,
-                    height: 1.3,
-                  ),
+                // Header
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: primaryText,
+                          height: 1.3,
+                        ),
+                      ),
+                    ),
+                    if (timestamp != null) ...[
+                      const SizedBox(width: 12),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: lightGray,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          DateFormat('MMM dd').format(timestamp.toDate()),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: secondaryText,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
 
-                const SizedBox(height: 12),
-
-                // Notes preview
+                // Content preview
                 if (notes.isNotEmpty) ...[
+                  const SizedBox(height: 12),
                   Text(
-                    notes.length > 150
-                        ? '${notes.substring(0, 150)}...'
+                    notes.length > 120
+                        ? '${notes.substring(0, 120)}...'
                         : notes,
                     style: TextStyle(
                       fontSize: 15,
-                      color: deepGreen.withOpacity(0.8),
+                      color: secondaryText,
                       height: 1.5,
                     ),
                   ),
+                  const SizedBox(height: 16),
 
-                  if (notes.length > 150)
-                    GestureDetector(
-                      onTap: () =>
-                          _showFullContent(context, title, notes, mediaUrl),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          'Read more',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: accentGreen,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-
-                const SizedBox(height: 16),
-
-                // Footer with timestamp and read more button
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Timestamp
-                    if (timestamp != null)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: sectionLightGreen.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.schedule,
-                              size: 14,
-                              color: deepGreen.withOpacity(0.7),
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              _formatDate(timestamp.toDate()),
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: deepGreen.withOpacity(0.7),
-                                fontWeight: FontWeight.w500,
+                  // Action buttons
+                  Row(
+                    children: [
+                      if (notes.length > 120)
+                        Expanded(
+                          child: Container(
+                            height: 44,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [gradientStart, gradientEnd],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
                               ),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: accent.withOpacity(0.3),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-
-                    // Read more button
-                    if (notes.isNotEmpty)
-                      GestureDetector(
-                        onTap: () =>
-                            _showFullContent(context, title, notes, mediaUrl),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: accentGreen,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text(
-                                'View Full',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(12),
+                                onTap: () => _showFullContent(
+                                  context,
+                                  title,
+                                  notes,
+                                  mediaUrl,
+                                  mediaPath,
+                                ),
+                                child: const Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.article_outlined,
+                                        color: Colors.white,
+                                        size: 18,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        "Read More",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              const SizedBox(width: 4),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                size: 12,
-                                color: Colors.white.withOpacity(0.8),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                  ],
-                ),
+                      if ((mediaUrl != null || mediaPath != null) &&
+                          notes.length > 120)
+                        const SizedBox(width: 12),
+                      if (mediaUrl != null || mediaPath != null)
+                        Expanded(
+                          child: Container(
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: lightGray,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: borderColor),
+                            ),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(12),
+                                onTap: () => _showFullScreenImage(
+                                  context,
+                                  mediaUrl ?? mediaPath!,
+                                  title,
+                                  isStoragePath:
+                                      mediaPath != null && mediaUrl == null,
+                                ),
+                                child: Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.image_outlined,
+                                        color: primaryText,
+                                        size: 18,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        "View Image",
+                                        style: TextStyle(
+                                          color: primaryText,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),
@@ -333,13 +534,18 @@ class GalleryPage extends StatelessWidget {
 
   void _showFullScreenImage(
     BuildContext context,
-    String imageUrl,
-    String title,
-  ) {
+    String imagePath,
+    String title, {
+    bool isStoragePath = false,
+  }) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => FullScreenImageView(imageUrl: imageUrl, title: title),
+        builder: (_) => FullScreenImageView(
+          imagePath: imagePath,
+          title: title,
+          isStoragePath: isStoragePath,
+        ),
       ),
     );
   }
@@ -349,71 +555,309 @@ class GalleryPage extends StatelessWidget {
     String title,
     String notes,
     String? mediaUrl,
+    String? mediaPath,
   ) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) =>
-            FullContentView(title: title, content: notes, imageUrl: mediaUrl),
+        builder: (_) => FullContentView(
+          title: title,
+          content: notes,
+          mediaUrl: mediaUrl,
+          mediaPath: mediaPath,
+        ),
+      ),
+    );
+  }
+}
+
+// Smart Image Widget with Multiple Fallback Strategies
+class SmartImageWidget extends StatefulWidget {
+  final String? mediaUrl;
+  final String? mediaPath;
+  final double width;
+  final double height;
+  final BoxFit fit;
+
+  const SmartImageWidget({
+    super.key,
+    this.mediaUrl,
+    this.mediaPath,
+    required this.width,
+    required this.height,
+    this.fit = BoxFit.cover,
+  });
+
+  @override
+  State<SmartImageWidget> createState() => _SmartImageWidgetState();
+}
+
+class _SmartImageWidgetState extends State<SmartImageWidget> {
+  String? _currentUrl;
+  int _retryCount = 0;
+  static const int _maxRetries = 3;
+  bool _isLoading = true;
+  String? _errorMessage;
+
+  static const Color lightGray = Color(0xFFF3F4F6);
+  static const Color secondaryText = Color(0xFF6B7280);
+  static const Color accent = Color(0xFF10B981);
+
+  @override
+  void initState() {
+    super.initState();
+    _loadImage();
+  }
+
+  Future<void> _loadImage() async {
+    if (_retryCount >= _maxRetries) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Failed to load image after $_maxRetries attempts';
+      });
+      return;
+    }
+
+    try {
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
+
+      String? urlToTry;
+
+      if (_retryCount == 0 && widget.mediaUrl != null) {
+        // First attempt: Use the provided mediaUrl as-is
+        urlToTry = widget.mediaUrl!;
+      } else if (_retryCount == 1 && widget.mediaUrl != null) {
+        // Second attempt: Try domain replacement
+        urlToTry = widget.mediaUrl!
+            .replaceAll('firebasestorage.app', 'appspot.com')
+            .replaceAll(
+              'mind-aware-b89c3.firebasestorage.app',
+              'mind-aware-b89c3.appspot.com',
+            );
+      } else if (widget.mediaPath != null) {
+        // Third attempt: Generate URL from storage path
+        try {
+          final ref = FirebaseStorage.instance.ref().child(widget.mediaPath!);
+          urlToTry = await ref.getDownloadURL();
+        } catch (e) {
+          debugPrint('Failed to get download URL from path: $e');
+          _retryCount++;
+          await Future.delayed(Duration(milliseconds: 500 * _retryCount));
+          _loadImage();
+          return;
+        }
+      } else {
+        // No more options
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'No valid image source available';
+        });
+        return;
+      }
+
+      if (urlToTry != null) {
+        setState(() {
+          _currentUrl = urlToTry;
+        });
+      } else {
+        _retryCount++;
+        await Future.delayed(Duration(milliseconds: 500 * _retryCount));
+        _loadImage();
+      }
+    } catch (e) {
+      debugPrint('Error in _loadImage: $e');
+      _retryCount++;
+      await Future.delayed(Duration(milliseconds: 500 * _retryCount));
+      _loadImage();
+    }
+  }
+
+  void _onImageError() {
+    debugPrint('Image failed to load: $_currentUrl');
+    _retryCount++;
+    Future.delayed(Duration(milliseconds: 200), () {
+      if (mounted) {
+        _loadImage();
+      }
+    });
+  }
+
+  Widget _buildErrorWidget() {
+    return Container(
+      width: widget.width,
+      height: widget.height,
+      decoration: BoxDecoration(color: lightGray),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.broken_image_outlined, size: 48, color: secondaryText),
+          const SizedBox(height: 8),
+          Text(
+            _errorMessage ?? 'Image failed to load',
+            style: TextStyle(color: secondaryText, fontSize: 12),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          if (_retryCount < _maxRetries)
+            GestureDetector(
+              onTap: () {
+                _retryCount = 0;
+                _loadImage();
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: accent.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: accent.withOpacity(0.3)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.refresh, size: 14, color: accent),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Retry',
+                      style: TextStyle(
+                        color: accent,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
 
-  String _formatDate(DateTime date) {
-    final now = DateTime.now();
-    final difference = now.difference(date);
+  Widget _buildLoadingWidget() {
+    return Container(
+      width: widget.width,
+      height: widget.height,
+      decoration: BoxDecoration(color: lightGray),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 32,
+              height: 32,
+              child: CircularProgressIndicator(color: accent, strokeWidth: 3),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Loading image... (${_retryCount + 1}/$_maxRetries)',
+              style: TextStyle(color: secondaryText, fontSize: 12),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-    if (difference.inDays > 7) {
-      return '${date.day}/${date.month}/${date.year}';
-    } else if (difference.inDays > 0) {
-      return '${difference.inDays} days ago';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}h ago';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}m ago';
-    } else {
-      return 'Just now';
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading || _currentUrl == null) {
+      return _buildLoadingWidget();
     }
+
+    if (_errorMessage != null) {
+      return _buildErrorWidget();
+    }
+
+    return Image.network(
+      _currentUrl!,
+      width: widget.width,
+      height: widget.height,
+      fit: widget.fit,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) {
+          setState(() => _isLoading = false);
+          return child;
+        }
+        return _buildLoadingWidget();
+      },
+      errorBuilder: (context, error, stackTrace) {
+        debugPrint('Network image error: $error for URL: $_currentUrl');
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            _onImageError();
+          }
+        });
+        return _buildLoadingWidget();
+      },
+    );
   }
 }
 
-// Full screen image viewer
+// Enhanced Full screen image viewer
 class FullScreenImageView extends StatelessWidget {
-  final String imageUrl;
+  final String imagePath;
   final String title;
+  final bool isStoragePath;
 
   const FullScreenImageView({
     super.key,
-    required this.imageUrl,
+    required this.imagePath,
     required this.title,
+    this.isStoragePath = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
-          title,
-          style: const TextStyle(color: Colors.white),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+        title: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.6),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
+        leading: Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.6),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const BackButton(color: Colors.white),
+        ),
       ),
       body: InteractiveViewer(
+        panEnabled: true,
+        minScale: 0.5,
+        maxScale: 4.0,
         child: Center(
-          child: Image.network(
-            imageUrl,
+          child: SmartImageWidget(
+            mediaUrl: isStoragePath ? null : imagePath,
+            mediaPath: isStoragePath ? imagePath : null,
+            width: double.infinity,
+            height: double.infinity,
             fit: BoxFit.contain,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return const Center(
-                child: CircularProgressIndicator(color: Colors.white),
-              );
-            },
           ),
         ),
       ),
@@ -421,58 +865,69 @@ class FullScreenImageView extends StatelessWidget {
   }
 }
 
-// Full content viewer
+// Enhanced Full content viewer
 class FullContentView extends StatelessWidget {
   final String title;
   final String content;
-  final String? imageUrl;
+  final String? mediaUrl;
+  final String? mediaPath;
 
   const FullContentView({
     super.key,
     required this.title,
     required this.content,
-    this.imageUrl,
+    this.mediaUrl,
+    this.mediaPath,
   });
 
-  static const Color deepGreen = Color.fromARGB(255, 25, 53, 30);
-  static const Color sectionLightGreen = Color.fromARGB(255, 180, 220, 190);
-  static const Color listTileCream = Color.fromARGB(255, 245, 245, 220);
+  static const Color primaryBackground = Color(0xFFFAFBFC);
+  static const Color cardBackground = Color(0xFFFFFFFF);
+  static const Color primaryText = Color(0xFF1A1D29);
+  static const Color secondaryText = Color(0xFF6B7280);
+  static const Color borderColor = Color(0xFFE5E7EB);
 
   @override
   Widget build(BuildContext context) {
+    final bool hasImage = mediaUrl != null || mediaPath != null;
+
     return Scaffold(
-      backgroundColor: deepGreen,
+      backgroundColor: primaryBackground,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: imageUrl != null ? 300 : 120,
+            expandedHeight: hasImage ? 280 : 120,
             floating: false,
             pinned: true,
-            backgroundColor: deepGreen,
-            iconTheme: const IconThemeData(color: Colors.white),
+            backgroundColor: cardBackground,
+            foregroundColor: primaryText,
+            elevation: 0,
             flexibleSpace: FlexibleSpaceBar(
-              title: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
+              titlePadding: const EdgeInsets.only(
+                left: 60,
+                bottom: 16,
+                right: 16,
               ),
-              background: imageUrl != null
+              title: Text(
+                title,
+                style: TextStyle(
+                  color: primaryText,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              background: hasImage
                   ? Stack(
                       fit: StackFit.expand,
                       children: [
-                        Image.network(imageUrl!, fit: BoxFit.cover),
+                        SmartImageWidget(
+                          mediaUrl: mediaUrl,
+                          mediaPath: mediaPath,
+                          width: double.infinity,
+                          height: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                         Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
@@ -489,29 +944,24 @@ class FullContentView extends StatelessWidget {
                     )
                   : Container(
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            const Color.fromRGBO(25, 53, 30, 1),
-                            const Color.fromRGBO(46, 125, 50, 1),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
+                        color: cardBackground,
+                        border: Border(bottom: BorderSide(color: borderColor)),
                       ),
                     ),
             ),
           ),
           SliverToBoxAdapter(
             child: Container(
-              margin: const EdgeInsets.all(16),
+              margin: const EdgeInsets.all(20),
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: listTileCream,
-                borderRadius: BorderRadius.circular(20),
+                color: cardBackground,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: borderColor),
                 boxShadow: [
                   BoxShadow(
-                    color: deepGreen.withOpacity(0.15),
-                    blurRadius: 10,
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
                 ],
@@ -523,18 +973,29 @@ class FullContentView extends StatelessWidget {
                     title,
                     style: TextStyle(
                       fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      color: deepGreen,
+                      fontWeight: FontWeight.w800,
+                      color: primaryText,
                       height: 1.3,
+                      letterSpacing: -0.3,
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  Text(
-                    content,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: deepGreen.withOpacity(0.8),
-                      height: 1.6,
+                  const SizedBox(height: 24),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: primaryBackground,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: borderColor),
+                    ),
+                    child: Text(
+                      content,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: primaryText,
+                        height: 1.6,
+                        letterSpacing: 0.1,
+                      ),
                     ),
                   ),
                 ],

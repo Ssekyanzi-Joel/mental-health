@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mind_aware_application/constants.dart';
 import 'package:mind_aware_application/responsive.dart';
 import '../../components/background.dart';
-import 'components/sign_up_top_image.dart';
+
 import 'components/signup_form.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -10,28 +9,20 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Background(
+    return Background(
       child: SingleChildScrollView(
         child: Responsive(
-          mobile: MobileSignupScreen(),
+          mobile: const MobileSignupScreen(),
           desktop: Row(
             children: [
               Expanded(
-                child: SignUpScreenTopImage(),
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 450,
-                      child: SignUpForm(),
-                    ),
-                    SizedBox(height: defaultPadding / 2),
-                    // SocalSignUp()
-                  ],
+                child: Center(
+                  child: Container(
+                    constraints: const BoxConstraints(maxWidth: 450),
+                    child: const SignUpForm(),
+                  ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -41,27 +32,28 @@ class SignUpScreen extends StatelessWidget {
 }
 
 class MobileSignupScreen extends StatelessWidget {
-  const MobileSignupScreen({
-    super.key,
-  });
+  const MobileSignupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        SignUpScreenTopImage(),
+        const SizedBox(height: 20),
         Row(
           children: [
-            Spacer(),
+            const Spacer(),
             Expanded(
               flex: 8,
-              child: SignUpForm(),
+              child: Container(
+                constraints: const BoxConstraints(maxHeight: 600),
+                child: const SignUpForm(),
+              ),
             ),
-            Spacer(),
+            const Spacer(),
           ],
         ),
-        // const SocalSignUp()
+        const SizedBox(height: 20),
       ],
     );
   }
