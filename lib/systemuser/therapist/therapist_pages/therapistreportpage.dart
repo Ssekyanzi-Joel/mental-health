@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// ignore: unused_import
-import 'package:mind_aware_application/systemuser/therapist/therapist_pages/therapist_report_dashboard.dart';
 
 class TherapistReportPage extends StatefulWidget {
   final String userId;
@@ -28,26 +27,25 @@ class _TherapistReportPageState extends State<TherapistReportPage>
   late Animation<double> _fadeInAnimation;
   int _completedQuestions = 0;
 
-  // Modern green color palette
-  static const Color primaryGreen = Color.fromRGBO(25, 53, 30, 1);
-  static const Color accentGreen = Color.fromRGBO(
-    34,
-    197,
-    94,
-    1,
-  ); // Modern emerald
-  static const Color lightGreen = Color.fromRGBO(
-    134,
-    239,
-    172,
-    1,
-  ); // Light emerald
-  // ignore: unused_field
-  static const Color darkGreen = Color.fromRGBO(20, 83, 45, 1); // Dark emerald
-  // ignore: unused_field
-  static const Color surfaceGreen = Color.fromRGBO(22, 101, 52, 0.1);
-  static const Color cardGreen = Color.fromRGBO(30, 58, 35, 1);
-  static const Color borderGreen = Color.fromRGBO(74, 222, 128, 0.2);
+  // Refined balanced color palette
+  static const Color primaryDark =   Color.fromARGB(
+    255,
+    15,
+    40,
+    20,
+  ); // Professional Blue
+  static const Color secondaryDark = Color(0xFF2A2D3A);
+  static const Color accentTeal = Color(0xFF00C896);
+  static const Color softTeal = Color(0xFF4ECDC4);
+  static const Color lightGrey = Color(0xFFE8EBF0);
+  static const Color mediumGrey = Color(0xFF8B949E);
+  static const Color cardBackground = Colors.white;
+  static const Color successColor = Color(0xFF10B981);
+  static const Color warningColor = Color(0xFFF59E0B);
+  static const Color errorColor = Color(0xFFEF4444);
+  static const Color backgroundWhite = Color(0xFFF8FAFC);
+  static const Color riskColor = Color(0xFFFEE2E2);
+  static const Color riskBorder = Color(0xFFFCA5A5);
 
   final List<String> questions = [
     "How is the user's overall mood?",
@@ -82,7 +80,6 @@ class _TherapistReportPageState extends State<TherapistReportPage>
       _controllers[i] = TextEditingController();
       _focusNodes[i] = FocusNode();
 
-      // Listen for text changes to update progress
       _controllers[i]!.addListener(() {
         _updateProgress();
       });
@@ -140,6 +137,9 @@ class _TherapistReportPageState extends State<TherapistReportPage>
       });
 
       if (mounted) {
+        // Haptic feedback
+        HapticFeedback.lightImpact();
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -150,18 +150,22 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                     color: Colors.white,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.check, color: accentGreen, size: 20),
+                  child: const Icon(Icons.check, color: successColor, size: 20),
                 ),
                 const SizedBox(width: 12),
                 const Expanded(
                   child: Text(
                     "Report submitted successfully",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],
             ),
-            backgroundColor: accentGreen,
+            backgroundColor: successColor,
             behavior: SnackBarBehavior.floating,
             margin: const EdgeInsets.all(16),
             shape: RoundedRectangleBorder(
@@ -175,16 +179,23 @@ class _TherapistReportPageState extends State<TherapistReportPage>
       }
     } catch (e) {
       if (mounted) {
+        HapticFeedback.heavyImpact();
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
               children: [
                 const Icon(Icons.error_outline, color: Colors.white),
                 const SizedBox(width: 12),
-                Expanded(child: Text("Error: $e")),
+                Expanded(
+                  child: Text(
+                    "Error submitting report: $e",
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
               ],
             ),
-            backgroundColor: Colors.red.shade600,
+            backgroundColor: errorColor,
             behavior: SnackBarBehavior.floating,
             margin: const EdgeInsets.all(16),
             shape: RoundedRectangleBorder(
@@ -239,9 +250,9 @@ class _TherapistReportPageState extends State<TherapistReportPage>
 
   Color _getQuestionColor(int index) {
     if (index >= 11 && index <= 12) {
-      return Colors.red.shade400;
+      return errorColor;
     }
-    return accentGreen;
+    return accentTeal;
   }
 
   bool _isRiskQuestion(int index) => index >= 11 && index <= 12;
@@ -250,7 +261,20 @@ class _TherapistReportPageState extends State<TherapistReportPage>
     double progress = _completedQuestions / questions.length;
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+      margin: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: cardBackground,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: lightGrey),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -258,31 +282,50 @@ class _TherapistReportPageState extends State<TherapistReportPage>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Progress",
+                "Assessment Progress",
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: lightGreen.withOpacity(0.8),
+                  color: primaryDark,
                 ),
               ),
-              Text(
-                "$_completedQuestions/${questions.length}",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: lightGreen.withOpacity(0.8),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: accentTeal.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  "$_completedQuestions/${questions.length}",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: accentTeal,
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
               value: progress,
-              backgroundColor: primaryGreen.withOpacity(0.3),
-              valueColor: AlwaysStoppedAnimation<Color>(accentGreen),
-              minHeight: 6,
+              backgroundColor: lightGrey,
+              valueColor: AlwaysStoppedAnimation<Color>(accentTeal),
+              minHeight: 8,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "${(progress * 100).toInt()}% completed",
+            style: TextStyle(
+              fontSize: 13,
+              color: mediumGrey,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],
@@ -295,16 +338,12 @@ class _TherapistReportPageState extends State<TherapistReportPage>
       margin: const EdgeInsets.all(20),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [cardGreen, cardGreen.withOpacity(0.8)],
-        ),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: borderGreen, width: 1),
+        color: cardBackground,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: lightGrey),
         boxShadow: [
           BoxShadow(
-            color: accentGreen.withOpacity(0.1),
+            color: Colors.black.withOpacity(0.08),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -319,43 +358,55 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  accentGreen.withOpacity(0.2),
-                  accentGreen.withOpacity(0.1),
+                  accentTeal.withOpacity(0.1),
+                  softTeal.withOpacity(0.1),
                 ],
               ),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: accentGreen.withOpacity(0.3), width: 2),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: accentTeal.withOpacity(0.2)),
             ),
-            child: Icon(Icons.assignment_rounded, color: accentGreen, size: 32),
+            child: Icon(Icons.assignment_rounded, color: accentTeal, size: 28),
           ),
           const SizedBox(width: 20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   "Therapy Assessment",
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: lightGreen,
+                    fontWeight: FontWeight.w700,
+                    color: primaryDark,
                   ),
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  "Patient: ${widget.userName}",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: backgroundWhite,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: lightGrey),
+                  ),
+                  child: Text(
+                    "Patient: ${widget.userName}",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: primaryDark,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 8),
                 Text(
                   "${questions.length} comprehensive questions",
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.white.withOpacity(0.7),
+                    color: mediumGrey,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
@@ -374,34 +425,21 @@ class _TherapistReportPageState extends State<TherapistReportPage>
       duration: const Duration(milliseconds: 300),
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            isRisk ? Colors.red.shade900.withOpacity(0.1) : cardGreen,
-            isRisk
-                ? Colors.red.shade800.withOpacity(0.05)
-                : cardGreen.withOpacity(0.8),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
+        color: isRisk ? riskColor : cardBackground,
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isRisk
-              ? Colors.red.shade400.withOpacity(0.3)
+              ? riskBorder
               : hasContent
-              ? accentGreen.withOpacity(0.5)
-              : borderGreen,
-          width: isRisk
-              ? 2
-              : hasContent
-              ? 2
-              : 1,
+              ? accentTeal.withOpacity(0.5)
+              : lightGrey,
+          width: isRisk || hasContent ? 2 : 1,
         ),
         boxShadow: [
           BoxShadow(
             color: isRisk
-                ? Colors.red.withOpacity(0.1)
-                : accentGreen.withOpacity(0.05),
+                ? errorColor.withOpacity(0.08)
+                : Colors.black.withOpacity(0.04),
             blurRadius: hasContent ? 12 : 8,
             offset: const Offset(0, 4),
           ),
@@ -417,24 +455,16 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        _getQuestionColor(index).withOpacity(0.2),
-                        _getQuestionColor(index).withOpacity(0.1),
-                      ],
-                    ),
+                    color: _getQuestionColor(index).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: _getQuestionColor(index).withOpacity(0.3),
-                      width: 1,
+                      color: _getQuestionColor(index).withOpacity(0.2),
                     ),
                   ),
                   child: Icon(
                     _getQuestionIcon(index),
                     color: _getQuestionColor(index),
-                    size: 22,
+                    size: 20,
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -442,22 +472,32 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Question ${index + 1}",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white.withOpacity(0.6),
-                          letterSpacing: 0.5,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: mediumGrey.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          "Question ${index + 1}",
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: mediumGrey,
+                            letterSpacing: 0.5,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 8),
                       Text(
                         questions[index],
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: isRisk ? Colors.red.shade300 : lightGreen,
+                          color: isRisk ? errorColor : primaryDark,
                           height: 1.3,
                         ),
                       ),
@@ -468,7 +508,7 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: accentGreen,
+                      color: successColor,
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -484,52 +524,73 @@ class _TherapistReportPageState extends State<TherapistReportPage>
               controller: _controllers[index],
               focusNode: _focusNodes[index],
               maxLines: 3,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                height: 1.4,
-              ),
+              style: TextStyle(color: primaryDark, fontSize: 15, height: 1.4),
               decoration: InputDecoration(
-                hintText: "Share your professional assessment...",
+                hintText: isRisk
+                    ? "Please provide detailed risk assessment..."
+                    : "Share your professional assessment...",
                 hintStyle: TextStyle(
-                  color: Colors.white.withOpacity(0.4),
+                  color: mediumGrey.withOpacity(0.7),
                   fontSize: 15,
                 ),
-                fillColor: primaryGreen.withOpacity(0.8),
+                fillColor: backgroundWhite,
                 filled: true,
                 contentPadding: const EdgeInsets.all(16),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(
-                    color: _getQuestionColor(index).withOpacity(0.3),
-                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: lightGrey),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(
-                    color: _getQuestionColor(index).withOpacity(0.2),
-                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: lightGrey),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
                     color: _getQuestionColor(index),
                     width: 2,
                   ),
                 ),
                 errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(color: Colors.red.shade400, width: 2),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: errorColor, width: 2),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(color: Colors.red.shade400, width: 2),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: errorColor, width: 2),
                 ),
               ),
               validator: (value) => value!.trim().isEmpty
                   ? "Please provide your assessment for this question"
                   : null,
             ),
+            if (isRisk) ...[
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: errorColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: errorColor.withOpacity(0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: errorColor, size: 16),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        "This is a critical risk assessment question",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: errorColor,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -539,15 +600,20 @@ class _TherapistReportPageState extends State<TherapistReportPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: primaryGreen,
+      backgroundColor: backgroundWhite,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Assessment Report",
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+            color: Colors.white,
+          ),
         ),
-        backgroundColor: primaryGreen,
+        backgroundColor: primaryDark,
         foregroundColor: Colors.white,
         elevation: 0,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_rounded),
           onPressed: () => Navigator.pop(context),
@@ -562,14 +628,14 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: accentGreen.withOpacity(0.2),
+                  color: accentTeal.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: accentGreen.withOpacity(0.3)),
+                  border: Border.all(color: accentTeal.withOpacity(0.3)),
                 ),
                 child: Text(
                   "${((_completedQuestions / questions.length) * 100).toInt()}%",
-                  style: TextStyle(
-                    color: lightGreen,
+                  style: const TextStyle(
+                    color: Colors.white,
                     fontWeight: FontWeight.w600,
                     fontSize: 13,
                   ),
@@ -579,98 +645,86 @@ class _TherapistReportPageState extends State<TherapistReportPage>
           ),
         ],
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              primaryGreen,
-              primaryGreen.withOpacity(0.95),
-              const Color.fromRGBO(15, 40, 20, 1),
-            ],
-          ),
-        ),
-        child: _loading
-            ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: cardGreen,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: accentGreen.withOpacity(0.3)),
-                      ),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width: 48,
-                            height: 48,
-                            child: CircularProgressIndicator(
-                              color: accentGreen,
-                              strokeWidth: 4,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          const Text(
-                            "Submitting Report",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "Please wait while we process your assessment...",
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.7),
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
+      body: _loading
+          ? Center(
+              child: Container(
+                padding: const EdgeInsets.all(32),
+                margin: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: cardBackground,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
                     ),
                   ],
                 ),
-              )
-            : FadeTransition(
-                opacity: _fadeInAnimation,
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    _buildHeader(),
-                    _buildProgressIndicator(),
-                    const SizedBox(height: 16),
-                    Expanded(
-                      child: Form(
-                        key: _formKey,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          itemCount: questions.length,
-                          itemBuilder: (context, index) {
-                            return _buildQuestionCard(index);
-                          },
-                        ),
+                    SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: CircularProgressIndicator(
+                        color: accentTeal,
+                        strokeWidth: 4,
                       ),
                     ),
-                    const SizedBox(height: 100),
+                    const SizedBox(height: 24),
+                    Text(
+                      "Submitting Report",
+                      style: TextStyle(
+                        color: primaryDark,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Please wait while we process your assessment...",
+                      style: TextStyle(color: mediumGrey, fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
                   ],
                 ),
               ),
-      ),
+            )
+          : FadeTransition(
+              opacity: _fadeInAnimation,
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  _buildProgressIndicator(),
+                  const SizedBox(height: 20),
+                  Expanded(
+                    child: Form(
+                      key: _formKey,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        itemCount: questions.length,
+                        itemBuilder: (context, index) {
+                          return _buildQuestionCard(index);
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 100),
+                ],
+              ),
+            ),
       floatingActionButton: AnimatedScale(
         scale: _loading ? 0.8 : 1.0,
         duration: const Duration(milliseconds: 200),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: accentGreen.withOpacity(0.4),
-                blurRadius: 16,
-                offset: const Offset(0, 8),
+                color: accentTeal.withOpacity(0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
               ),
             ],
           ),
@@ -678,14 +732,14 @@ class _TherapistReportPageState extends State<TherapistReportPage>
             onPressed: _loading ? null : submitReport,
             icon: _loading
                 ? SizedBox(
-                    width: 24,
-                    height: 24,
+                    width: 20,
+                    height: 20,
                     child: CircularProgressIndicator(
-                      strokeWidth: 3,
+                      strokeWidth: 2.5,
                       color: Colors.white,
                     ),
                   )
-                : const Icon(Icons.send_rounded, color: Colors.white, size: 24),
+                : const Icon(Icons.send_rounded, color: Colors.white, size: 20),
             label: Text(
               _loading ? "Submitting..." : "Submit Assessment",
               style: const TextStyle(
@@ -694,9 +748,12 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                 fontSize: 16,
               ),
             ),
-            backgroundColor: accentGreen,
+            backgroundColor: accentTeal,
             foregroundColor: Colors.white,
             elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
             extendedPadding: const EdgeInsets.symmetric(horizontal: 24),
           ),
         ),

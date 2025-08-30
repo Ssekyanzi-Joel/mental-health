@@ -75,7 +75,7 @@ class _TherapistBottomState extends State<TherapistBottom> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 15, 40, 20),
-      appBar: const CustomAppBar(title: 'Mind Aware - Therapist', height: 50),
+     // appBar: const CustomAppBar(title: 'Mind Aware - Therapist', height: 50),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 350),
         child: _getPage(_index),

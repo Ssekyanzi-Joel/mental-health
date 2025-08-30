@@ -12,24 +12,36 @@ class TherapistBookingPage extends StatefulWidget {
 
 class _TherapistBookingPageState extends State<TherapistBookingPage>
     with TickerProviderStateMixin {
-  // Modern green color palette - matching user page
-  static const Color primaryGreen = Color(0xFF19351E);
-  static const Color lightGreen = Color(0xFF2A4A2F);
-  static const Color accentGreen = Color(0xFF3D6B42);
-  static const Color darkGreen = Color(0xFF0F1F12);
-  static const Color mintGreen = Color(0xFF4A7C59);
-  static const Color surfaceGreen = Color(0xFF1E3A23);
-  static const Color borderGreen = Color(0xFF345A39);
+  // Modern professional color palette
+  static const Color primaryBlue = const Color.fromARGB(
+    255,
+    15,
+    40,
+    20,
+  ); // Professional Blue
+  static const Color lightBlue = Color(0xFF3B82F6); // Lighter Blue
+  static const Color accentTeal = Color(0xFF0891B2); // Teal Accent
+  static const Color successGreen = Color(0xFF059669); // Success Green
+  static const Color warningOrange = Color(0xFFF59E0B); // Warning Orange
+  static const Color errorRed = Color(0xFFDC2626); // Error Red
+  static const Color pureWhite = Color(0xFFFFFFFF); // Pure White
+  static const Color lightGray = Color(0xFFF8FAFC); // Very Light Gray
+  static const Color mediumGray = Color(0xFFE2E8F0); // Medium Gray
+  static const Color darkGray = Color(0xFF475569); // Dark Gray
+  static const Color softBlack = Color(0xFF1E293B); // Soft Black
+  static const Color cardBackground = Color(0xFFFFFFFF); // White Cards
+  static const Color shadowColor = Color(0x1A000000); // Subtle Shadow
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String? therapistId = FirebaseAuth.instance.currentUser?.uid;
 
   late TabController _tabController;
   late AnimationController _fadeController;
+  late AnimationController _slideController;
   late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
 
   String _selectedFilter = 'All';
-  // ignore: unused_field
   bool _isLoading = false;
 
   final List<String> _filterOptions = [
@@ -49,6 +61,10 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
   void _setupControllers() {
     _tabController = TabController(length: 2, vsync: this);
     _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _slideController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
@@ -56,13 +72,19 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
       parent: _fadeController,
       curve: Curves.easeOutCubic,
     );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),
+        );
     _fadeController.forward();
+    _slideController.forward();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     _fadeController.dispose();
+    _slideController.dispose();
     super.dispose();
   }
 
@@ -88,11 +110,11 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
 
       _showSnackBar(
         'Booking ${newStatus.toLowerCase()} successfully',
-        newStatus == 'Accepted' ? Colors.green : Colors.orange,
+        newStatus == 'Accepted' ? successGreen : primaryBlue,
         newStatus == 'Accepted' ? Icons.check_circle : Icons.info,
       );
     } catch (e) {
-      _showSnackBar('Failed to update booking', Colors.red, Icons.error);
+      _showSnackBar('Failed to update booking', errorRed, Icons.error);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -107,152 +129,273 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
 
     await showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          backgroundColor: surfaceGreen,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: const Text(
-            'Update Booking',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Status',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+        builder: (context, setState) => Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
+            decoration: BoxDecoration(
+              color: pureWhite,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: shadowColor,
+                  blurRadius: 24,
+                  offset: const Offset(0, 8),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  color: primaryGreen,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: borderGreen),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: selectedStatus,
-                    isExpanded: true,
-                    dropdownColor: surfaceGreen,
-                    style: const TextStyle(color: Colors.white),
-                    items: ['Pending', 'Accepted', 'Rejected', 'Completed']
-                        .map(
-                          (status) => DropdownMenuItem(
-                            value: status,
-                            child: Text(status),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: primaryBlue.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          Icons.edit_note_rounded,
+                          color: primaryBlue,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Update Booking',
+                        style: TextStyle(
+                          color: softBlack,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+
+                  Text(
+                    'Status',
+                    style: TextStyle(
+                      color: darkGray,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: lightGray,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: mediumGray),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: selectedStatus,
+                        isExpanded: true,
+                        dropdownColor: pureWhite,
+                        style: TextStyle(color: softBlack, fontSize: 16),
+                        icon: Icon(Icons.keyboard_arrow_down, color: darkGray),
+                        items: ['Pending', 'Accepted', 'Rejected', 'Completed']
+                            .map(
+                              (status) => DropdownMenuItem(
+                                value: status,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 8,
+                                      height: 8,
+                                      decoration: BoxDecoration(
+                                        color: _getStatusColor(status),
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(status),
+                                  ],
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() => selectedStatus = value);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  Text(
+                    'Response Message (Optional)',
+                    style: TextStyle(
+                      color: darkGray,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: responseController,
+                    maxLines: 4,
+                    style: TextStyle(color: softBlack, fontSize: 16),
+                    decoration: InputDecoration(
+                      hintText: 'Add a personalized message for your client...',
+                      hintStyle: TextStyle(color: darkGray.withOpacity(0.6)),
+                      filled: true,
+                      fillColor: lightGray,
+                      contentPadding: const EdgeInsets.all(16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: mediumGray),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: mediumGray),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: primaryBlue, width: 2),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              side: BorderSide(color: mediumGray),
+                            ),
                           ),
-                        )
-                        .toList(),
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() => selectedStatus = value);
-                      }
-                    },
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              color: darkGray,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _updateBookingStatus(
+                              bookingId,
+                              selectedStatus,
+                              response: responseController.text.trim(),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(
+                              255,
+                              15,
+                              40,
+                              20,
+                            ),
+                            foregroundColor: pureWhite,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: const Text(
+                            'Update',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                ],
               ),
-              const SizedBox(height: 16),
-              Text(
-                'Response (Optional)',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: responseController,
-                maxLines: 3,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: 'Add a message for the client...',
-                  hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
-                  filled: true,
-                  fillColor: primaryGreen,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: borderGreen),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: borderGreen),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: accentGreen, width: 2),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: Colors.white.withOpacity(0.7)),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _updateBookingStatus(
-                  bookingId,
-                  selectedStatus,
-                  response: responseController.text.trim(),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: accentGreen,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: const Text(
-                'Update',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
         ),
       ),
     );
   }
 
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'accepted':
+        return successGreen;
+      case 'rejected':
+        return errorRed;
+      case 'completed':
+        return accentTeal;
+      default:
+        return warningOrange;
+    }
+  }
+
   void _showSnackBar(String message, Color color, IconData icon) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Row(
-          children: [
-            Icon(icon, color: Colors.white),
-            const SizedBox(width: 12),
-            Expanded(child: Text(message)),
-          ],
+        content: Container(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, color: Colors.white, size: 20),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  message,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
         backgroundColor: color,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 3),
       ),
     );
   }
 
   Widget _buildFilterChips() {
     return Container(
-      height: 50,
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      height: 60,
+      margin: const EdgeInsets.symmetric(vertical: 12),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         itemCount: _filterOptions.length,
         itemBuilder: (context, index) {
           final filter = _filterOptions[index];
@@ -260,24 +403,36 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
 
           return Container(
             margin: const EdgeInsets.only(right: 12),
-            child: FilterChip(
-              selected: isSelected,
-              label: Text(
-                filter,
-                style: TextStyle(
-                  color: isSelected
-                      ? Colors.white
-                      : Colors.white.withOpacity(0.8),
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              child: FilterChip(
+                selected: isSelected,
+                label: Text(
+                  filter,
+                  style: TextStyle(
+                    color: isSelected ? pureWhite : darkGray,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                    fontSize: 14,
+                  ),
                 ),
+                selectedColor: primaryBlue,
+                backgroundColor: pureWhite,
+                checkmarkColor: pureWhite,
+                side: BorderSide(
+                  color: isSelected ? primaryBlue : mediumGray,
+                  width: isSelected ? 2 : 1,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                onSelected: (selected) {
+                  setState(() => _selectedFilter = filter);
+                },
               ),
-              selectedColor: accentGreen,
-              backgroundColor: surfaceGreen,
-              checkmarkColor: Colors.white,
-              side: BorderSide(color: isSelected ? accentGreen : borderGreen),
-              onSelected: (selected) {
-                setState(() => _selectedFilter = filter);
-              },
             ),
           );
         },
@@ -297,41 +452,18 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
     final createdAt = data['createdAt'] as Timestamp?;
     final therapistResponse = data['therapistResponse'] as String?;
 
-    Color statusColor;
-    IconData statusIcon;
-
-    switch (status.toLowerCase()) {
-      case 'accepted':
-        statusColor = Colors.green;
-        statusIcon = Icons.check_circle_rounded;
-        break;
-      case 'rejected':
-        statusColor = Colors.red;
-        statusIcon = Icons.cancel_rounded;
-        break;
-      case 'completed':
-        statusColor = Colors.blue;
-        statusIcon = Icons.done_all_rounded;
-        break;
-      default:
-        statusColor = Colors.orange;
-        statusIcon = Icons.schedule_rounded;
-    }
+    final statusColor = _getStatusColor(status);
+    final statusIcon = _getStatusIcon(status);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [lightGreen, lightGreen.withOpacity(0.9)],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: borderGreen.withOpacity(0.5)),
+        color: cardBackground,
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
-            blurRadius: 10,
+            color: shadowColor,
+            blurRadius: 12,
             offset: const Offset(0, 4),
           ),
         ],
@@ -341,30 +473,38 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
           // Status Header
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
             decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.15),
+              color: statusColor.withOpacity(0.08),
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
               ),
             ),
             child: Row(
               children: [
-                Icon(statusIcon, color: statusColor, size: 20),
-                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: statusColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(statusIcon, color: statusColor, size: 18),
+                ),
+                const SizedBox(width: 12),
                 Text(
                   status.toUpperCase(),
                   style: TextStyle(
                     color: statusColor,
                     fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                    letterSpacing: 0.5,
+                    fontSize: 13,
+                    letterSpacing: 1.0,
                   ),
                 ),
                 const Spacer(),
                 PopupMenuButton<String>(
-                  color: surfaceGreen,
+                  color: pureWhite,
+                  surfaceTintColor: pureWhite,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -373,11 +513,18 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                       value: 'update',
                       child: Row(
                         children: [
-                          const Icon(Icons.edit, color: Colors.white, size: 18),
-                          const SizedBox(width: 8),
-                          const Text(
+                          Icon(
+                            Icons.edit_rounded,
+                            color: primaryBlue,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
                             'Update Status',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                              color: softBlack,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
@@ -391,12 +538,12 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
+                      color: mediumGray.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(6),
                     ),
-                    child: const Icon(
-                      Icons.more_vert,
-                      color: Colors.white,
+                    child: Icon(
+                      Icons.more_vert_rounded,
+                      color: darkGray,
                       size: 16,
                     ),
                   ),
@@ -412,142 +559,146 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Client Info
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: accentGreen.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(
-                        Icons.person_rounded,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            sessionType,
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.8),
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                // Contact Info
-                _buildInfoRow(Icons.email_rounded, email),
-                const SizedBox(height: 6),
-                _buildInfoRow(Icons.phone_rounded, phone),
-
-                if (dateTime != null) ...[
-                  const SizedBox(height: 6),
-                  _buildInfoRow(
-                    Icons.access_time_rounded,
-                    DateFormat(
-                      'MMM dd, yyyy • hh:mm a',
-                    ).format(DateTime.parse(dateTime)),
-                  ),
-                ],
-
-                const SizedBox(height: 16),
-
-                // Reason Section
                 Container(
-                  width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.2),
+                    color: lightGray,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
                     children: [
-                      Text(
-                        'Reason for Booking',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.9),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: primaryBlue,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.person_rounded,
+                          color: pureWhite,
+                          size: 20,
                         ),
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        reason,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
-                          fontSize: 14,
-                          height: 1.3,
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              name,
+                              style: TextStyle(
+                                color: softBlack,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: accentTeal.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                sessionType,
+                                style: TextStyle(
+                                  color: accentTeal,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
 
-                // Therapist Response Section
-                if (therapistResponse != null &&
-                    therapistResponse.isNotEmpty) ...[
-                  const SizedBox(height: 12),
+                const SizedBox(height: 16),
+
+                // Contact Information
+                _buildInfoSection('Contact Information', [
+                  _buildInfoRow(Icons.email_outlined, email),
+                  _buildInfoRow(Icons.phone_outlined, phone),
+                  if (dateTime != null)
+                    _buildInfoRow(
+                      Icons.schedule_outlined,
+                      DateFormat(
+                        'EEEE, MMM dd, yyyy • hh:mm a',
+                      ).format(DateTime.parse(dateTime)),
+                    ),
+                ]),
+
+                const SizedBox(height: 16),
+
+                // Reason Section
+                _buildInfoSection('Booking Details', [
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: accentGreen.withOpacity(0.2),
+                      color: lightGray,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Your Response',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          therapistResponse,
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
-                            fontSize: 14,
-                            height: 1.3,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      reason,
+                      style: TextStyle(
+                        color: softBlack,
+                        fontSize: 14,
+                        height: 1.4,
+                      ),
                     ),
                   ),
+                ]),
+
+                // Therapist Response Section
+                if (therapistResponse != null &&
+                    therapistResponse.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  _buildInfoSection('Your Response', [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: primaryBlue.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: primaryBlue.withOpacity(0.2)),
+                      ),
+                      child: Text(
+                        therapistResponse,
+                        style: TextStyle(
+                          color: softBlack,
+                          fontSize: 14,
+                          height: 1.4,
+                        ),
+                      ),
+                    ),
+                  ]),
                 ],
 
                 if (createdAt != null) ...[
                   const SizedBox(height: 16),
-                  Text(
-                    'Requested on ${DateFormat('MMM dd, yyyy • hh:mm a').format(createdAt.toDate())}',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.6),
-                      fontSize: 12,
-                    ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.access_time_outlined,
+                        color: darkGray.withOpacity(0.6),
+                        size: 14,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Requested ${DateFormat('MMM dd, yyyy • hh:mm a').format(createdAt.toDate())}',
+                        style: TextStyle(
+                          color: darkGray.withOpacity(0.6),
+                          fontSize: 12,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ],
@@ -558,22 +709,64 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String text) {
-    return Row(
+  Widget _buildInfoSection(String title, List<Widget> children) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: Colors.white.withOpacity(0.7), size: 16),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.8),
-              fontSize: 13,
-            ),
+        Text(
+          title,
+          style: TextStyle(
+            color: softBlack,
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
           ),
         ),
+        const SizedBox(height: 8),
+        ...children,
       ],
     );
+  }
+
+  Widget _buildInfoRow(IconData icon, String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: primaryBlue.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Icon(icon, color: primaryBlue, size: 14),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                color: darkGray,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  IconData _getStatusIcon(String status) {
+    switch (status.toLowerCase()) {
+      case 'accepted':
+        return Icons.check_circle_outline;
+      case 'rejected':
+        return Icons.cancel_outlined;
+      case 'completed':
+        return Icons.done_all_outlined;
+      default:
+        return Icons.schedule_outlined;
+    }
   }
 
   Widget _buildBookingsList() {
@@ -587,27 +780,43 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
           return Center(
             child: Container(
               margin: const EdgeInsets.all(24),
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(32),
               decoration: BoxDecoration(
-                color: surfaceGreen,
+                color: pureWhite,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: borderGreen),
+                boxShadow: [
+                  BoxShadow(
+                    color: shadowColor,
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.error_outline_rounded,
-                    color: Colors.red.shade400,
-                    size: 32,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Error loading bookings',
-                    style: TextStyle(
-                      color: Colors.red.shade400,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: errorRed.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
                     ),
+                    child: Icon(Icons.error_outline, color: errorRed, size: 32),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Something went wrong',
+                    style: TextStyle(
+                      color: errorRed,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Unable to load bookings at the moment',
+                    style: TextStyle(color: darkGray, fontSize: 14),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
@@ -620,17 +829,26 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
             child: Container(
               margin: const EdgeInsets.all(48),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  const CircularProgressIndicator(
-                    color: mintGreen,
-                    strokeWidth: 3,
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: primaryBlue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: CircularProgressIndicator(
+                      color: const Color.fromARGB(255, 15, 40, 20),
+                      strokeWidth: 3,
+                    ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
                   Text(
-                    'Loading bookings...',
+                    'Loading your bookings...',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
+                      color: darkGray,
                       fontSize: 16,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -647,66 +865,63 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                 return data['status'] == _selectedFilter;
               }).toList();
 
-        if (filteredBookings.isEmpty) {
-          return Center(
-            child: Container(
-              margin: const EdgeInsets.all(24),
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                color: surfaceGreen.withOpacity(0.7),
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: borderGreen),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: accentGreen.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Icon(
-                      Icons.calendar_view_day_rounded,
-                      size: 48,
-                      color: Colors.white70,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'No ${_selectedFilter.toLowerCase() == 'all' ? '' : _selectedFilter.toLowerCase()} bookings',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _selectedFilter == 'All'
-                        ? 'No therapy bookings have been submitted yet'
-                        : 'No bookings with ${_selectedFilter.toLowerCase()} status found',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.7),
-                      fontSize: 14,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-
         return Column(
           children: [
             _buildFilterChips(),
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredBookings.length,
-                itemBuilder: (context, index) =>
-                    _buildBookingCard(filteredBookings[index]),
+            if (filteredBookings.isEmpty)
+              Expanded(
+                child: Center(
+                  child: Container(
+                    margin: const EdgeInsets.all(24),
+                    padding: const EdgeInsets.all(40),
+                    decoration: BoxDecoration(
+                      color: pureWhite,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: shadowColor,
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: lightGray,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Icon(
+                            Icons.calendar_view_day_outlined,
+                            size: 48,
+                            color: darkGray,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          _selectedFilter == 'All'
+                              ? 'Your therapy bookings will appear here once clients start scheduling sessions'
+                              : 'No ${_selectedFilter.toLowerCase()} bookings found',
+                          style: TextStyle(color: darkGray, fontSize: 16),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            else
+              Expanded(
+                child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: filteredBookings.length,
+                  itemBuilder: (context, index) =>
+                      _buildBookingCard(filteredBookings[index]),
+                ),
               ),
-            ),
           ],
         );
       },
@@ -718,8 +933,35 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
       stream: _firestore.collection('bookings').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(color: mintGreen),
+          return Center(
+            child: Container(
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: primaryBlue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: CircularProgressIndicator(
+                      color: primaryBlue,
+                      strokeWidth: 3,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Loading analytics...',
+                    style: TextStyle(
+                      color: darkGray,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
         }
 
@@ -736,10 +978,66 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
             .length;
 
         return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Header
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: pureWhite,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: shadowColor,
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: primaryBlue.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          Icons.analytics_outlined,
+                          color: primaryBlue,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Booking Analytics',
+                              style: TextStyle(
+                                color: softBlack,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              'Overview of your therapy sessions',
+                              style: TextStyle(color: darkGray, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
                 // Summary Cards
                 Row(
                   children: [
@@ -747,8 +1045,8 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                       child: _buildStatsCard(
                         'Total Bookings',
                         totalBookings.toString(),
-                        Icons.calendar_month_rounded,
-                        Colors.blue,
+                        Icons.calendar_month_outlined,
+                        primaryBlue,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -756,8 +1054,8 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                       child: _buildStatsCard(
                         'Pending',
                         pendingBookings.toString(),
-                        Icons.schedule_rounded,
-                        Colors.orange,
+                        Icons.schedule_outlined,
+                        warningOrange,
                       ),
                     ),
                   ],
@@ -769,8 +1067,8 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                       child: _buildStatsCard(
                         'Accepted',
                         acceptedBookings.toString(),
-                        Icons.check_circle_rounded,
-                        Colors.green,
+                        Icons.check_circle_outline,
+                        successGreen,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -778,8 +1076,8 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                       child: _buildStatsCard(
                         'Completed',
                         completedBookings.toString(),
-                        Icons.done_all_rounded,
-                        Colors.indigo,
+                        Icons.done_all_outlined,
+                        accentTeal,
                       ),
                     ),
                   ],
@@ -790,96 +1088,193 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                 // Recent Activity
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: lightGreen,
+                    color: pureWhite,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: borderGreen),
+                    boxShadow: [
+                      BoxShadow(
+                        color: shadowColor,
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Recent Activity',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: lightGray,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: accentTeal.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Icon(
+                                Icons.history,
+                                color: accentTeal,
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Recent Activity',
+                              style: TextStyle(
+                                color: softBlack,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      if (bookings.isEmpty)
-                        Text(
-                          'No recent activity',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
-                          ),
-                        )
-                      else
-                        ...bookings.take(3).map((booking) {
-                          final data = booking.data() as Map<String, dynamic>;
-                          final name = data['name'] ?? 'Unknown';
-                          final status = data['status'] ?? 'Pending';
-                          final createdAt = data['createdAt'] as Timestamp?;
-
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 12),
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 8,
-                                  height: 8,
-                                  decoration: BoxDecoration(
-                                    color: status == 'Pending'
-                                        ? Colors.orange
-                                        : status == 'Accepted'
-                                        ? Colors.green
-                                        : Colors.grey,
-                                    shape: BoxShape.circle,
-                                  ),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: bookings.isEmpty
+                            ? Container(
+                                padding: const EdgeInsets.all(24),
+                                decoration: BoxDecoration(
+                                  color: lightGray,
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        name,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Status: $status',
-                                        style: TextStyle(
-                                          color: Colors.white.withOpacity(0.7),
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                if (createdAt != null)
-                                  Text(
-                                    DateFormat(
-                                      'MMM dd',
-                                    ).format(createdAt.toDate()),
-                                    style: TextStyle(
-                                      color: Colors.white.withOpacity(0.6),
-                                      fontSize: 12,
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.inbox_outlined,
+                                      color: darkGray.withOpacity(0.6),
+                                      size: 40,
                                     ),
-                                  ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
+                                    const SizedBox(height: 12),
+                                    Text(
+                                      'No activity yet',
+                                      style: TextStyle(
+                                        color: darkGray,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Column(
+                                children: bookings.take(5).map((booking) {
+                                  final data =
+                                      booking.data() as Map<String, dynamic>;
+                                  final name = data['name'] ?? 'Unknown';
+                                  final status = data['status'] ?? 'Pending';
+                                  final createdAt =
+                                      data['createdAt'] as Timestamp?;
+
+                                  return Container(
+                                    margin: const EdgeInsets.only(bottom: 12),
+                                    padding: const EdgeInsets.all(16),
+                                    decoration: BoxDecoration(
+                                      color: lightGray,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(6),
+                                          decoration: BoxDecoration(
+                                            color: _getStatusColor(
+                                              status,
+                                            ).withOpacity(0.1),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          child: Icon(
+                                            _getStatusIcon(status),
+                                            color: _getStatusColor(status),
+                                            size: 16,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 14),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                name,
+                                                style: TextStyle(
+                                                  color: softBlack,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 6,
+                                                      vertical: 2,
+                                                    ),
+                                                decoration: BoxDecoration(
+                                                  color: _getStatusColor(
+                                                    status,
+                                                  ).withOpacity(0.1),
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                ),
+                                                child: Text(
+                                                  status,
+                                                  style: TextStyle(
+                                                    color: _getStatusColor(
+                                                      status,
+                                                    ),
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        if (createdAt != null)
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                DateFormat(
+                                                  'MMM dd',
+                                                ).format(createdAt.toDate()),
+                                                style: TextStyle(
+                                                  color: darkGray,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              Text(
+                                                DateFormat(
+                                                  'hh:mm a',
+                                                ).format(createdAt.toDate()),
+                                                style: TextStyle(
+                                                  color: darkGray.withOpacity(
+                                                    0.7,
+                                                  ),
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                      ),
                     ],
                   ),
                 ),
@@ -898,11 +1293,17 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
     Color color,
   ) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: lightGreen,
+        color: pureWhite,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderGreen),
+        boxShadow: [
+          BoxShadow(
+            color: shadowColor,
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -911,30 +1312,30 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8),
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(icon, color: color, size: 20),
               ),
               Text(
                 value,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
+                style: TextStyle(
+                  color: softBlack,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Text(
             title,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.8),
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+              color: darkGray,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -946,28 +1347,51 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
   Widget build(BuildContext context) {
     if (therapistId == null) {
       return Scaffold(
-        backgroundColor: primaryGreen,
+        backgroundColor: lightGray,
         body: Center(
           child: Container(
-            margin: const EdgeInsets.all(24),
+            margin: const EdgeInsets.all(32),
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              color: surfaceGreen,
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: borderGreen),
+              color: pureWhite,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: shadowColor,
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
             ),
-            child: const Column(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.login_rounded, color: Colors.white, size: 48),
-                SizedBox(height: 16),
-                Text(
-                  'Please sign in as therapist to continue',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: primaryBlue.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(16),
                   ),
+                  child: Icon(
+                    Icons.login_outlined,
+                    color: primaryBlue,
+                    size: 48,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Authentication Required',
+                  style: TextStyle(
+                    color: softBlack,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Please sign in as a therapist to access your dashboard',
+                  style: TextStyle(color: darkGray, fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -978,61 +1402,59 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
     }
 
     return Scaffold(
-      backgroundColor: primaryGreen,
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [primaryGreen, darkGreen],
-          ),
-        ),
-        child: FadeTransition(
-          opacity: _fadeAnimation,
+      backgroundColor: lightGray,
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: SlideTransition(
+          position: _slideAnimation,
           child: Column(
             children: [
-              // App Bar
+              // Clean App Bar
               Container(
-                padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
+                padding: const EdgeInsets.fromLTRB(20, 56, 20, 20),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [primaryGreen, primaryGreen.withOpacity(0.8)],
-                  ),
+                  color: pureWhite,
+                  boxShadow: [
+                    BoxShadow(
+                      color: shadowColor,
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: accentGreen.withOpacity(0.2),
+                        color: primaryBlue,
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: const Icon(
-                        Icons.medical_services_rounded,
-                        color: Colors.white,
+                        Icons.medical_services_outlined,
+                        color: pureWhite,
                         size: 24,
                       ),
                     ),
                     const SizedBox(width: 16),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Therapist Dashboard',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: softBlack,
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            'Manage your therapy bookings',
+                            'Manage your therapy bookings efficiently',
                             style: TextStyle(
-                              color: Colors.white70,
+                              color: darkGray,
                               fontSize: 14,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
@@ -1042,36 +1464,61 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                 ),
               ),
 
-              // Tab Bar
+              // Clean Tab Bar
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                margin: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: surfaceGreen,
+                  color: pureWhite,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: borderGreen),
+                  boxShadow: [
+                    BoxShadow(
+                      color: shadowColor,
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: TabBar(
                   controller: _tabController,
                   indicator: BoxDecoration(
-                    color: accentGreen,
+                    color: primaryBlue,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   indicatorSize: TabBarIndicatorSize.tab,
+                  indicatorPadding: const EdgeInsets.all(4),
                   dividerColor: Colors.transparent,
-                  labelColor: Colors.white,
-                  unselectedLabelColor: Colors.white.withOpacity(0.7),
+                  labelColor: pureWhite,
+                  unselectedLabelColor: darkGray,
                   labelStyle: const TextStyle(
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                  unselectedLabelStyle: const TextStyle(
+                    fontWeight: FontWeight.w500,
                     fontSize: 15,
                   ),
                   tabs: const [
                     Tab(
-                      icon: Icon(Icons.list_alt_rounded, size: 20),
-                      text: 'Bookings',
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.list_alt_outlined, size: 20),
+                          SizedBox(width: 8),
+                          Text('Bookings'),
+                        ],
+                      ),
                     ),
                     Tab(
-                      icon: Icon(Icons.analytics_rounded, size: 20),
-                      text: 'Analytics',
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.analytics_outlined, size: 20),
+                          SizedBox(width: 8),
+                          Text('Analytics'),
+                        ],
+                      ),
                     ),
                   ],
                 ),

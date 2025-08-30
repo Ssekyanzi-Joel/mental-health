@@ -23,13 +23,27 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  // Modern theme colors - consistent with user profile
-  static const Color deepGreen = Color.fromARGB(255, 25, 53, 30);
-  static const Color sectionLightGreen = Color.fromARGB(255, 180, 220, 190);
-  static const Color listTileCream = Color.fromARGB(255, 245, 245, 220);
-  static const Color accentGreen = Color.fromARGB(255, 76, 175, 80);
-  static const Color therapistBlue = Color.fromARGB(255, 33, 150, 243);
-  static const Color therapistOrange = Color.fromARGB(255, 255, 152, 0);
+  // Redesigned color palette - more balanced and professional
+  static const Color primaryBlue = const Color.fromARGB(
+    255,
+    15,
+    40,
+    20,
+  ); // Professional Blue
+  static const Color lightBlue = Color.fromARGB(255, 7, 73, 45); // Lighter blue accent
+  static const Color softGray = Color(0xFF7A8B99); // Muted gray-blue
+  static const Color warmWhite = Color(0xFFFAFBFC); // Warm white background
+  static const Color cardWhite = Color(0xFFFFFFFF); // Pure white for cards
+  static const Color textDark = const Color.fromARGB(
+    255,
+    15,
+    40,
+    20,
+  ); // Professional Blue
+  static const Color textLight = Color(0xFF5A6B7A); // Light text
+  static const Color accentTeal = Color(0xFF4A9B8E); // Calming teal
+  static const Color accentOrange = Color(0xFFE17B47); // Warm orange
+  static const Color accentPurple = Color(0xFF8B7AB8); // Soft purple
 
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
@@ -72,197 +86,167 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            const Color.fromRGBO(25, 53, 30, 1),
-            const Color.fromRGBO(46, 125, 50, 1),
-            const Color.fromRGBO(76, 175, 80, 0.9),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          stops: const [0.0, 0.6, 1.0],
+          colors: [primaryBlue, lightBlue, softGray.withOpacity(0.8)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: const [0.0, 0.7, 1.0],
         ),
         borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(40),
-          bottomRight: Radius.circular(40),
+          bottomLeft: Radius.circular(32),
+          bottomRight: Radius.circular(32),
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color.fromRGBO(25, 53, 30, 0.3),
+            color: primaryBlue.withOpacity(0.2),
             blurRadius: 20,
-            offset: const Offset(0, 10),
-            spreadRadius: 2,
-          ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
+            offset: const Offset(0, 8),
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
       child: Column(
         children: [
           const SizedBox(height: 20),
 
-          // Therapist badge
+          // Professional therapist badge
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.blue.withOpacity(0.4), width: 1),
+              color: cardWhite.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: cardWhite.withOpacity(0.3), width: 1.5),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.psychology, color: Colors.blue[300], size: 16),
-                const SizedBox(width: 8),
+                Icon(Icons.psychology_outlined, color: cardWhite, size: 18),
+                const SizedBox(width: 10),
                 Text(
-                  'THERAPIST',
+                  'LICENSED THERAPIST',
                   style: TextStyle(
-                    color: Colors.blue[300],
-                    fontWeight: FontWeight.w700,
-                    fontSize: 12,
-                    letterSpacing: 1.2,
+                    color: cardWhite,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                    letterSpacing: 1.0,
                   ),
                 ),
               ],
             ),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
 
-          // Modern profile avatar with glow effect
+          // Clean profile avatar
           Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.white.withOpacity(0.2),
-                  blurRadius: 20,
-                  spreadRadius: 5,
+                  color: cardWhite.withOpacity(0.2),
+                  blurRadius: 16,
+                  spreadRadius: 4,
                 ),
               ],
             ),
             child: CircleAvatar(
-              radius: 60,
-              backgroundColor: Colors.white.withOpacity(0.15),
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.white.withOpacity(0.3),
-                    width: 2,
-                  ),
-                ),
-                child: CircleAvatar(
-                  radius: 57,
-                  backgroundColor: Colors.white.withOpacity(0.1),
-                  child: Text(
-                    (userData['firstName']?[0] ?? 'T') +
-                        (userData['lastName']?[0] ?? 'H'),
-                    style: const TextStyle(
-                      fontSize: 36,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 2,
-                    ),
+              radius: 56,
+              backgroundColor: cardWhite,
+              child: CircleAvatar(
+                radius: 52,
+                backgroundColor: accentTeal,
+                child: Text(
+                  (userData['firstName']?[0] ?? 'T') +
+                      (userData['lastName']?[0] ?? 'H'),
+                  style: const TextStyle(
+                    fontSize: 32,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
 
-          // Modern name display
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              'Dr. ${userData['firstName'] ?? 'Therapist'} ${userData['lastName'] ?? 'User'}',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w800,
-                color: Colors.white,
-                letterSpacing: 0.5,
-                height: 1.2,
-              ),
+          // Professional name display
+          Text(
+            'Dr. ${userData['firstName'] ?? 'Therapist'} ${userData['lastName'] ?? 'User'}',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+              letterSpacing: 0.3,
             ),
           ),
 
           const SizedBox(height: 16),
 
-          // Modern info cards
+          // Contact information cards
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
                 // Email card
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
-                      ),
-                      margin: const EdgeInsets.only(bottom: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.2),
-                          width: 1,
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 14,
+                  ),
+                  margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(
+                    color: cardWhite.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: cardWhite.withOpacity(0.25),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: cardWhite.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          Icons.email_outlined,
+                          color: Colors.white,
+                          size: 16,
                         ),
                       ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.15),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Icon(
-                              Icons.email_outlined,
-                              color: Colors.white,
-                              size: 18,
-                            ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Text(
+                          userData['email'] ?? 'therapist@mindaware.com',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
                           ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Text(
-                              userData['email'] ?? 'therapist@mindaware.com',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white.withOpacity(0.95),
-                                fontWeight: FontWeight.w500,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
 
-                // Phone card (if phone exists)
+                // Phone card (if exists)
                 if (userData['phone'] != null &&
                     userData['phone'].toString().isNotEmpty)
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
+                      horizontal: 18,
+                      vertical: 14,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
+                      color: cardWhite.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
+                        color: cardWhite.withOpacity(0.25),
                         width: 1,
                       ),
                     ),
@@ -271,22 +255,22 @@ class _ProfilePageState extends State<ProfilePage> {
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(12),
+                            color: cardWhite.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           child: const Icon(
                             Icons.phone_outlined,
                             color: Colors.white,
-                            size: 18,
+                            size: 16,
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 14),
                         Expanded(
                           child: Text(
                             userData['phone'] ?? '',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white.withOpacity(0.95),
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -298,7 +282,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
         ],
       ),
     );
@@ -306,17 +290,25 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildSectionHeader(String title, IconData icon) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
+      padding: const EdgeInsets.fromLTRB(24, 28, 24, 16),
       child: Row(
         children: [
-          Icon(icon, color: sectionLightGreen, size: 24),
-          const SizedBox(width: 12),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: primaryBlue.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: primaryBlue, size: 20),
+          ),
+          const SizedBox(width: 14),
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: sectionLightGreen,
+              fontWeight: FontWeight.w700,
+              color: textDark,
+              letterSpacing: 0.2,
             ),
           ),
         ],
@@ -332,51 +324,84 @@ class _ProfilePageState extends State<ProfilePage> {
     String? subtitle,
   }) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
       decoration: BoxDecoration(
-        color: listTileCream,
-        borderRadius: BorderRadius.circular(16),
+        color: cardWhite,
+        borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: deepGreen.withOpacity(0.08),
-            blurRadius: 8,
+            color: primaryBlue.withOpacity(0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 6,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        leading: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: iconColor.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(icon, color: iconColor, size: 24),
-        ),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: deepGreen,
-          ),
-        ),
-        subtitle: subtitle != null
-            ? Text(
-                subtitle,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: deepGreen.withOpacity(0.6),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: iconColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Icon(icon, color: iconColor, size: 22),
                 ),
-              )
-            : null,
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          color: deepGreen.withOpacity(0.6),
-          size: 16,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: textDark,
+                          letterSpacing: 0.1,
+                        ),
+                      ),
+                      if (subtitle != null) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          subtitle,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: textLight,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: softGray.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    color: softGray,
+                    size: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-        onTap: onTap,
       ),
     );
   }
@@ -384,14 +409,16 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(
-        backgroundColor: deepGreen,
-        body: Center(child: CircularProgressIndicator(color: accentGreen)),
+      return Scaffold(
+        backgroundColor: warmWhite,
+        body: Center(
+          child: CircularProgressIndicator(color: primaryBlue, strokeWidth: 3),
+        ),
       );
     }
 
     return Scaffold(
-      backgroundColor: deepGreen,
+      backgroundColor: warmWhite,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -399,108 +426,120 @@ class _ProfilePageState extends State<ProfilePage> {
             _buildProfileHeader(),
 
             // Account Settings Section
-            _buildSectionHeader("Account Management", Icons.settings),
+            _buildSectionHeader("Account Management", Icons.settings_outlined),
             _buildProfileOption(
               icon: Icons.person_outline,
               title: "Update Profile",
               subtitle: "Edit therapist profile information",
-              iconColor: accentGreen,
+              iconColor: primaryBlue,
               onTap: () => navigateTo(UpdateProfilePage(userData: userData)),
             ),
             _buildProfileOption(
               icon: Icons.people_outline,
               title: "Users",
               subtitle: "Manage assigned patients",
-              iconColor: therapistBlue,
+              iconColor: accentTeal,
               onTap: () => navigateTo(const TherapistUserListPage()),
             ),
 
             // Patient Care Section
-            _buildSectionHeader("Patient Care", Icons.health_and_safety),
+            _buildSectionHeader(
+              "Patient Care",
+              Icons.health_and_safety_outlined,
+            ),
             _buildProfileOption(
               icon: Icons.emergency_outlined,
               title: "Emergency Resources",
               subtitle: "Crisis intervention and support",
-              iconColor: Colors.redAccent,
+              iconColor: const Color(0xFFE74C3C),
               onTap: () => navigateTo(const TherapistEmergiesDashboard()),
             ),
             _buildProfileOption(
               icon: Icons.mood_outlined,
               title: "Mood Tracker",
               subtitle: "Monitor patient mood patterns",
-              iconColor: accentGreen,
+              iconColor: accentPurple,
               onTap: () => navigateTo(const TherapistMoodTrackerPage()),
             ),
             _buildProfileOption(
               icon: Icons.book_online_outlined,
               title: "Bookings",
               subtitle: "Manage appointment schedule",
-              iconColor: therapistOrange,
+              iconColor: accentOrange,
               onTap: () => navigateTo(const TherapistBookingPage()),
             ),
 
             // Content Management Section
-            _buildSectionHeader("Content & Resources", Icons.content_paste),
+            _buildSectionHeader(
+              "Content & Resources",
+              Icons.library_books_outlined,
+            ),
             _buildProfileOption(
               icon: Icons.photo_library_outlined,
               title: "Gallery",
               subtitle: "Manage therapeutic resources",
-              iconColor: therapistBlue,
+              iconColor: lightBlue,
               onTap: () => navigateTo(const GalleryPage()),
             ),
             _buildProfileOption(
               icon: Icons.star_outline,
               title: "Testimonials",
               subtitle: "Patient success stories",
-              iconColor: Colors.amber,
+              iconColor: const Color(0xFFF39C12),
               onTap: () => navigateTo(const TherapistPostTestimonyPage()),
             ),
 
             // Communication Section
-            _buildSectionHeader("Communication", Icons.message),
+            _buildSectionHeader("Communication", Icons.chat_bubble_outline),
             _buildProfileOption(
               icon: Icons.message_outlined,
               title: "Messages",
               subtitle: "Patient communications",
-              iconColor: therapistOrange,
+              iconColor: accentTeal,
               onTap: () => navigateTo(const MessagesPage()),
             ),
             _buildProfileOption(
               icon: Icons.notifications_outlined,
               title: "Notifications",
               subtitle: "System alerts and updates",
-              iconColor: therapistBlue,
+              iconColor: accentPurple,
               onTap: () => navigateTo(const NotificationsPage()),
             ),
             _buildProfileOption(
               icon: Icons.feedback_outlined,
               title: "Feedback",
               subtitle: "Patient and system feedback",
-              iconColor: therapistOrange,
+              iconColor: accentOrange,
               onTap: () => navigateTo(const TherapistDashboard()),
             ),
 
             // Business Section
-            _buildSectionHeader("Business Management", Icons.business),
+            _buildSectionHeader(
+              "Business Management",
+              Icons.business_center_outlined,
+            ),
             _buildProfileOption(
               icon: Icons.payment_outlined,
               title: "Transactions",
               subtitle: "Payment and billing records",
-              iconColor: Colors.amber,
+              iconColor: const Color(0xFF27AE60),
               onTap: () => navigateTo(const AdminTransactionsPage()),
             ),
 
             // Account Actions
-            _buildSectionHeader("Account Actions", Icons.account_circle),
+            _buildSectionHeader(
+              "Account Actions",
+              Icons.account_circle_outlined,
+            ),
             _buildProfileOption(
-              icon: Icons.logout,
+              icon: Icons.logout_outlined,
               title: "Logout",
               subtitle: "Sign out of therapist account",
-              iconColor: Colors.redAccent,
+              iconColor: const Color(0xFFE74C3C),
               onTap: () => navigateTo(const LogoutPage()),
             ),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 32),
           ],
         ),
       ),

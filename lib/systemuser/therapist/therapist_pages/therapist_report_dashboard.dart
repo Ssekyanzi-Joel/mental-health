@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mind_aware_application/systemuser/therapist/therapist_pages/therapistreportpage.dart';
 
@@ -16,19 +17,29 @@ class TherapistReportDashboard extends StatefulWidget {
 
 class _TherapistReportDashboardState extends State<TherapistReportDashboard>
     with SingleTickerProviderStateMixin {
-  // Modern color palette
-  static const Color primaryGreen = Color.fromRGBO(25, 53, 30, 1);
-  static const Color accentGreen = Color.fromRGBO(46, 125, 50, 1);
-  static const Color lightGreen = Color.fromRGBO(76, 175, 80, 1);
-  static const Color paleGreen = Color.fromRGBO(129, 199, 132, 1);
-  static const Color backgroundGreen = Color.fromRGBO(15, 40, 20, 1);
-  static const Color cardGreen = Color.fromRGBO(35, 70, 40, 1);
+  // Refined color palette - less green, more balanced
+  static const Color primaryDark = const Color.fromARGB(
+    255,
+    15,
+    40,
+    20,
+  ); // Professional Blue
+  static const Color secondaryDark = Color(0xFF2A2D3A);
+  static const Color accentGreen = Color(0xFF00C896);
+  static const Color softGreen = Color(0xFF4ECDC4);
+  static const Color lightGrey = Color(0xFFE8EBF0);
+  static const Color mediumGrey = Color(0xFF8B949E);
+  static const Color cardBackground = Colors.white;
+  static const Color successColor = Color(0xFF10B981);
+  static const Color warningColor = Color(0xFFF59E0B);
+  static const Color errorColor = Color(0xFFEF4444);
+  static const Color backgroundWhite = Color(0xFFF8FAFC);
 
   late AnimationController _animationController;
   late Animation<double> _slideAnimation;
   late Animation<double> _fadeAnimation;
   String selectedFilter = "All";
-  int touchedIndex = -1; // For pie chart interactivity
+  int touchedIndex = -1;
 
   @override
   void initState() {
@@ -55,11 +66,11 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
   Color _statusColor(String status) {
     switch (status) {
       case "Approved":
-        return lightGreen;
+        return successColor;
       case "Rejected":
-        return const Color(0xFFF44336);
+        return errorColor;
       default:
-        return const Color(0xFFFFA726);
+        return warningColor;
     }
   }
 
@@ -78,7 +89,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
     final filters = ["All", "Pending", "Approved", "Rejected"];
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -90,8 +101,9 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                 label: Text(
                   filter,
                   style: TextStyle(
-                    color: isSelected ? Colors.white : paleGreen,
+                    color: isSelected ? Colors.white : mediumGrey,
                     fontWeight: FontWeight.w600,
+                    fontSize: 14,
                   ),
                 ),
                 selected: isSelected,
@@ -100,19 +112,22 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                     selectedFilter = filter;
                   });
                 },
-                backgroundColor: cardGreen,
-                selectedColor: accentGreen,
+                backgroundColor: cardBackground,
+                selectedColor: primaryDark,
                 checkmarkColor: Colors.white,
                 side: BorderSide(
-                  color: isSelected ? accentGreen : paleGreen.withOpacity(0.3),
+                  color: isSelected ? primaryDark : lightGrey,
+                  width: 1.5,
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(25),
                 ),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
+                  horizontal: 16,
+                  vertical: 10,
                 ),
+                elevation: isSelected ? 2 : 0,
+                shadowColor: primaryDark.withOpacity(0.2),
               ),
             );
           }).toList(),
@@ -133,37 +148,39 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
-            child: CircularProgressIndicator(color: lightGreen),
+            child: CircularProgressIndicator(color: accentGreen),
           );
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return Container(
-            margin: const EdgeInsets.all(16),
-            padding: const EdgeInsets.all(20),
+            margin: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [primaryGreen, accentGreen.withOpacity(0.8)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: cardBackground,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: primaryGreen.withOpacity(0.3),
-                  blurRadius: 15,
-                  offset: const Offset(0, 8),
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
             child: Center(
-              child: Text(
-                "No reports available for analysis",
-                style: TextStyle(
-                  color: paleGreen,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+              child: Column(
+                children: [
+                  Icon(Icons.analytics_outlined, size: 48, color: mediumGrey),
+                  const SizedBox(height: 16),
+                  Text(
+                    "No reports available for analysis",
+                    style: TextStyle(
+                      color: mediumGrey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             ),
           );
@@ -190,32 +207,19 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
           }
         }
 
-        // Debug logging to confirm data updates
-        debugPrint(
-          "Reports fetched: $total (Approved: $approved, Pending: $pending, Rejected: $rejected)",
-        );
-        debugPrint("Weekly counts: $weeklyCounts");
+        final pieChartHeight = screenHeight * 0.25;
+        final barChartHeight = screenHeight * 0.25;
 
-        // Adjust chart heights based on screen size
-        final pieChartHeight = screenHeight * 0.3;
-        final barChartHeight = screenHeight * 0.3;
-
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-          margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.all(20),
+        return Container(
+          margin: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [primaryGreen, accentGreen.withOpacity(0.8)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(20),
+            color: cardBackground,
+            borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: primaryGreen.withOpacity(0.3),
-                blurRadius: 15,
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 25,
                 offset: const Offset(0, 8),
               ),
             ],
@@ -225,7 +229,59 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Pie Chart for Status Distribution
+                // Header with title and total count
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: accentGreen.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        Icons.analytics_rounded,
+                        color: accentGreen,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Analytics Overview",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: primaryDark,
+                            ),
+                          ),
+                          Text(
+                            "$total total reports",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: mediumGrey,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
+
+                // Status Distribution Pie Chart
+                Text(
+                  "Status Distribution",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: primaryDark,
+                  ),
+                ),
+                const SizedBox(height: 16),
                 SizedBox(
                   height: pieChartHeight,
                   child: PieChart(
@@ -233,44 +289,41 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                       sections: [
                         PieChartSectionData(
                           value: approved.toDouble(),
-                          color: const Color(0xFF4CAF50),
-                          title: "Approved\n$approved",
-                          radius: touchedIndex == 0 ? 80 : 70,
+                          color: successColor,
+                          title: "$approved",
+                          radius: touchedIndex == 0 ? 75 : 65,
                           titleStyle: const TextStyle(
                             color: Colors.white,
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
-                          titlePositionPercentageOffset: 0.6,
                         ),
                         PieChartSectionData(
                           value: pending.toDouble(),
-                          color: const Color(0xFFFFA726),
-                          title: "Pending\n$pending",
-                          radius: touchedIndex == 1 ? 80 : 70,
+                          color: warningColor,
+                          title: "$pending",
+                          radius: touchedIndex == 1 ? 75 : 65,
                           titleStyle: const TextStyle(
                             color: Colors.white,
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
-                          titlePositionPercentageOffset: 0.6,
                         ),
                         PieChartSectionData(
                           value: rejected.toDouble(),
-                          color: const Color(0xFFF44336),
-                          title: "Rejected\n$rejected",
-                          radius: touchedIndex == 2 ? 80 : 70,
+                          color: errorColor,
+                          title: "$rejected",
+                          radius: touchedIndex == 2 ? 75 : 65,
                           titleStyle: const TextStyle(
                             color: Colors.white,
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
-                          titlePositionPercentageOffset: 0.6,
                         ),
                       ],
                       borderData: FlBorderData(show: false),
-                      sectionsSpace: 4,
-                      centerSpaceRadius: 50,
+                      sectionsSpace: 3,
+                      centerSpaceRadius: 45,
                       pieTouchData: PieTouchData(
                         touchCallback: (FlTouchEvent event, pieTouchResponse) {
                           setState(() {
@@ -289,36 +342,55 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
-                // Bar Chart for Reports Over Time
+
+                // Legend
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildLegendItem("Approved", successColor, approved),
+                    _buildLegendItem("Pending", warningColor, pending),
+                    _buildLegendItem("Rejected", errorColor, rejected),
+                  ],
+                ),
+
+                const SizedBox(height: 32),
+
+                // Weekly Reports Bar Chart
+                Text(
+                  "Reports Trend (Last 4 Weeks)",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: primaryDark,
+                  ),
+                ),
+                const SizedBox(height: 16),
                 SizedBox(
                   height: barChartHeight,
                   child: BarChart(
                     BarChartData(
                       alignment: BarChartAlignment.spaceAround,
-                      maxY: (weeklyCounts.reduce((a, b) => a > b ? a : b) + 3)
+                      maxY: (weeklyCounts.reduce((a, b) => a > b ? a : b) + 2)
                           .toDouble()
-                          .clamp(5, double.infinity),
+                          .clamp(4, double.infinity),
                       barTouchData: BarTouchData(
                         enabled: true,
                         handleBuiltInTouches: true,
                         touchTooltipData: BarTouchTooltipData(
-                          getTooltipColor: (group) =>
-                              cardGreen.withOpacity(0.9),
+                          getTooltipColor: (group) => primaryDark,
                           tooltipPadding: const EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 8,
                           ),
                           tooltipMargin: 10,
-                          fitInsideHorizontally: true,
-                          fitInsideVertically: true,
                           getTooltipItem: (group, groupIndex, rod, rodIndex) {
                             return BarTooltipItem(
                               "${weeklyCounts[group.x.toInt()]} reports",
                               const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 14,
+                                fontSize: 12,
                               ),
                             );
                           },
@@ -330,9 +402,13 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                           barRods: [
                             BarChartRodData(
                               toY: weeklyCounts[index].toDouble(),
-                              color: accentGreen,
-                              width: 20,
-                              borderRadius: BorderRadius.circular(8),
+                              gradient: LinearGradient(
+                                colors: [softGreen, accentGreen],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                              ),
+                              width: 24,
+                              borderRadius: BorderRadius.circular(6),
                             ),
                           ],
                         );
@@ -341,14 +417,15 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                         leftTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
-                            reservedSize: 40,
+                            reservedSize: 35,
                             getTitlesWidget: (value, meta) {
-                              if (value.toInt() % 1 == 0) {
+                              if (value.toInt() % 1 == 0 && value >= 0) {
                                 return Text(
                                   value.toInt().toString(),
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.8),
-                                    fontSize: 12,
+                                    color: mediumGrey,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 );
                               }
@@ -361,11 +438,17 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                             showTitles: true,
                             getTitlesWidget: (value, meta) {
                               final weeksAgo = 3 - value.toInt();
-                              return Text(
-                                "W${weeksAgo + 1}",
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.8),
-                                  fontSize: 12,
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: Text(
+                                  weeksAgo == 0
+                                      ? "This week"
+                                      : "${weeksAgo}w ago",
+                                  style: TextStyle(
+                                    color: mediumGrey,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               );
                             },
@@ -380,10 +463,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                         drawVerticalLine: false,
                         horizontalInterval: 1,
                         getDrawingHorizontalLine: (value) {
-                          return FlLine(
-                            color: Colors.white.withOpacity(0.1),
-                            strokeWidth: 1,
-                          );
+                          return FlLine(color: lightGrey, strokeWidth: 1);
                         },
                       ),
                     ),
@@ -394,6 +474,31 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
           ),
         );
       },
+    );
+  }
+
+  Widget _buildLegendItem(String label, Color color, int count) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          "$label ($count)",
+          style: TextStyle(
+            fontSize: 12,
+            color: mediumGrey,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 
@@ -415,23 +520,16 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
             ),
           ),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [cardGreen, cardGreen.withOpacity(0.8)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: cardBackground,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: _statusColor(status).withOpacity(0.3),
-            width: 1.5,
-          ),
+          border: Border.all(color: lightGrey, width: 1),
           boxShadow: [
             BoxShadow(
-              color: _statusColor(status).withOpacity(0.1),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 15,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -458,15 +556,15 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: _statusColor(status).withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12),
+                          color: _statusColor(status).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(
                           _statusIcon(status),
                           color: _statusColor(status),
-                          size: 24,
+                          size: 20,
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -475,28 +573,25 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Report on $userName",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 18,
-                                color: Colors.white,
+                              "Report for $userName",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: primaryDark,
                               ),
                             ),
                             const SizedBox(height: 4),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
+                                horizontal: 10,
                                 vertical: 4,
                               ),
                               decoration: BoxDecoration(
-                                color: _statusColor(status).withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: _statusColor(status).withOpacity(0.5),
-                                ),
+                                color: _statusColor(status).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
-                                status.toUpperCase(),
+                                status,
                                 style: TextStyle(
                                   color: _statusColor(status),
                                   fontWeight: FontWeight.w600,
@@ -507,17 +602,10 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                           ],
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: paleGreen.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: paleGreen,
-                          size: 16,
-                        ),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: mediumGrey,
+                        size: 16,
                       ),
                     ],
                   ),
@@ -526,15 +614,15 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                     children: [
                       Icon(
                         Icons.access_time_rounded,
-                        size: 16,
-                        color: Colors.white.withOpacity(0.7),
+                        size: 14,
+                        color: mediumGrey,
                       ),
                       const SizedBox(width: 6),
                       Text(
                         "Submitted ${_formatDate(createdAt)}",
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
-                          fontSize: 14,
+                          color: mediumGrey,
+                          fontSize: 13,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -552,22 +640,21 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundGreen,
+      backgroundColor: backgroundWhite,
       appBar: AppBar(
-        title: null,
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [primaryGreen, accentGreen],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+        title: Text(
+          "Report Dashboard",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
           ),
         ),
+        centerTitle: true,
+        backgroundColor: primaryDark,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
@@ -575,8 +662,8 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
             context,
             MaterialPageRoute(
               builder: (_) => TherapistReportPage(
-                userId: "placeholder_user_id", // Replace with actual userId
-                userName: "Placeholder User", // Replace with actual userName
+                userId: "placeholder_user_id",
+                userName: "Placeholder User",
               ),
             ),
           );
@@ -584,15 +671,11 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text(
           "New Report",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontSize: 16,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         backgroundColor: accentGreen,
-        elevation: 0,
-        extendedPadding: const EdgeInsets.symmetric(horizontal: 24),
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -607,46 +690,58 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(color: lightGreen),
+                  return const Center(
+                    child: CircularProgressIndicator(color: accentGreen),
                   );
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: cardGreen.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Icon(
-                            Icons.description_outlined,
-                            size: 64,
-                            color: paleGreen.withOpacity(0.7),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        Text(
-                          "No reports submitted yet",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white.withOpacity(0.8),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Your submitted reports will appear here",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white.withOpacity(0.6),
-                          ),
+                  return Container(
+                    margin: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(32),
+                    decoration: BoxDecoration(
+                      color: cardBackground,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 15,
+                          offset: const Offset(0, 4),
                         ),
                       ],
+                    ),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: lightGrey,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Icon(
+                              Icons.description_outlined,
+                              size: 48,
+                              color: mediumGrey,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            "No reports submitted yet",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: primaryDark,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            "Your submitted reports will appear here",
+                            style: TextStyle(fontSize: 14, color: mediumGrey),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 }
@@ -662,32 +757,47 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                 }
 
                 if (reports.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: cardGreen.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Icon(
-                            Icons.filter_list_off,
-                            size: 64,
-                            color: paleGreen.withOpacity(0.7),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        Text(
-                          "No $selectedFilter reports found",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white.withOpacity(0.8),
-                          ),
+                  return Container(
+                    margin: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(32),
+                    decoration: BoxDecoration(
+                      color: cardBackground,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 15,
+                          offset: const Offset(0, 4),
                         ),
                       ],
+                    ),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: lightGrey,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Icon(
+                              Icons.filter_list_off,
+                              size: 48,
+                              color: mediumGrey,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            "No $selectedFilter reports found",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: primaryDark,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 }
@@ -695,7 +805,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                 return ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.only(bottom: 20),
+                  padding: const EdgeInsets.only(bottom: 100),
                   itemCount: reports.length,
                   itemBuilder: (context, index) {
                     return _buildModernReportCard(reports[index], index);
@@ -743,12 +853,15 @@ class ReportDetailPage extends StatefulWidget {
 
 class _ReportDetailPageState extends State<ReportDetailPage>
     with SingleTickerProviderStateMixin {
-  static const Color primaryGreen = Color.fromRGBO(25, 53, 30, 1);
-  static const Color accentGreen = Color.fromRGBO(46, 125, 50, 1);
-  static const Color lightGreen = Color.fromRGBO(76, 175, 80, 1);
-  static const Color paleGreen = Color.fromRGBO(129, 199, 132, 1);
-  static const Color backgroundGreen = Color.fromRGBO(15, 40, 20, 1);
-  static const Color cardGreen = Color.fromRGBO(35, 70, 40, 1);
+  static const Color primaryDark = Color(0xFF1A1D29);
+  static const Color accentGreen = Color(0xFF00C896);
+  static const Color lightGrey = Color(0xFFE8EBF0);
+  static const Color mediumGrey = Color(0xFF8B949E);
+  static const Color cardBackground = Colors.white;
+  static const Color successColor = Color(0xFF10B981);
+  static const Color warningColor = Color(0xFFF59E0B);
+  static const Color errorColor = Color(0xFFEF4444);
+  static const Color backgroundWhite = Color(0xFFF8FAFC);
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -775,11 +888,11 @@ class _ReportDetailPageState extends State<ReportDetailPage>
   Color _statusColor(String status) {
     switch (status) {
       case "Approved":
-        return lightGreen;
+        return successColor;
       case "Rejected":
-        return const Color.fromRGBO(244, 67, 54, 1);
+        return errorColor;
       default:
-        return const Color.fromRGBO(255, 152, 0, 1);
+        return warningColor;
     }
   }
 
@@ -789,21 +902,19 @@ class _ReportDetailPageState extends State<ReportDetailPage>
     final createdAt = (widget.reportData["createdAt"] as Timestamp).toDate();
 
     return Scaffold(
-      backgroundColor: backgroundGreen,
+      backgroundColor: backgroundWhite,
       appBar: AppBar(
-        title: null,
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [primaryGreen, accentGreen],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+        title: Text(
+          "Report Details",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
           ),
         ),
+        backgroundColor: primaryDark,
+        foregroundColor: Colors.white,
+        elevation: 0,
       ),
       body: FadeTransition(
         opacity: _fadeAnimation,
@@ -817,20 +928,16 @@ class _ReportDetailPageState extends State<ReportDetailPage>
                 width: double.infinity,
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [cardGreen, accentGreen.withOpacity(0.1)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  color: cardBackground,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: _statusColor(status).withOpacity(0.3),
+                    color: _statusColor(status).withOpacity(0.2),
                     width: 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: _statusColor(status).withOpacity(0.1),
-                      blurRadius: 15,
+                      color: Colors.black.withOpacity(0.06),
+                      blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
                   ],
@@ -843,13 +950,13 @@ class _ReportDetailPageState extends State<ReportDetailPage>
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: paleGreen.withOpacity(0.2),
+                            color: accentGreen.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
                             Icons.description_rounded,
-                            color: paleGreen,
-                            size: 28,
+                            color: accentGreen,
+                            size: 24,
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -857,9 +964,9 @@ class _ReportDetailPageState extends State<ReportDetailPage>
                           child: Text(
                             "Report Overview",
                             style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w800,
-                              color: paleGreen,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              color: primaryDark,
                             ),
                           ),
                         ),
@@ -869,7 +976,7 @@ class _ReportDetailPageState extends State<ReportDetailPage>
                             vertical: 8,
                           ),
                           decoration: BoxDecoration(
-                            color: _statusColor(status).withOpacity(0.2),
+                            color: _statusColor(status).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                               color: _statusColor(status),
@@ -880,7 +987,7 @@ class _ReportDetailPageState extends State<ReportDetailPage>
                             status.toUpperCase(),
                             style: TextStyle(
                               color: _statusColor(status),
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w600,
                               fontSize: 12,
                             ),
                           ),
@@ -905,20 +1012,13 @@ class _ReportDetailPageState extends State<ReportDetailPage>
                 width: double.infinity,
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [cardGreen, cardGreen.withOpacity(0.8)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  color: cardBackground,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: lightGreen.withOpacity(0.3),
-                    width: 1,
-                  ),
+                  border: Border.all(color: lightGrey, width: 1),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 15,
+                      color: Colors.black.withOpacity(0.06),
+                      blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
                   ],
@@ -931,12 +1031,12 @@ class _ReportDetailPageState extends State<ReportDetailPage>
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: lightGreen.withOpacity(0.2),
+                            color: primaryDark.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
                             Icons.article_rounded,
-                            color: lightGreen,
+                            color: primaryDark,
                             size: 24,
                           ),
                         ),
@@ -946,7 +1046,7 @@ class _ReportDetailPageState extends State<ReportDetailPage>
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 20,
-                            color: paleGreen,
+                            color: primaryDark,
                           ),
                         ),
                       ],
@@ -956,12 +1056,9 @@ class _ReportDetailPageState extends State<ReportDetailPage>
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: primaryGreen,
+                        color: backgroundWhite,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: lightGreen.withOpacity(0.2),
-                          width: 1,
-                        ),
+                        border: Border.all(color: lightGrey, width: 1),
                       ),
                       child: Text(
                         widget.reportData["answers"] != null
@@ -971,10 +1068,11 @@ class _ReportDetailPageState extends State<ReportDetailPage>
                                   .map((e) => "• ${e.value}")
                                   .join("\n\n")
                             : "No detailed answers provided.",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
+                        style: TextStyle(
+                          color: primaryDark,
+                          fontSize: 15,
                           height: 1.6,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),
@@ -993,9 +1091,9 @@ class _ReportDetailPageState extends State<ReportDetailPage>
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: primaryGreen.withOpacity(0.5),
+        color: backgroundWhite,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: paleGreen.withOpacity(0.2)),
+        border: Border.all(color: lightGrey),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1006,7 +1104,7 @@ class _ReportDetailPageState extends State<ReportDetailPage>
               "$label:",
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: Colors.white.withOpacity(0.8),
+                color: mediumGrey,
                 fontSize: 14,
               ),
             ),
@@ -1014,8 +1112,8 @@ class _ReportDetailPageState extends State<ReportDetailPage>
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: primaryDark,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),

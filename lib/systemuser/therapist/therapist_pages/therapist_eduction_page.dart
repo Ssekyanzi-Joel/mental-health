@@ -29,8 +29,8 @@ class TherapyState extends ChangeNotifier {
   final TextEditingController contentController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
   final ImagePicker picker = ImagePicker();
-  List<XFile> selectedMedia = []; // Changed to XFile for web compatibility
-  List<Uint8List> webMediaBytes = []; // Store bytes for web image previews
+  List<XFile> selectedMedia = [];
+  List<Uint8List> webMediaBytes = [];
   List<VideoPlayerController> videoControllers = [];
   bool isUploading = false;
   bool isCreatePostVisible = false;
@@ -138,61 +138,110 @@ class _TherapyPageContent extends StatefulWidget {
 
 class _TherapyPageContentState extends State<_TherapyPageContent>
     with TickerProviderStateMixin {
-  static const Color primaryGreen = Color.fromRGBO(25, 53, 30, 1);
-  static const Color accentGreen = Color.fromRGBO(46, 125, 50, 1);
-  static const Color lightGreen = Color.fromRGBO(76, 175, 80, 1);
-  static const Color paleGreen = Color.fromRGBO(129, 199, 132, 1);
-  static const Color backgroundGreen = Color.fromRGBO(15, 40, 20, 1);
-  static const Color cardGreen = Color.fromRGBO(35, 70, 40, 1);
+  // Bright Green Color Scheme
+  static const Color primaryGreen = const Color.fromARGB(
+    255,
+    15,
+    40,
+    20,
+  ); // Professional Blue // Bright emerald
+  static const Color accentGreen = Color.fromRGBO(
+    34,
+    197,
+    94,
+    1,
+  ); // Vibrant green
+  static const Color lightGreen = const Color.fromARGB(
+    255,
+    15,
+    40,
+    20,
+  ); // Professional Blue
+  static const Color paleGreen = const Color.fromARGB(
+    255,
+    15,
+    40,
+    20,
+  ); // Professional Blue
+  static const Color backgroundGreen = Color.fromRGBO(
+    240,
+    253,
+    244,
+    1,
+  ); // Very light green
+  static const Color cardGreen = Color.fromRGBO(
+    255,
+    255,
+    255,
+    1,
+  ); // Pure white cards
+  static const Color surfaceGreen = Color.fromRGBO(
+    236,
+    253,
+    245,
+    1,
+  ); // Light mint surface
+  static const Color darkText = const Color.fromARGB(
+    255,
+    15,
+    40,
+    20,
+  ); // Professional Blue
+  static const Color mediumText = const Color.fromARGB(
+    255,
+    15,
+    40,
+    20,
+  ); // Professional Blue
 
   static const List<Map<String, dynamic>> categories = [
     {
       'id': 'anxiety',
       'name': 'Anxiety',
       'icon': Icons.psychology,
-      'color': Colors.orange,
+      'color': Color.fromRGBO(251, 146, 60, 1), // Bright orange
     },
     {
       'id': 'depression',
       'name': 'Depression',
       'icon': Icons.sentiment_very_dissatisfied,
-      'color': Colors.blue,
+      'color': Color.fromRGBO(59, 130, 246, 1), // Bright blue
     },
     {
       'id': 'mindfulness',
       'name': 'Mindfulness',
       'icon': Icons.self_improvement,
-      'color': Colors.purple,
+      'color': Color.fromRGBO(147, 51, 234, 1), // Bright purple
     },
     {
       'id': 'stress',
       'name': 'Stress',
       'icon': Icons.flash_on,
-      'color': Colors.red,
+      'color': Color.fromRGBO(239, 68, 68, 1), // Bright red
     },
     {
       'id': 'relationships',
       'name': 'Relationships',
       'icon': Icons.favorite,
-      'color': Colors.pink,
+      'color': Color.fromRGBO(236, 72, 153, 1), // Bright pink
     },
     {
       'id': 'self_care',
       'name': 'Self Care',
       'icon': Icons.spa,
-      'color': Colors.teal,
+      'color': Color.fromRGBO(20, 184, 166, 1), // Bright teal
     },
     {
       'id': 'coping',
       'name': 'Coping Skills',
       'icon': Icons.emoji_objects,
-      'color': Colors.amber,
+      'color': Color.fromRGBO(245, 158, 11, 1), // Bright amber
     },
     {
       'id': 'trauma',
       'name': 'Trauma',
       'icon': Icons.healing,
-      'color': Colors.indigo,
+      'color': Color.fromRGBO(99, 102, 241, 1), // Bright indigo
     },
   ];
 
@@ -352,17 +401,17 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
         "likes": 0,
       };
 
-      print('Saving post to Firestore: $postData'); // Debug log
+      print('Saving post to Firestore: $postData');
 
       if (state.editingPostId != null) {
         await FirebaseFirestore.instance
             .collection("education")
             .doc(state.editingPostId)
             .update(postData);
-        _showSnackBar(context, "Post updated successfully", lightGreen);
+        _showSnackBar(context, "Post updated successfully", primaryGreen);
       } else {
         await FirebaseFirestore.instance.collection("education").add(postData);
-        _showSnackBar(context, "Post published successfully", lightGreen);
+        _showSnackBar(context, "Post published successfully", primaryGreen);
       }
 
       _clearForm(context);
@@ -394,11 +443,18 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
   void _showSnackBar(BuildContext context, String message, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Text(
+          message,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         backgroundColor: color,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         margin: const EdgeInsets.all(16),
+        elevation: 8,
       ),
     );
   }
@@ -411,33 +467,85 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
         child: CustomScrollView(
           slivers: [
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+              padding: const EdgeInsets.fromLTRB(24, 32, 24, 16),
               sliver: SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      _getGreeting(),
-                      style: const TextStyle(
-                        color: paleGreen,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            const Color.fromARGB(255, 253, 255, 254).withOpacity(0.1),
+                            const Color.fromARGB(255, 250, 250, 250).withOpacity(0.05),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: primaryGreen.withOpacity(0.2),
+                          width: 1,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: primaryGreen.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: const Icon(
+                                  Icons.psychology_rounded,
+                                  color: Color.fromARGB(
+    255,
+    15,
+    40,
+    20,
+  ),// Professional Blue
+                                  size: 28,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _getGreeting(),
+                                      style: TextStyle(
+                                        color: darkText.withOpacity(0.8),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      widget.therapistName,
+                                      style: const TextStyle(
+                                        color: darkText,
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      widget.therapistName,
-                      style: const TextStyle(
-                        color: lightGreen,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 32),
                     Consumer<TherapyState>(
                       builder: (context, state, _) => _buildStatsRow(context),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 32),
                     _buildActionButtons(context),
                   ],
                 ),
@@ -465,56 +573,73 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
           'Total Posts',
           state.totalPosts.toString(),
           Icons.article_rounded,
+          primaryGreen,
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 16),
         _buildStatCard(
           'Total Views',
           state.totalViews.toString(),
           Icons.visibility_rounded,
+          accentGreen,
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 16),
         _buildStatCard(
           'Total Likes',
           state.totalLikes.toString(),
           Icons.favorite_rounded,
+          lightGreen,
         ),
       ],
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon) {
+  Widget _buildStatCard(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: cardGreen,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: accentGreen.withOpacity(0.2)),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: color.withOpacity(0.2), width: 1.5),
           boxShadow: [
             BoxShadow(
-              color: primaryGreen.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: color.withOpacity(0.1),
+              blurRadius: 16,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
         child: Column(
           children: [
-            Icon(icon, color: lightGreen, size: 20),
-            const SizedBox(height: 6),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: color, size: 28),
+            ),
+            const SizedBox(height: 12),
             Text(
               value,
-              style: const TextStyle(
-                color: paleGreen,
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
+              style: TextStyle(
+                color: darkText,
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
               ),
             ),
+            const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.7),
-                fontSize: 10,
+                color: darkText.withOpacity(0.7),
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],
@@ -524,62 +649,106 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
   }
 
   Widget _buildActionButtons(BuildContext context) {
-    return Wrap(
-      spacing: 12,
-      runSpacing: 12,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildActionButton('Create Post', Icons.add_circle, () {
-          context.read<TherapyState>().updateState(createPostVisible: true);
-          _clearForm(context);
-        }),
-        _buildActionButton('Use Template', Icons.auto_stories, () {
-          _showTemplateModal(context);
-        }),
-        _buildActionButton('Manage Content', Icons.edit_note, () {}),
-        _buildActionButton('View Reports', Icons.analytics, () {}),
+        Text(
+          'Quick Actions',
+          style: TextStyle(
+            color: darkText,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 16),
+        GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          childAspectRatio: 1.4,
+          children: [
+            _buildActionButton(
+              'Create Post',
+              Icons.add_circle_rounded,
+              primaryGreen,
+              () {
+                context.read<TherapyState>().updateState(
+                  createPostVisible: true,
+                );
+                _clearForm(context);
+              },
+            ),
+            _buildActionButton(
+              'Use Template',
+              Icons.auto_stories_rounded,
+              accentGreen,
+              () => _showTemplateModal(context),
+            ),
+            _buildActionButton(
+              'Manage Content',
+              Icons.edit_note_rounded,
+              lightGreen,
+              () {},
+            ),
+            _buildActionButton(
+              'View Reports',
+              Icons.analytics_rounded,
+              mediumText,
+              () {},
+            ),
+          ],
+        ),
       ],
     );
   }
 
-  Widget _buildActionButton(String label, IconData icon, VoidCallback onTap) {
-    return SizedBox(
-      width: (MediaQuery.of(context).size.width - 44) / 2,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          decoration: BoxDecoration(
-            color: primaryGreen,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: accentGreen.withOpacity(0.3)),
-            boxShadow: [
-              BoxShadow(
-                color: primaryGreen.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
+  Widget _buildActionButton(
+    String label,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: cardGreen,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: color.withOpacity(0.2), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.1),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
               ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: lightGreen, size: 20),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  label,
-                  style: const TextStyle(
-                    color: paleGreen,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                ),
+              child: Icon(icon, color: color, size: 28),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              label,
+              style: TextStyle(
+                color: darkText,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
               ),
-            ],
-          ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );
@@ -590,20 +759,20 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
       builder: (context, state, _) => FadeTransition(
         opacity: _fadeAnimation,
         child: Container(
-          margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.all(24),
+          margin: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [cardGreen, accentGreen.withOpacity(0.1)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+            color: cardGreen,
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(
+              color: primaryGreen.withOpacity(0.2),
+              width: 1.5,
             ),
-            borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: primaryGreen.withOpacity(0.2),
-                blurRadius: 16,
-                offset: const Offset(0, 8),
+                color: primaryGreen.withOpacity(0.15),
+                blurRadius: 24,
+                offset: const Offset(0, 12),
               ),
             ],
           ),
@@ -613,54 +782,72 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: lightGreen.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
+                      gradient: LinearGradient(
+                        colors: [primaryGreen, accentGreen],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: primaryGreen.withOpacity(0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Icon(
-                      state.editingPostId != null ? Icons.edit : Icons.create,
-                      color: paleGreen,
-                      size: 24,
+                      state.editingPostId != null
+                          ? Icons.edit_rounded
+                          : Icons.create_rounded,
+                      color: Colors.white,
+                      size: 28,
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  Text(
-                    state.editingPostId != null
-                        ? "Edit Post"
-                        : "Create New Post",
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: paleGreen,
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: Text(
+                      state.editingPostId != null
+                          ? "Edit Post"
+                          : "Create New Post",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w800,
+                        color: darkText,
+                      ),
                     ),
                   ),
-                  const Spacer(),
                   IconButton(
                     onPressed: () =>
                         state.updateState(createPostVisible: false),
-                    icon: const Icon(Icons.close, color: paleGreen),
+                    icon: Icon(
+                      Icons.close_rounded,
+                      color: darkText.withOpacity(0.7),
+                      size: 28,
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
               _buildModernTextField(
                 controller: state.titleController,
                 label: "Post Title",
                 hint: "Enter an engaging title...",
-                prefixIcon: Icons.title,
+                prefixIcon: Icons.title_rounded,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               _buildCategorySelector(context),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               _buildModernTextField(
                 controller: state.contentController,
                 label: "Notes",
                 hint: "Share your thoughts and insights...",
-                maxLines: 4,
-                prefixIcon: Icons.notes,
+                maxLines: 5,
+                prefixIcon: Icons.notes_rounded,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               if (state.selectedMedia.isNotEmpty) _buildMediaPreview(context),
               Row(
                 children: [
@@ -668,19 +855,28 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                     child: OutlinedButton.icon(
                       onPressed: () =>
                           _pickMedia(context, ImageSource.gallery, false),
-                      icon: const Icon(Icons.add_photo_alternate, size: 20),
-                      label: const Text("Add Image"),
+                      icon: const Icon(
+                        Icons.add_photo_alternate_rounded,
+                        size: 24,
+                      ),
+                      label: const Text(
+                        "Add Image",
+                        style: TextStyle(fontSize: 16),
+                      ),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: paleGreen,
-                        side: BorderSide(color: paleGreen.withOpacity(0.5)),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        foregroundColor: primaryGreen,
+                        side: BorderSide(
+                          color: primaryGreen.withOpacity(0.4),
+                          width: 2,
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 20),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(16),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 20),
                   Expanded(
                     flex: 2,
                     child: ElevatedButton.icon(
@@ -689,18 +885,18 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                           : () => _uploadPost(context),
                       icon: state.isUploading
                           ? const SizedBox(
-                              width: 20,
-                              height: 20,
+                              width: 24,
+                              height: 24,
                               child: CircularProgressIndicator(
-                                strokeWidth: 2,
+                                strokeWidth: 3,
                                 color: Colors.white,
                               ),
                             )
                           : Icon(
                               state.editingPostId != null
-                                  ? Icons.update
-                                  : Icons.publish,
-                              size: 20,
+                                  ? Icons.update_rounded
+                                  : Icons.publish_rounded,
+                              size: 24,
                             ),
                       label: Text(
                         state.isUploading
@@ -708,14 +904,20 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                             : (state.editingPostId != null
                                   ? "Update Post"
                                   : "Publish Post"),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: lightGreen,
+                        backgroundColor: primaryGreen,
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 20),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(16),
                         ),
+                        elevation: 8,
+                        shadowColor: primaryGreen.withOpacity(0.3),
                       ),
                     ),
                   ),
@@ -735,41 +937,63 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
     int maxLines = 1,
     IconData? prefixIcon,
   }) {
-    return TextField(
-      controller: controller,
-      maxLines: maxLines,
-      style: const TextStyle(color: Colors.white, fontSize: 16),
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        prefixIcon: prefixIcon != null
-            ? Icon(prefixIcon, color: paleGreen)
-            : null,
-        labelStyle: const TextStyle(
-          color: paleGreen,
-          fontWeight: FontWeight.w500,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: darkText,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        hintStyle: TextStyle(color: Colors.white.withOpacity(0.6)),
-        fillColor: primaryGreen,
-        filled: true,
-        alignLabelWithHint: maxLines > 1,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide.none,
+        const SizedBox(height: 8),
+        TextField(
+          controller: controller,
+          maxLines: maxLines,
+          style: TextStyle(
+            color: darkText,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+          decoration: InputDecoration(
+            hintText: hint,
+            prefixIcon: prefixIcon != null
+                ? Icon(prefixIcon, color: mediumText, size: 24)
+                : null,
+            hintStyle: TextStyle(
+              color: darkText.withOpacity(0.5),
+              fontWeight: FontWeight.w400,
+            ),
+            fillColor: surfaceGreen,
+            filled: true,
+            alignLabelWithHint: maxLines > 1,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(
+                color: primaryGreen.withOpacity(0.3),
+                width: 1.5,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(
+                color: primaryGreen.withOpacity(0.3),
+                width: 1.5,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: primaryGreen, width: 2.5),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 20,
+            ),
+          ),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: accentGreen.withOpacity(0.3)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: lightGreen, width: 2),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 16,
-        ),
-      ),
+      ],
     );
   }
 
@@ -778,17 +1002,17 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
       builder: (context, state, _) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Category',
             style: TextStyle(
-              color: paleGreen,
+              color: darkText,
               fontSize: 16,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           SizedBox(
-            height: 50,
+            height: 60,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: categories.map((category) {
@@ -803,34 +1027,44 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                     duration: const Duration(milliseconds: 300),
                     margin: const EdgeInsets.only(right: 12),
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
+                      horizontal: 20,
+                      vertical: 12,
                     ),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? category['color']!.withOpacity(0.3)
-                          : primaryGreen,
-                      borderRadius: BorderRadius.circular(12),
+                          ? category['color']!.withOpacity(0.15)
+                          : surfaceGreen,
+                      borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: isSelected
                             ? category['color']!
-                            : accentGreen.withOpacity(0.3),
-                        width: 1.5,
+                            : primaryGreen.withOpacity(0.3),
+                        width: isSelected ? 2 : 1.5,
                       ),
+                      boxShadow: isSelected
+                          ? [
+                              BoxShadow(
+                                color: category['color']!.withOpacity(0.2),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ]
+                          : null,
                     ),
                     child: Row(
                       children: [
                         Icon(
                           category['icon'],
-                          color: isSelected ? category['color'] : paleGreen,
-                          size: 20,
+                          color: isSelected ? category['color'] : mediumText,
+                          size: 24,
                         ),
                         const SizedBox(width: 8),
                         Text(
                           category['name']!,
                           style: TextStyle(
-                            color: isSelected ? category['color'] : paleGreen,
+                            color: isSelected ? category['color'] : darkText,
                             fontWeight: FontWeight.w600,
+                            fontSize: 14,
                           ),
                         ),
                       ],
@@ -850,17 +1084,23 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
       builder: (context, state, _) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Attached Media',
             style: TextStyle(
-              color: paleGreen,
+              color: darkText,
               fontSize: 16,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 120,
+          const SizedBox(height: 12),
+          Container(
+            height: 140,
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: surfaceGreen,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: primaryGreen.withOpacity(0.2)),
+            ),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: state.selectedMedia.length,
@@ -870,26 +1110,33 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                     state.videoControllers[index].value.isInitialized;
 
                 return Container(
-                  width: 120,
-                  margin: const EdgeInsets.only(right: 8),
+                  width: 140,
+                  margin: const EdgeInsets.only(right: 12),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: primaryGreen,
+                    borderRadius: BorderRadius.circular(16),
+                    color: cardGreen,
+                    boxShadow: [
+                      BoxShadow(
+                        color: primaryGreen.withOpacity(0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
                   child: Stack(
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(16),
                         child: kIsWeb
                             ? Image.memory(
                                 state.webMediaBytes[index],
-                                width: 120,
+                                width: 140,
                                 height: 120,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(
-                                      Icons.broken_image,
-                                      color: Colors.red,
+                                    Icon(
+                                      Icons.broken_image_rounded,
+                                      color: Colors.red.shade400,
                                       size: 40,
                                     ),
                               )
@@ -897,36 +1144,35 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                             ? VideoPlayer(state.videoControllers[index])
                             : Image.file(
                                 File(state.selectedMedia[index].path),
-                                width: 120,
+                                width: 140,
                                 height: 120,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(
-                                      Icons.broken_image,
-                                      color: Colors.red,
+                                    Icon(
+                                      Icons.broken_image_rounded,
+                                      color: Colors.red.shade400,
                                       size: 40,
                                     ),
                               ),
                       ),
                       if (isVideo && !kIsWeb)
-                        const Center(
-                          child: Icon(
-                            Icons.play_circle_filled,
-                            color: Colors.white,
-                            size: 40,
-                          ),
-                        ),
-                      if (kIsWeb)
-                        const Center(
-                          child: Icon(
-                            Icons.image,
-                            color: Colors.white,
-                            size: 40,
+                        Center(
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.black54,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Icon(
+                              Icons.play_circle_filled_rounded,
+                              color: Colors.white,
+                              size: 32,
+                            ),
                           ),
                         ),
                       Positioned(
-                        top: 4,
-                        right: 4,
+                        top: 8,
+                        right: 8,
                         child: GestureDetector(
                           onTap: () {
                             final updatedMedia = List<XFile>.from(
@@ -952,15 +1198,22 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                             );
                           },
                           child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: Colors.black54,
-                              shape: BoxShape.circle,
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade400,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.red.withOpacity(0.3),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
                             ),
                             child: const Icon(
-                              Icons.close,
+                              Icons.close_rounded,
                               color: Colors.white,
-                              size: 16,
+                              size: 18,
                             ),
                           ),
                         ),
@@ -971,6 +1224,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
               },
             ),
           ),
+          const SizedBox(height: 16),
         ],
       ),
     );
@@ -980,40 +1234,111 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
     showModalBottomSheet(
       context: context,
       backgroundColor: cardGreen,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       builder: (context) => Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(28),
+        decoration: BoxDecoration(
+          color: cardGreen,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+          boxShadow: [
+            BoxShadow(
+              color: primaryGreen.withOpacity(0.1),
+              blurRadius: 20,
+              offset: const Offset(0, -8),
+            ),
+          ],
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Post Templates',
-              style: TextStyle(
-                color: paleGreen,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
+            Container(
+              width: 48,
+              height: 4,
+              decoration: BoxDecoration(
+                color: primaryGreen.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(2),
               ),
             ),
-            const SizedBox(height: 20),
-            ...templates.entries.map(
-              (entry) => ListTile(
-                leading: const Icon(Icons.description, color: lightGreen),
-                title: Text(
-                  entry.key.replaceAll('_', ' ').toUpperCase(),
-                  style: const TextStyle(color: paleGreen),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [primaryGreen, accentGreen],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.auto_stories_rounded,
+                    color: Colors.white,
+                    size: 24,
+                  ),
                 ),
-                onTap: () {
-                  Navigator.pop(context);
-                  context.read<TherapyState>().contentController.text =
-                      entry.value;
-                  context.read<TherapyState>().updateState(
-                    createPostVisible: true,
-                  );
-                },
+                const SizedBox(width: 16),
+                Text(
+                  'Post Templates',
+                  style: TextStyle(
+                    color: darkText,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            ...templates.entries.map(
+              (entry) => Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
+                  ),
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: primaryGreen.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.description_rounded,
+                      color: primaryGreen,
+                      size: 20,
+                    ),
+                  ),
+                  title: Text(
+                    entry.key.replaceAll('_', ' ').toUpperCase(),
+                    style: TextStyle(
+                      color: darkText,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color: mediumText,
+                    size: 16,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  tileColor: surfaceGreen,
+                  onTap: () {
+                    Navigator.pop(context);
+                    context.read<TherapyState>().contentController.text =
+                        entry.value;
+                    context.read<TherapyState>().updateState(
+                      createPostVisible: true,
+                    );
+                  },
+                ),
               ),
             ),
+            const SizedBox(height: 16),
           ],
         ),
       ),
@@ -1032,41 +1357,59 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Your Posts',
                 style: TextStyle(
-                  color: paleGreen,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
+                  color: darkText,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
               Consumer<TherapyState>(
-                builder: (context, state, _) => DropdownButton<String>(
-                  value: state.sortBy,
-                  icon: const Icon(Icons.filter_list, color: lightGreen),
-                  dropdownColor: cardGreen,
-                  style: const TextStyle(color: paleGreen),
-                  items: const [
-                    DropdownMenuItem(value: 'newest', child: Text('Newest')),
-                    DropdownMenuItem(value: 'likes', child: Text('Most Liked')),
-                    DropdownMenuItem(
-                      value: 'views',
-                      child: Text('Most Viewed'),
+                builder: (context, state, _) => Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: surfaceGreen,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: primaryGreen.withOpacity(0.3)),
+                  ),
+                  child: DropdownButton<String>(
+                    value: state.sortBy,
+                    icon: Icon(Icons.filter_list_rounded, color: mediumText),
+                    dropdownColor: cardGreen,
+                    underline: const SizedBox(),
+                    style: TextStyle(
+                      color: darkText,
+                      fontWeight: FontWeight.w600,
                     ),
-                  ],
-                  onChanged: (value) {
-                    state.updateState(sort: value!);
-                  },
+                    items: const [
+                      DropdownMenuItem(value: 'newest', child: Text('Newest')),
+                      DropdownMenuItem(
+                        value: 'likes',
+                        child: Text('Most Liked'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'views',
+                        child: Text('Most Viewed'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      state.updateState(sort: value!);
+                    },
+                  ),
                 ),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.7,
           child: _buildPostsList(context),
@@ -1085,35 +1428,77 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
             stream: _postsStream,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(color: lightGreen),
+                return Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: cardGreen,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: CircularProgressIndicator(
+                      color: primaryGreen,
+                      strokeWidth: 3,
+                    ),
+                  ),
                 );
               }
 
               if (snapshot.hasError) {
                 return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.error_outline,
-                        color: Colors.red,
-                        size: 60,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Error loading posts: ${snapshot.error}',
-                        style: const TextStyle(color: Colors.red, fontSize: 16),
-                        textAlign: TextAlign.center,
-                      ),
-                      TextButton(
-                        onPressed: () => setState(() => _initializeStream()),
-                        child: const Text(
-                          'Retry',
-                          style: TextStyle(color: lightGreen, fontSize: 16),
+                  child: Container(
+                    margin: const EdgeInsets.all(24),
+                    padding: const EdgeInsets.all(32),
+                    decoration: BoxDecoration(
+                      color: cardGreen,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.red.withOpacity(0.3)),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.error_outline_rounded,
+                          color: Colors.red.shade400,
+                          size: 64,
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 20),
+                        Text(
+                          'Error loading posts',
+                          style: TextStyle(
+                            color: darkText,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '${snapshot.error}',
+                          style: TextStyle(
+                            color: darkText.withOpacity(0.7),
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton.icon(
+                          onPressed: () => setState(() => _initializeStream()),
+                          icon: const Icon(Icons.refresh_rounded),
+                          label: const Text('Retry'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryGreen,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               }
@@ -1186,37 +1571,50 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
   Widget _buildSearchBar(BuildContext context) {
     final state = context.watch<TherapyState>();
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       child: TextField(
         controller: state.searchController,
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(
+          color: darkText,
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
         decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.search, color: paleGreen),
+          prefixIcon: Icon(Icons.search_rounded, color: mediumText, size: 28),
           suffixIcon: state.searchController.text.isNotEmpty
               ? IconButton(
                   onPressed: () => state.searchController.clear(),
-                  icon: const Icon(Icons.clear, color: paleGreen),
+                  icon: Icon(Icons.clear_rounded, color: mediumText, size: 24),
                 )
               : null,
           hintText: "Search posts by title...",
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.6)),
+          hintStyle: TextStyle(
+            color: darkText.withOpacity(0.5),
+            fontWeight: FontWeight.w400,
+          ),
           fillColor: cardGreen,
           filled: true,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(
+              color: primaryGreen.withOpacity(0.3),
+              width: 1.5,
+            ),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: accentGreen.withOpacity(0.3)),
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(
+              color: primaryGreen.withOpacity(0.3),
+              width: 1.5,
+            ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: lightGreen, width: 2),
+            borderRadius: BorderRadius.circular(20),
+            borderSide: const BorderSide(color: primaryGreen, width: 2.5),
           ),
           contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 16,
+            horizontal: 24,
+            vertical: 20,
           ),
         ),
       ),
@@ -1225,35 +1623,60 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
 
   Widget _buildEmptyState(bool isSearching) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            isSearching ? Icons.search_off : Icons.inbox_rounded,
-            color: paleGreen,
-            size: 80,
-          ),
-          const SizedBox(height: 20),
-          Text(
-            isSearching ? 'No results found' : 'No posts yet',
-            style: const TextStyle(
-              color: paleGreen,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+      child: Container(
+        margin: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(32),
+        decoration: BoxDecoration(
+          color: cardGreen,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: primaryGreen.withOpacity(0.2)),
+          boxShadow: [
+            BoxShadow(
+              color: primaryGreen.withOpacity(0.1),
+              blurRadius: 16,
+              offset: const Offset(0, 8),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            isSearching
-                ? 'Try a different keyword or filter.'
-                : 'Your posts will appear here.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
-              fontSize: 14,
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: primaryGreen.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Icon(
+                isSearching ? Icons.search_off_rounded : Icons.inbox_rounded,
+                color: primaryGreen,
+                size: 64,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 24),
+            Text(
+              isSearching ? 'No results found' : 'No posts yet',
+              style: TextStyle(
+                color: darkText,
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              isSearching
+                  ? 'Try a different keyword or filter.'
+                  : 'Your posts will appear here.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: darkText.withOpacity(0.6),
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1268,54 +1691,109 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
       (cat) => cat['id'] == data['category'],
       orElse: () => {
         'name': 'General',
-        'icon': Icons.category,
-        'color': Colors.grey,
+        'icon': Icons.category_rounded,
+        'color': mediumText,
       },
     );
 
-    return Card(
-      color: cardGreen,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: accentGreen.withOpacity(0.2)),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      decoration: BoxDecoration(
+        color: cardGreen,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: primaryGreen.withOpacity(0.2), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: primaryGreen.withOpacity(0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(categoryData['icon'], color: categoryData['color']),
-                const SizedBox(width: 8),
-                Text(
-                  categoryData['name'],
-                  style: TextStyle(
-                    color: categoryData['color'],
-                    fontWeight: FontWeight.bold,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: categoryData['color']!.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: categoryData['color']!.withOpacity(0.3),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        categoryData['icon'],
+                        color: categoryData['color'],
+                        size: 18,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        categoryData['name'],
+                        style: TextStyle(
+                          color: categoryData['color'],
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const Spacer(),
                 if (data['createdAt'] != null)
-                  Text(
-                    '${(data['createdAt'] as Timestamp).toDate().day}/${(data['createdAt'] as Timestamp).toDate().month}/${(data['createdAt'] as Timestamp).toDate().year}',
-                    style: TextStyle(
-                      color: paleGreen.withOpacity(0.7),
-                      fontSize: 12,
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: surfaceGreen,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      '${(data['createdAt'] as Timestamp).toDate().day}/${(data['createdAt'] as Timestamp).toDate().month}/${(data['createdAt'] as Timestamp).toDate().year}',
+                      style: TextStyle(
+                        color: mediumText,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
+                const SizedBox(width: 8),
                 PopupMenuButton(
                   color: cardGreen,
-                  icon: const Icon(Icons.more_vert, color: paleGreen),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  icon: Icon(
+                    Icons.more_vert_rounded,
+                    color: mediumText,
+                    size: 24,
+                  ),
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       value: 'edit',
                       child: Row(
-                        children: const [
-                          Icon(Icons.edit, color: lightGreen),
-                          SizedBox(width: 8),
-                          Text('Edit', style: TextStyle(color: paleGreen)),
+                        children: [
+                          Icon(Icons.edit_rounded, color: primaryGreen),
+                          const SizedBox(width: 12),
+                          Text(
+                            'Edit',
+                            style: TextStyle(
+                              color: darkText,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ],
                       ),
                       onTap: () {
@@ -1332,10 +1810,19 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                     PopupMenuItem(
                       value: 'delete',
                       child: Row(
-                        children: const [
-                          Icon(Icons.delete, color: Colors.redAccent),
-                          SizedBox(width: 8),
-                          Text('Delete', style: TextStyle(color: paleGreen)),
+                        children: [
+                          Icon(
+                            Icons.delete_rounded,
+                            color: Colors.red.shade400,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            'Delete',
+                            style: TextStyle(
+                              color: darkText,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ],
                       ),
                       onTap: () => _deletePost(context, postId),
@@ -1344,71 +1831,118 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             Text(
               data['title'] ?? 'No Title',
-              style: const TextStyle(
-                color: paleGreen,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+              style: TextStyle(
+                color: darkText,
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                height: 1.3,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Text(
               data['notes'] ?? 'No Content',
-              style: const TextStyle(color: Colors.white, fontSize: 14),
-              maxLines: hasMedia ? 3 : null,
+              style: TextStyle(
+                color: darkText.withOpacity(0.8),
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                height: 1.5,
+              ),
+              maxLines: hasMedia ? 4 : null,
               overflow: hasMedia ? TextOverflow.ellipsis : null,
             ),
             if (hasMedia) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  data['mediaUrl'],
-                  fit: BoxFit.cover,
-                  width: 280,
-                  height: 200,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.broken_image, color: Colors.red),
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: primaryGreen.withOpacity(0.1),
+                        blurRadius: 12,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Image.network(
+                    data['mediaUrl'],
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: 200,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: surfaceGreen,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.broken_image_rounded,
+                          color: Colors.red.shade400,
+                          size: 48,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Icon(
-                  Icons.remove_red_eye_outlined,
-                  color: paleGreen.withOpacity(0.7),
-                  size: 16,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  '${data['views'] ?? 0}',
-                  style: TextStyle(
-                    color: paleGreen.withOpacity(0.7),
-                    fontSize: 12,
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: surfaceGreen,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                children: [
+                  _buildStatBadge(
+                    Icons.remove_red_eye_rounded,
+                    '${data['views'] ?? 0}',
+                    'views',
                   ),
-                ),
-                const SizedBox(width: 16),
-                Icon(
-                  Icons.favorite_outline,
-                  color: paleGreen.withOpacity(0.7),
-                  size: 16,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  '${data['likes'] ?? 0}',
-                  style: TextStyle(
-                    color: paleGreen.withOpacity(0.7),
-                    fontSize: 12,
+                  const SizedBox(width: 24),
+                  _buildStatBadge(
+                    Icons.favorite_rounded,
+                    '${data['likes'] ?? 0}',
+                    'likes',
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildStatBadge(IconData icon, String value, String label) {
+    return Row(
+      children: [
+        Icon(icon, color: mediumText, size: 20),
+        const SizedBox(width: 8),
+        Text(
+          value,
+          style: TextStyle(
+            color: darkText,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: TextStyle(
+            color: darkText.withOpacity(0.6),
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 
@@ -1417,17 +1951,41 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: cardGreen,
-        title: const Text('Delete Post', style: TextStyle(color: paleGreen)),
-        content: const Text(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Icon(Icons.delete_rounded, color: Colors.red.shade400, size: 28),
+            const SizedBox(width: 12),
+            Text(
+              'Delete Post',
+              style: TextStyle(color: darkText, fontWeight: FontWeight.w700),
+            ),
+          ],
+        ),
+        content: Text(
           'Are you sure you want to delete this post? This action cannot be undone.',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: darkText.withOpacity(0.8),
+            fontSize: 16,
+            height: 1.4,
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel', style: TextStyle(color: paleGreen)),
+            style: TextButton.styleFrom(
+              foregroundColor: mediumText,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
           ),
-          TextButton(
+          ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
               try {
@@ -1435,13 +1993,28 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                     .collection("education")
                     .doc(postId)
                     .delete();
-                _showSnackBar(context, "Post deleted successfully", lightGreen);
+                _showSnackBar(
+                  context,
+                  "Post deleted successfully",
+                  primaryGreen,
+                );
                 context.read<TherapyState>().updateStats();
               } catch (e) {
                 _showSnackBar(context, "Error deleting post: $e", Colors.red);
               }
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red.shade400,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text(
+              'Delete',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
           ),
         ],
       ),
