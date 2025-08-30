@@ -1,6 +1,7 @@
 // lib/SplashScreen/splash_screen.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:mind_aware_application/Screens/Login/login_screen.dart';
 import 'package:mind_aware_application/Screens/Welcome1/welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -33,8 +34,10 @@ class _SplashScreenState extends State<SplashScreen>
         if (mounted) {
           Navigator.of(context).pushReplacement(
             PageRouteBuilder(
+              //navigate to login screen
               pageBuilder: (context, animation, secondaryAnimation) =>
-                  const WelcomeScreen1(),
+                  const LoginScreen(),
+                 
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                     var fade = Tween(begin: 0.0, end: 1.0).animate(animation);
@@ -60,12 +63,7 @@ class _SplashScreenState extends State<SplashScreen>
     double logoSize = screenWidth > 600 ? 300 : 150;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(
-        255,
-        25,
-        53,
-        30,
-      ), // deep green background
+      backgroundColor: const Color.fromARGB(255, 246, 248, 246), // deep green background
       body: Center(
         child: FadeTransition(
           opacity: _fadeAnimation,

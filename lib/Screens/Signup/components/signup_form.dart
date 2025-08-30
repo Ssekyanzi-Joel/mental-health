@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mind_aware_application/Screens/Login/login_screen.dart';
-import 'package:mind_aware_application/components/already_have_an_account_acheck.dart'; // This import is not used in the provided code, consider removing it if not used elsewhere
-import 'package:mind_aware_application/constants.dart'; // This import is not used in the provided code, consider removing it if not used elsewhere
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
@@ -24,8 +22,7 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   String? _gender;
   String? _role;
@@ -34,7 +31,6 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
   bool _confirmPasswordVisible = false;
   int _currentStep = 0;
   final int _totalSteps = 3;
-
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
@@ -67,18 +63,12 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
   }
 
   bool _validateCurrentStep() {
-    // This part should also validate the form fields of the current step
-    // using _formKey.currentState!.validate() for a comprehensive check.
-    // However, for simplicity and focusing on your original structure,
-    // I'm keeping your individual field checks here.
     switch (_currentStep) {
       case 0:
         return _firstNameController.text.isNotEmpty &&
             _lastNameController.text.isNotEmpty &&
             _emailController.text.isNotEmpty &&
-            RegExp(
-              r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-            ).hasMatch(_emailController.text);
+            RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_emailController.text);
       case 1:
         return _countryController.text.isNotEmpty &&
             _cityController.text.isNotEmpty &&
@@ -94,7 +84,6 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
   }
 
   void _nextStep() {
-    // Only proceed if the current form section is valid
     if (_formKey.currentState!.validate() &&
         _validateCurrentStep() &&
         _currentStep < _totalSteps - 1) {
@@ -118,7 +107,6 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
 
   Future<void> _registerUser() async {
     if (!_formKey.currentState!.validate() || !_validateCurrentStep()) {
-      // If validation fails, ensure all steps are checked for errors
       _showErrorSnackBar('Please correct the errors in the form.');
       return;
     }
@@ -155,7 +143,7 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const LoginScreen()),
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -205,26 +193,29 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return FadeTransition(
       opacity: _fadeAnimation,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildHeader(),
-              const SizedBox(height: 24),
-              _buildProgressIndicator(),
-              const SizedBox(height: 32),
-              SizedBox(
-                height: 400, // Fixed height instead of Expanded
-                child: _buildStepContent(),
-              ),
-              const SizedBox(height: 24),
-              _buildNavigationButtons(),
-              const SizedBox(height: 16),
-              _buildFooterLinks(),
-            ],
+      child: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 24),
+                _buildProgressIndicator(),
+                const SizedBox(height: 32),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child: _buildStepContent(),
+                ),
+                const SizedBox(height: 24),
+                _buildNavigationButtons(),
+                const SizedBox(height: 16),
+                _buildFooterLinks(),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),
@@ -288,28 +279,18 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
     return Row(
       children: List.generate(_totalSteps, (index) {
         final isActive = index <= _currentStep;
-        // final isCompleted = index < _currentStep; // isCompleted is not used
-
         return Expanded(
           child: Container(
             margin: EdgeInsets.only(right: index < _totalSteps - 1 ? 8 : 0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    height: 4,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(2),
-                      color: isActive
-                          ? const Color(0xFF9CAF7F)
-                          : Colors.grey.shade200,
-                    ),
-                  ),
-                ),
-                // The SizedBox below is redundant if it's always followed by another Expanded
-                // if (index < _totalSteps - 1) const SizedBox(width: 8),
-              ],
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              height: 4,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(2),
+                color: isActive
+                    ? const Color(0xFF9CAF7F)
+                    : Colors.grey.shade200,
+              ),
             ),
           ),
         );
@@ -366,10 +347,7 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value!.isEmpty) return 'Email is required';
-              // Removed the extra '$' at the end of the regex
-              if (!RegExp(
-                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-              ).hasMatch(value)) {
+              if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
                 return 'Enter a valid email';
               }
               return null;
@@ -378,9 +356,8 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
         ],
       ),
     );
-  }
-
-  Widget _buildLocationPreferencesStep() {
+  } 
+ Widget _buildLocationPreferencesStep() {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -644,9 +621,7 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
         ),
       ],
     );
-  }
-
-  Widget _buildPasswordField({
+  }  Widget _buildPasswordField({
     required TextEditingController controller,
     required String label,
     required String hint,
@@ -866,9 +841,6 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
           ),
         if (_currentStep > 0) const SizedBox(width: 16),
         Expanded(
-          flex: _currentStep == 0
-              ? 1
-              : 1, // This flex is always 1, can be simplified
           child: Container(
             height: 56,
             decoration: BoxDecoration(
@@ -886,8 +858,8 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
               onPressed: _isLoading
                   ? null
                   : (_currentStep == _totalSteps - 1
-                        ? _registerUser
-                        : _nextStep),
+                      ? _registerUser
+                      : _nextStep),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF8B4513),
                 foregroundColor: Colors.white,
@@ -940,14 +912,13 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => const LoginScreen()),
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
             );
           },
           child: const Text(
-            // Changed to const as the style is constant
             'Sign In',
             style: TextStyle(
-              color: Color(0xFF9CAF7F), // Original color from other elements
+              color: Color(0xFF9CAF7F),
               fontWeight: FontWeight.w600,
             ),
           ),

@@ -28,13 +28,8 @@ class _AdmindasboradState extends State<Admindasborad> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(
-        255,
-        25,
-        53,
-        30,
-      ), // deep green page background
-      appBar: const CustomAppBar(title: 'Admin Dashboard', height: 50),
+      backgroundColor: const Color.fromARGB(255, 238, 240, 238), // deep green page background
+      // appBar: const CustomAppBar(title: 'Admin Dashboard', height: 50),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 350),
         child: _pages[_index],

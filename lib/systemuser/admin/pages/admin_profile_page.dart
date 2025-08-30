@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:ui';
 import 'package:mind_aware_application/systemuser/admin/drawer_pages/admin_emegies.dart';
 import 'package:mind_aware_application/systemuser/admin/drawer_pages/admin_feedback.dart';
 import 'package:mind_aware_application/systemuser/admin/drawer_pages/admin_testimonies.dart';
@@ -24,25 +23,37 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  // Modern theme colors
-  static const Color deepGreen = Color.fromARGB(255, 25, 53, 30);
-  static const Color sectionLightGreen = Color.fromARGB(255, 180, 220, 190);
-  static const Color listTileCream = Color.fromARGB(255, 245, 245, 220);
-  static const Color accentGreen = Color.fromARGB(255, 76, 175, 80);
-  static const Color adminBlue = Color.fromARGB(255, 33, 150, 243);
-  static const Color adminOrange = Color.fromARGB(255, 255, 152, 0);
+class _ProfilePageState extends State<ProfilePage>
+    with SingleTickerProviderStateMixin {
+  // Consistent color scheme
+  static const Color primaryGreen = Color(0xFF2E7D32);
+  static const Color lightGreen = Color(0xFF4CAF50);
+  static const Color accentGreen = Color(0xFF81C784);
+  static const Color darkGreen = Color(0xFF1B5E20);
+  static const Color surfaceGreen = Color(0xFFF1F8E9);
 
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
 
   Map<String, dynamic> userData = {};
   bool isLoading = true;
+  late AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
     fetchUserData();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   Future<void> fetchUserData() async {
@@ -73,75 +84,64 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildProfileHeader() {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color.fromRGBO(25, 53, 30, 1),
-            const Color.fromRGBO(46, 125, 50, 1),
-            const Color.fromRGBO(76, 175, 80, 0.9),
-          ],
+        gradient: const LinearGradient(
+          colors: [primaryGreen, lightGreen],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          stops: const [0.0, 0.6, 1.0],
         ),
         borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(40),
-          bottomRight: Radius.circular(40),
+          bottomLeft: Radius.circular(32),
+          bottomRight: Radius.circular(32),
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color.fromRGBO(25, 53, 30, 0.3),
+            color: primaryGreen.withOpacity(0.3),
             blurRadius: 20,
-            offset: const Offset(0, 10),
-            spreadRadius: 2,
-          ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
+            offset: const Offset(0, 8),
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
       child: Column(
         children: [
           const SizedBox(height: 20),
 
-          // Admin badge
+          // Role badge
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.amber.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(20),
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: Colors.amber.withOpacity(0.4),
+                color: Colors.white.withOpacity(0.3),
                 width: 1,
               ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
+                const Icon(
                   Icons.admin_panel_settings,
-                  color: Colors.amber[300],
-                  size: 16,
+                  color: Colors.white,
+                  size: 14,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 6),
                 Text(
-                  'ADMIN',
-                  style: TextStyle(
-                    color: Colors.amber[300],
+                  userData['role']?.toString().toUpperCase() ?? 'ADMIN',
+                  style: const TextStyle(
+                    color: Colors.white,
                     fontWeight: FontWeight.w700,
-                    fontSize: 12,
-                    letterSpacing: 1.2,
+                    fontSize: 11,
+                    letterSpacing: 1,
                   ),
                 ),
               ],
             ),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
 
-          // Modern profile avatar with glow effect
+          // Profile avatar
           Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -154,160 +154,98 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
             child: CircleAvatar(
-              radius: 60,
-              backgroundColor: Colors.white.withOpacity(0.15),
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.white.withOpacity(0.3),
-                    width: 2,
-                  ),
-                ),
-                child: CircleAvatar(
-                  radius: 57,
-                  backgroundColor: Colors.white.withOpacity(0.1),
-                  child: Text(
-                    (userData['firstName']?[0] ?? 'A') +
-                        (userData['lastName']?[0] ?? 'D'),
-                    style: const TextStyle(
-                      fontSize: 36,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 2,
-                    ),
-                  ),
+              radius: 50,
+              backgroundColor: Colors.white.withOpacity(0.2),
+              child: Text(
+                (userData['firstName']?[0] ?? 'A').toUpperCase() +
+                    (userData['lastName']?[0] ?? 'D').toUpperCase(),
+                style: const TextStyle(
+                  fontSize: 28,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
 
-          // Modern name display
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              '${userData['firstName'] ?? 'Admin'} ${userData['lastName'] ?? 'User'}',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w800,
-                color: Colors.white,
-                letterSpacing: 0.5,
-                height: 1.2,
-              ),
+          // User name
+          Text(
+            '${userData['firstName'] ?? 'Admin'} ${userData['lastName'] ?? 'User'}',
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
 
           const SizedBox(height: 16),
 
-          // Modern info cards
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              children: [
-                // Email card
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
-                      ),
-                      margin: const EdgeInsets.only(bottom: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.2),
-                          width: 1,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.15),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Icon(
-                              Icons.email_outlined,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Text(
-                              userData['email'] ?? 'admin@mindaware.com',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white.withOpacity(0.95),
-                                fontWeight: FontWeight.w500,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+          // Contact info cards
+          if (userData['email'] != null) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              margin: const EdgeInsets.only(bottom: 8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.2),
+                  width: 1,
                 ),
-
-                // Phone card (if phone exists)
-                if (userData['phone'] != null &&
-                    userData['phone'].toString().isNotEmpty)
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(
-                            Icons.phone_outlined,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Text(
-                            userData['phone'] ?? '',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white.withOpacity(0.95),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
+              ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.email_outlined,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      userData['email'] ?? '',
+                      style: const TextStyle(fontSize: 14, color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-              ],
+                ],
+              ),
             ),
-          ),
+          ],
 
-          const SizedBox(height: 8),
+          if (userData['phone'] != null &&
+              userData['phone'].toString().isNotEmpty) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.2),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.phone_outlined,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      userData['phone'] ?? '',
+                      style: const TextStyle(fontSize: 14, color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -318,14 +256,21 @@ class _ProfilePageState extends State<ProfilePage> {
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
       child: Row(
         children: [
-          Icon(icon, color: sectionLightGreen, size: 24),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: surfaceGreen,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, color: primaryGreen, size: 18),
+          ),
           const SizedBox(width: 12),
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: sectionLightGreen,
+              color: darkGreen,
             ),
           ),
         ],
@@ -343,47 +288,44 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        color: listTileCream,
-        borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: deepGreen.withOpacity(0.08),
+            color: Colors.grey.withOpacity(0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: iconColor.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(icon, color: iconColor, size: 24),
+          child: Icon(icon, color: iconColor, size: 20),
         ),
         title: Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: deepGreen,
+            color: Colors.black87,
           ),
         ),
         subtitle: subtitle != null
             ? Text(
                 subtitle,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: deepGreen.withOpacity(0.6),
-                ),
+                style: const TextStyle(fontSize: 13, color: Colors.grey),
               )
             : null,
-        trailing: Icon(
+        trailing: const Icon(
           Icons.arrow_forward_ios,
-          color: deepGreen.withOpacity(0.6),
-          size: 16,
+          color: Colors.grey,
+          size: 14,
         ),
         onTap: onTap,
       ),
@@ -393,14 +335,18 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(
-        backgroundColor: deepGreen,
-        body: Center(child: CircularProgressIndicator(color: accentGreen)),
+      return Scaffold(
+        backgroundColor: Colors.grey[50],
+        body: const Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(primaryGreen),
+          ),
+        ),
       );
     }
 
     return Scaffold(
-      backgroundColor: deepGreen,
+      backgroundColor: Colors.grey[50],
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -412,15 +358,15 @@ class _ProfilePageState extends State<ProfilePage> {
             _buildProfileOption(
               icon: Icons.person_outline,
               title: "Update Profile",
-              subtitle: "Edit admin profile information",
-              iconColor: accentGreen,
+              subtitle: "Edit profile information",
+              iconColor: primaryGreen,
               onTap: () => navigateTo(UpdateProfilePage(userData: userData)),
             ),
             _buildProfileOption(
               icon: Icons.notifications_outlined,
               title: "Notifications",
               subtitle: "Manage notification preferences",
-              iconColor: adminBlue,
+              iconColor: Colors.blue,
               onTap: () => navigateTo(const NotificationsPage()),
             ),
 
@@ -433,21 +379,21 @@ class _ProfilePageState extends State<ProfilePage> {
               icon: Icons.people_outline,
               title: "User Management",
               subtitle: "Manage registered users",
-              iconColor: adminBlue,
+              iconColor: Colors.blue,
               onTap: () => navigateTo(const UserManagementPage()),
             ),
             _buildProfileOption(
               icon: Icons.psychology_outlined,
               title: "Therapist Management",
               subtitle: "Manage therapist accounts",
-              iconColor: adminBlue,
+              iconColor: Colors.blue,
               onTap: () => navigateTo(const AdminTherapistDashboard()),
             ),
             _buildProfileOption(
               icon: Icons.person_add_outlined,
               title: "Latest Users",
               subtitle: "View recently registered users",
-              iconColor: adminOrange,
+              iconColor: Colors.orange,
               onTap: () => navigateTo(const AdminLatestUsersPage()),
             ),
 
@@ -457,21 +403,21 @@ class _ProfilePageState extends State<ProfilePage> {
               icon: Icons.assessment_outlined,
               title: "Reports",
               subtitle: "View system analytics and reports",
-              iconColor: adminBlue,
+              iconColor: Colors.blue,
               onTap: () => navigateTo(const AdminReportsPage()),
             ),
             _buildProfileOption(
               icon: Icons.book_online_outlined,
               title: "Bookings",
               subtitle: "Manage appointment bookings",
-              iconColor: adminOrange,
+              iconColor: Colors.orange,
               onTap: () => navigateTo(const BookingPage()),
             ),
             _buildProfileOption(
               icon: Icons.payment_outlined,
               title: "Transactions",
               subtitle: "Monitor payment transactions",
-              iconColor: adminOrange,
+              iconColor: Colors.orange,
               onTap: () => navigateTo(const AdminTransactionsPage()),
             ),
 
@@ -498,14 +444,14 @@ class _ProfilePageState extends State<ProfilePage> {
               icon: Icons.message_outlined,
               title: "Messages",
               subtitle: "View user messages",
-              iconColor: adminOrange,
+              iconColor: Colors.orange,
               onTap: () => navigateTo(const MessagesPage()),
             ),
             _buildProfileOption(
               icon: Icons.feedback_outlined,
               title: "Feedback",
               subtitle: "Review user feedback",
-              iconColor: adminOrange,
+              iconColor: Colors.orange,
               onTap: () => navigateTo(const TherapistDashboard()),
             ),
 
@@ -515,17 +461,17 @@ class _ProfilePageState extends State<ProfilePage> {
               icon: Icons.emergency_outlined,
               title: "Emergency Resources",
               subtitle: "Manage crisis support resources",
-              iconColor: Colors.redAccent,
+              iconColor: Colors.red,
               onTap: () => navigateTo(const AdminDashboard()),
             ),
 
-            // Account Actions
+            // Account Actions Section
             _buildSectionHeader("Account Actions", Icons.account_circle),
             _buildProfileOption(
               icon: Icons.logout,
               title: "Logout",
-              subtitle: "Sign out of admin account",
-              iconColor: Colors.redAccent,
+              subtitle: "Sign out of account",
+              iconColor: Colors.red,
               onTap: () => navigateTo(const LogoutPage()),
             ),
 
