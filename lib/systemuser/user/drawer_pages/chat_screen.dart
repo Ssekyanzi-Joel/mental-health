@@ -200,7 +200,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                               child: Text(
                                 msg.replyTo!,
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 10,
                                   color: msg.isUser
                                       ? Colors.white.withOpacity(0.8)
                                       : Colors.grey.shade600,
@@ -381,7 +381,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 const Text(
                   'MindAware AI',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: Colors.black87,
                   ),
@@ -449,7 +449,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         const Text(
                           'Please log in to access chat',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -483,7 +483,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                               Text(
                                 'Error loading chat',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.grey.shade700,
                                 ),
@@ -492,7 +492,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                               Text(
                                 '${snapshot.error}',
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   color: Colors.grey.shade600,
                                 ),
                                 textAlign: TextAlign.center,
@@ -527,11 +527,11 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                 color: Colors.green.shade500,
                                 size: 40,
                               ),
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 15),
                               Text(
                                 'Loading chat...',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 12,
                                   color: Colors.grey.shade600,
                                 ),
                               ),
@@ -565,11 +565,11 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                   color: Colors.white,
                                 ),
                               ),
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 15),
                               Text(
                                 'Welcome to MindAware',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.grey.shade800,
                                 ),
@@ -580,7 +580,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
-                                  fontSize: 16,
+                                  fontSize: 12,
                                 ),
                               ),
                             ],
@@ -627,7 +627,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     child: Text(
                       "Replying to: $_replyText",
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         color: Colors.green.shade700,
                       ),
                       maxLines: 1,
@@ -772,7 +772,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     loadingIndicator: const SizedBox.shrink(),
                     noRecents: const Text(
                       'No Recent Emojis',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
                       textAlign: TextAlign.center,
                     ),
                   ),

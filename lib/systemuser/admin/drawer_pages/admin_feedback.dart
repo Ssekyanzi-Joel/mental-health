@@ -39,9 +39,9 @@ class _TherapistDashboardState extends State<TherapistDashboard> {
       _notesController.clear();
       _mediaUrlController.clear();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to post content ❌')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Failed to post content ❌')));
     } finally {
       setState(() => _isLoading = false);
     }
@@ -49,14 +49,17 @@ class _TherapistDashboardState extends State<TherapistDashboard> {
 
   Future<void> _deleteContent(String docId) async {
     try {
-      await FirebaseFirestore.instance.collection('education').doc(docId).delete();
+      await FirebaseFirestore.instance
+          .collection('education')
+          .doc(docId)
+          .delete();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Post deleted successfully 🗑️')),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to delete post ❌')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Failed to delete post ❌')));
     }
   }
 
@@ -76,7 +79,7 @@ class _TherapistDashboardState extends State<TherapistDashboard> {
               "Post Therapy Content",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
 
             // Post Form
             Form(
@@ -129,7 +132,7 @@ class _TherapistDashboardState extends State<TherapistDashboard> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
 
                   _isLoading
                       ? const CircularProgressIndicator()
@@ -138,7 +141,8 @@ class _TherapistDashboardState extends State<TherapistDashboard> {
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(double.infinity, 50),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
                           ),
                           icon: const Icon(Icons.upload),
                           label: const Text("Post Content"),
@@ -179,7 +183,8 @@ class _TherapistDashboardState extends State<TherapistDashboard> {
                     return Card(
                       margin: const EdgeInsets.symmetric(vertical: 8),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       elevation: 3,
                       child: ListTile(
                         title: Text(

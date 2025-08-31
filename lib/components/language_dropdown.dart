@@ -46,9 +46,9 @@ class _LanguageDropdownState extends State<LanguageDropdown> {
             ],
           ),
           child: Theme(
-            data: Theme.of(context).copyWith(
-              canvasColor: const Color(0xFF66bb6a),
-            ),
+            data: Theme.of(
+              context,
+            ).copyWith(canvasColor: const Color(0xFF66bb6a)),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: currentLanguage['code'],
@@ -60,7 +60,7 @@ class _LanguageDropdownState extends State<LanguageDropdown> {
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
-                  fontSize: 14,
+                  fontSize: 12,
                   letterSpacing: 1.0,
                 ),
                 dropdownColor: const Color(0xFF66bb6a),

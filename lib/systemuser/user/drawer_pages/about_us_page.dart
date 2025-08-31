@@ -39,7 +39,7 @@ class AboutUsPage extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
           const Text(
             'Mind Aware',
             style: TextStyle(
@@ -52,7 +52,7 @@ class AboutUsPage extends StatelessWidget {
           Text(
             'Your Mental Health Companion',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 14,
               color: Colors.white.withOpacity(0.9),
             ),
           ),
@@ -115,7 +115,7 @@ class AboutUsPage extends StatelessWidget {
                     title,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: 18,
                       color: Color.fromRGBO(25, 53, 30, 1),
                     ),
                   ),
@@ -123,7 +123,7 @@ class AboutUsPage extends StatelessWidget {
                   Text(
                     content,
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 12,
                       height: 1.5,
                       color: Colors.black87,
                     ),
@@ -201,7 +201,7 @@ class AboutUsPage extends StatelessWidget {
                 role,
                 style: const TextStyle(
                   color: Color.fromRGBO(25, 53, 30, 1),
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -257,13 +257,13 @@ class AboutUsPage extends StatelessWidget {
                 'Get In Touch',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: 18,
                   color: Color.fromRGBO(25, 53, 30, 1),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
           _buildContactItem(Icons.email_outlined, 'support@mindaware.com'),
           const SizedBox(height: 12),
           _buildContactItem(Icons.phone_outlined, '+256 700 000 000'),
@@ -282,7 +282,7 @@ class AboutUsPage extends StatelessWidget {
         Flexible(
           child: Text(
             text,
-            style: const TextStyle(fontSize: 16, color: Colors.black87),
+            style: const TextStyle(fontSize: 12, color: Colors.black87),
           ),
         ),
       ],
@@ -373,7 +373,7 @@ class AboutUsPage extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
 
             // Team Grid
             GridView.count(

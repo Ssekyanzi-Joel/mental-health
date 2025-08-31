@@ -171,7 +171,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                         'Update Booking',
                         style: TextStyle(
                           color: softBlack,
-                          fontSize: 20,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -183,7 +183,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                     'Status',
                     style: TextStyle(
                       color: darkGray,
-                      fontSize: 16,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -234,13 +234,13 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
 
                   Text(
                     'Response Message (Optional)',
                     style: TextStyle(
                       color: darkGray,
-                      fontSize: 16,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -287,7 +287,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                             'Cancel',
                             style: TextStyle(
                               color: darkGray,
-                              fontSize: 16,
+                              fontSize: 12,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -321,7 +321,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                           child: const Text(
                             'Update',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -372,7 +372,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                   message,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -412,7 +412,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                   style: TextStyle(
                     color: isSelected ? pureWhite : darkGray,
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                    fontSize: 14,
+                    fontSize: 12,
                   ),
                 ),
                 selectedColor: primaryBlue,
@@ -588,7 +588,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                               name,
                               style: TextStyle(
                                 color: softBlack,
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -648,7 +648,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                       reason,
                       style: TextStyle(
                         color: softBlack,
-                        fontSize: 14,
+                        fontSize: 12,
                         height: 1.4,
                       ),
                     ),
@@ -672,7 +672,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                         therapistResponse,
                         style: TextStyle(
                           color: softBlack,
-                          fontSize: 14,
+                          fontSize: 12,
                           height: 1.4,
                         ),
                       ),
@@ -694,7 +694,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                         'Requested ${DateFormat('MMM dd, yyyy • hh:mm a').format(createdAt.toDate())}',
                         style: TextStyle(
                           color: darkGray.withOpacity(0.6),
-                          fontSize: 12,
+                          fontSize: 10,
                           fontStyle: FontStyle.italic,
                         ),
                       ),
@@ -808,7 +808,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                     'Something went wrong',
                     style: TextStyle(
                       color: errorRed,
-                      fontSize: 18,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -842,12 +842,12 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                       strokeWidth: 3,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
                   Text(
                     'Loading your bookings...',
                     style: TextStyle(
                       color: darkGray,
-                      fontSize: 16,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -900,7 +900,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                             color: darkGray,
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         Text(
                           _selectedFilter == 'All'
                               ? 'Your therapy bookings will appear here once clients start scheduling sessions'
@@ -950,12 +950,12 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                       strokeWidth: 3,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
                   Text(
                     'Loading analytics...',
                     style: TextStyle(
                       color: darkGray,
-                      fontSize: 16,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -1036,7 +1036,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
 
                 // Summary Cards
                 Row(
@@ -1130,7 +1130,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                               'Recent Activity',
                               style: TextStyle(
                                 color: softBlack,
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -1158,7 +1158,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                                       'No activity yet',
                                       style: TextStyle(
                                         color: darkGray,
-                                        fontSize: 16,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -1252,7 +1252,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                                                 ).format(createdAt.toDate()),
                                                 style: TextStyle(
                                                   color: darkGray,
-                                                  fontSize: 12,
+                                                  fontSize: 10,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
@@ -1378,7 +1378,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                     size: 48,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
                 Text(
                   'Authentication Required',
                   style: TextStyle(
@@ -1445,7 +1445,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                             'Therapist Dashboard',
                             style: TextStyle(
                               color: softBlack,
-                              fontSize: 24,
+                              fontSize: 10,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -1453,7 +1453,7 @@ class _TherapistBookingPageState extends State<TherapistBookingPage>
                             'Manage your therapy bookings efficiently',
                             style: TextStyle(
                               color: darkGray,
-                              fontSize: 14,
+                              fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
                           ),

@@ -19,9 +19,7 @@ class TherapistUserListPage extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(
-              child: Text("No users found."),
-            );
+            return const Center(child: Text("No users found."));
           }
 
           var users = snapshot.data!.docs;
@@ -101,11 +99,13 @@ class UserDetailPage extends StatelessWidget {
                           ? user["firstName"][0].toUpperCase()
                           : "?",
                       style: const TextStyle(
-                          fontSize: 32, fontWeight: FontWeight.bold),
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
                 _buildDetailRow("First Name", user["firstName"]),
                 _buildDetailRow("Last Name", user["lastName"]),
                 _buildDetailRow("Email", user["email"]),
@@ -135,18 +135,12 @@ class UserDetailPage extends StatelessWidget {
             flex: 2,
             child: Text(
               "$title:",
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
             ),
           ),
           Expanded(
             flex: 3,
-            child: Text(
-              value ?? "N/A",
-              style: const TextStyle(fontSize: 16),
-            ),
+            child: Text(value ?? "N/A", style: const TextStyle(fontSize: 16)),
           ),
         ],
       ),

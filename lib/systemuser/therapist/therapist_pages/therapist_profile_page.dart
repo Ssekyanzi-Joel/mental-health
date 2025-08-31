@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:ui';
 import 'package:mind_aware_application/systemuser/therapist/therapist_drawer_pages/gallery_page.dart';
 import 'package:mind_aware_application/systemuser/therapist/therapist_drawer_pages/logout_page.dart';
 import 'package:mind_aware_application/systemuser/therapist/therapist_drawer_pages/therapist_emergies.dart';
@@ -22,39 +21,63 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  // Redesigned color palette - more balanced and professional
-  static const Color primaryBlue = const Color.fromARGB(
-    255,
-    15,
-    40,
-    20,
-  ); // Professional Blue
-  static const Color lightBlue = Color.fromARGB(255, 7, 73, 45); // Lighter blue accent
-  static const Color softGray = Color(0xFF7A8B99); // Muted gray-blue
-  static const Color warmWhite = Color(0xFFFAFBFC); // Warm white background
-  static const Color cardWhite = Color(0xFFFFFFFF); // Pure white for cards
-  static const Color textDark = const Color.fromARGB(
-    255,
-    15,
-    40,
-    20,
-  ); // Professional Blue
-  static const Color textLight = Color(0xFF5A6B7A); // Light text
-  static const Color accentTeal = Color(0xFF4A9B8E); // Calming teal
-  static const Color accentOrange = Color(0xFFE17B47); // Warm orange
-  static const Color accentPurple = Color(0xFF8B7AB8); // Soft purple
+class _ProfilePageState extends State<ProfilePage>
+    with TickerProviderStateMixin {
+  // Modern therapist color palette
+  static const Color primaryBlue = Color(0xFF1565C0);
+  static const Color lightBlue = Color(0xFF42A5F5);
+  static const Color accentBlue = Color(0xFF90CAF9);
+  static const Color darkBlue = Color(0xFF0D47A1);
+  static const Color cardBackground = Color(0xFFFFFFFF);
+  static const Color backgroundGray = Color(0xFFF8FAF9);
+  static const Color textPrimary = Color(0xFF2D3748);
+  static const Color textSecondary = Color(0xFF718096);
 
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
 
   Map<String, dynamic> userData = {};
   bool isLoading = true;
+  late AnimationController _fadeController;
+  late AnimationController _slideController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
     fetchUserData();
+    _initializeAnimations();
+  }
+
+  void _initializeAnimations() {
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _slideController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut),
+    );
+
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(parent: _slideController, curve: Curves.elasticOut),
+        );
+
+    _fadeController.forward();
+    _slideController.forward();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    _slideController.dispose();
+    super.dispose();
   }
 
   Future<void> fetchUserData() async {
@@ -79,236 +102,270 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void navigateTo(Widget page) {
-    Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildModernProfileHeader() {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [primaryBlue, lightBlue, softGray.withOpacity(0.8)],
+          colors: [primaryBlue, lightBlue.withOpacity(0.9)],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          stops: const [0.0, 0.7, 1.0],
         ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(32),
-          bottomRight: Radius.circular(32),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: primaryBlue.withOpacity(0.2),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
-      child: Column(
-        children: [
-          const SizedBox(height: 20),
-
-          // Professional therapist badge
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            decoration: BoxDecoration(
-              color: cardWhite.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: cardWhite.withOpacity(0.3), width: 1.5),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.psychology_outlined, color: cardWhite, size: 18),
-                const SizedBox(width: 10),
-                Text(
-                  'LICENSED THERAPIST',
-                  style: TextStyle(
-                    color: cardWhite,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                    letterSpacing: 1.0,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // Clean profile avatar
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: cardWhite.withOpacity(0.2),
-                  blurRadius: 16,
-                  spreadRadius: 4,
-                ),
-              ],
-            ),
-            child: CircleAvatar(
-              radius: 56,
-              backgroundColor: cardWhite,
-              child: CircleAvatar(
-                radius: 52,
-                backgroundColor: accentTeal,
-                child: Text(
-                  (userData['firstName']?[0] ?? 'T') +
-                      (userData['lastName']?[0] ?? 'H'),
-                  style: const TextStyle(
-                    fontSize: 32,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          // Professional name display
-          Text(
-            'Dr. ${userData['firstName'] ?? 'Therapist'} ${userData['lastName'] ?? 'User'}',
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-              letterSpacing: 0.3,
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          // Contact information cards
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              children: [
-                // Email card
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                    vertical: 14,
-                  ),
-                  margin: const EdgeInsets.only(bottom: 8),
-                  decoration: BoxDecoration(
-                    color: cardWhite.withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: cardWhite.withOpacity(0.25),
-                      width: 1,
+      child: SafeArea(
+        child: Column(
+          children: [
+            // Header with settings icon
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Therapist Profile',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  child: Row(
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.settings_outlined,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                      onPressed: () =>
+                          navigateTo(UpdateProfilePage(userData: userData)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Profile Avatar and Info
+            FadeTransition(
+              opacity: _fadeAnimation,
+              child: Column(
+                children: [
+                  // Professional therapist badge
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.3),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.psychology_outlined,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'LICENSED THERAPIST',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Avatar with professional indicator
+                  Stack(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: cardWhite.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(10),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 20,
+                              spreadRadius: 5,
+                            ),
+                          ],
                         ),
-                        child: const Icon(
-                          Icons.email_outlined,
-                          color: Colors.white,
-                          size: 16,
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.white,
+                          child: CircleAvatar(
+                            radius: 46,
+                            backgroundColor: accentBlue,
+                            child: Text(
+                              (userData['firstName']?[0] ?? 'D').toUpperCase() +
+                                  (userData['lastName']?[0] ?? 'R')
+                                      .toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: 32,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Text(
-                          userData['email'] ?? 'therapist@mindaware.com',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
+                      // Professional status indicator
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 3),
                           ),
-                          overflow: TextOverflow.ellipsis,
+                          child: const Icon(
+                            Icons.verified,
+                            color: Colors.white,
+                            size: 12,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
 
-                // Phone card (if exists)
-                if (userData['phone'] != null &&
-                    userData['phone'].toString().isNotEmpty)
+                  const SizedBox(height: 16),
+
+                  // Name and Title
+                  Text(
+                    'Dr. ${userData['firstName'] ?? 'Therapist'} ${userData['lastName'] ?? 'Name'}',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  // Specialization Badge
                   Container(
-                    width: double.infinity,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 18,
-                      vertical: 14,
+                      horizontal: 16,
+                      vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: cardWhite.withOpacity(0.12),
-                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: cardWhite.withOpacity(0.25),
+                        color: Colors.white.withOpacity(0.3),
                         width: 1,
                       ),
                     ),
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: cardWhite.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Icon(
-                            Icons.phone_outlined,
-                            color: Colors.white,
-                            size: 16,
-                          ),
+                        const Icon(
+                          Icons.medical_services,
+                          color: Colors.white,
+                          size: 16,
                         ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Text(
-                            userData['phone'] ?? '',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'MENTAL HEALTH SPECIALIST',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                            letterSpacing: 1,
                           ),
                         ),
                       ],
                     ),
                   ),
-              ],
-            ),
-          ),
 
-          const SizedBox(height: 12),
-        ],
+                  const SizedBox(height: 24),
+
+                  // Quick Stats Cards
+                  _buildQuickStatsRow(),
+
+                  const SizedBox(height: 24),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildSectionHeader(String title, IconData icon) {
+  Widget _buildQuickStatsRow() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 28, 24, 16),
+      padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: primaryBlue.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon, color: primaryBlue, size: 20),
-          ),
-          const SizedBox(width: 14),
+          _buildStatCard('Patients', '24', Icons.people_outline),
+          _buildStatCard('Sessions', '156', Icons.psychology_outlined),
+          _buildStatCard('Rating', '4.9', Icons.star_outline),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatCard(String label, String value, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: Colors.white, size: 20),
+          const SizedBox(height: 8),
           Text(
-            title,
+            value,
             style: const TextStyle(
+              color: Colors.white,
               fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: textDark,
-              letterSpacing: 0.2,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.8),
+              fontSize: 12,
             ),
           ),
         ],
@@ -316,90 +373,119 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildProfileOption({
-    required IconData icon,
+  Widget _buildMenuSection({
     required String title,
-    required Color iconColor,
-    required VoidCallback onTap,
-    String? subtitle,
+    required List<MenuItemData> items,
   }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-      decoration: BoxDecoration(
-        color: cardWhite,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: primaryBlue.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(18),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: iconColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Icon(icon, color: iconColor, size: 22),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: textDark,
-                          letterSpacing: 0.1,
-                        ),
-                      ),
-                      if (subtitle != null) ...[
-                        const SizedBox(height: 2),
-                        Text(
-                          subtitle,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: textLight,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: softGray.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    color: softGray,
-                    size: 14,
-                  ),
-                ),
-              ],
+    return SlideTransition(
+      position: _slideAnimation,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        decoration: BoxDecoration(
+          color: cardBackground,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.08),
+              blurRadius: 10,
+              spreadRadius: 1,
+              offset: const Offset(0, 2),
             ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: darkBlue,
+                ),
+              ),
+            ),
+            ...items.asMap().entries.map((entry) {
+              final index = entry.key;
+              final item = entry.value;
+              return _buildModernMenuItem(
+                item: item,
+                isLast: index == items.length - 1,
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModernMenuItem({
+    required MenuItemData item,
+    bool isLast = false,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: item.onTap,
+        borderRadius: BorderRadius.vertical(
+          bottom: isLast ? const Radius.circular(16) : Radius.zero,
+        ),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          decoration: BoxDecoration(
+            border: !isLast
+                ? Border(
+                    bottom: BorderSide(
+                      color: Colors.grey.withOpacity(0.1),
+                      width: 1,
+                    ),
+                  )
+                : null,
+          ),
+          child: Row(
+            children: [
+              // Icon container
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: item.iconColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(item.icon, color: item.iconColor, size: 22),
+              ),
+
+              const SizedBox(width: 16),
+
+              // Title and subtitle
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    if (item.subtitle != null) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        item.subtitle!,
+                        style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+
+              // Arrow icon
+              Icon(Icons.chevron_right, color: Colors.grey[400], size: 20),
+            ],
           ),
         ),
       ),
@@ -410,139 +496,192 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return Scaffold(
-        backgroundColor: warmWhite,
+        backgroundColor: backgroundGray,
         body: Center(
-          child: CircularProgressIndicator(color: primaryBlue, strokeWidth: 3),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(primaryBlue),
+                strokeWidth: 3,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Loading profile...',
+                style: TextStyle(color: Colors.grey[600], fontSize: 16),
+              ),
+            ],
+          ),
         ),
       );
     }
 
     return Scaffold(
-      backgroundColor: warmWhite,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildProfileHeader(),
+      backgroundColor: backgroundGray,
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(child: _buildModernProfileHeader()),
+          SliverToBoxAdapter(
+            child: Transform.translate(
+              offset: const Offset(0, -20),
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: backgroundGray,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 32),
 
-            // Account Settings Section
-            _buildSectionHeader("Account Management", Icons.settings_outlined),
-            _buildProfileOption(
-              icon: Icons.person_outline,
-              title: "Update Profile",
-              subtitle: "Edit therapist profile information",
-              iconColor: primaryBlue,
-              onTap: () => navigateTo(UpdateProfilePage(userData: userData)),
-            ),
-            _buildProfileOption(
-              icon: Icons.people_outline,
-              title: "Users",
-              subtitle: "Manage assigned patients",
-              iconColor: accentTeal,
-              onTap: () => navigateTo(const TherapistUserListPage()),
-            ),
+                    // Patient Management Section
+                    _buildMenuSection(
+                      title: 'Patient Management',
+                      items: [
+                        MenuItemData(
+                          icon: Icons.people_outline,
+                          title: 'Patient List',
+                          subtitle: 'Manage assigned patients',
+                          iconColor: primaryBlue,
+                          onTap: () =>
+                              navigateTo(const TherapistUserListPage()),
+                        ),
+                        MenuItemData(
+                          icon: Icons.book_online_outlined,
+                          title: 'Appointments',
+                          subtitle: 'Manage session bookings',
+                          iconColor: Colors.orange,
+                          onTap: () => navigateTo(const TherapistBookingPage()),
+                        ),
+                        MenuItemData(
+                          icon: Icons.mood_outlined,
+                          title: 'Mood Tracker',
+                          subtitle: 'Monitor patient progress',
+                          iconColor: Colors.purple,
+                          onTap: () =>
+                              navigateTo(const TherapistMoodTrackerPage()),
+                        ),
+                      ],
+                    ),
 
-            // Patient Care Section
-            _buildSectionHeader(
-              "Patient Care",
-              Icons.health_and_safety_outlined,
-            ),
-            _buildProfileOption(
-              icon: Icons.emergency_outlined,
-              title: "Emergency Resources",
-              subtitle: "Crisis intervention and support",
-              iconColor: const Color(0xFFE74C3C),
-              onTap: () => navigateTo(const TherapistEmergiesDashboard()),
-            ),
-            _buildProfileOption(
-              icon: Icons.mood_outlined,
-              title: "Mood Tracker",
-              subtitle: "Monitor patient mood patterns",
-              iconColor: accentPurple,
-              onTap: () => navigateTo(const TherapistMoodTrackerPage()),
-            ),
-            _buildProfileOption(
-              icon: Icons.book_online_outlined,
-              title: "Bookings",
-              subtitle: "Manage appointment schedule",
-              iconColor: accentOrange,
-              onTap: () => navigateTo(const TherapistBookingPage()),
-            ),
+                    // Clinical Tools Section
+                    _buildMenuSection(
+                      title: 'Clinical Tools',
+                      items: [
+                        MenuItemData(
+                          icon: Icons.emergency_outlined,
+                          title: 'Emergency Resources',
+                          subtitle: 'Crisis intervention tools',
+                          iconColor: Colors.red,
+                          onTap: () =>
+                              navigateTo(const TherapistEmergiesDashboard()),
+                        ),
+                        MenuItemData(
+                          icon: Icons.star_outline,
+                          title: 'Testimonials',
+                          subtitle: 'Patient success stories',
+                          iconColor: Colors.amber,
+                          onTap: () =>
+                              navigateTo(const TherapistPostTestimonyPage()),
+                        ),
+                        MenuItemData(
+                          icon: Icons.photo_library_outlined,
+                          title: 'Resource Gallery',
+                          subtitle: 'Therapeutic materials',
+                          iconColor: Colors.teal,
+                          onTap: () => navigateTo(const GalleryPage()),
+                        ),
+                      ],
+                    ),
 
-            // Content Management Section
-            _buildSectionHeader(
-              "Content & Resources",
-              Icons.library_books_outlined,
-            ),
-            _buildProfileOption(
-              icon: Icons.photo_library_outlined,
-              title: "Gallery",
-              subtitle: "Manage therapeutic resources",
-              iconColor: lightBlue,
-              onTap: () => navigateTo(const GalleryPage()),
-            ),
-            _buildProfileOption(
-              icon: Icons.star_outline,
-              title: "Testimonials",
-              subtitle: "Patient success stories",
-              iconColor: const Color(0xFFF39C12),
-              onTap: () => navigateTo(const TherapistPostTestimonyPage()),
-            ),
+                    // Communication Section
+                    _buildMenuSection(
+                      title: 'Communication',
+                      items: [
+                        MenuItemData(
+                          icon: Icons.message_outlined,
+                          title: 'Messages',
+                          subtitle: 'Patient communications',
+                          iconColor: Colors.blue,
+                          onTap: () => navigateTo(const MessagesPage()),
+                        ),
+                        MenuItemData(
+                          icon: Icons.notifications_outlined,
+                          title: 'Notifications',
+                          subtitle: 'System alerts and updates',
+                          iconColor: Colors.indigo,
+                          onTap: () => navigateTo(const NotificationsPage()),
+                        ),
+                        MenuItemData(
+                          icon: Icons.feedback_outlined,
+                          title: 'Feedback',
+                          subtitle: 'Patient and system feedback',
+                          iconColor: Colors.green,
+                          onTap: () => navigateTo(const TherapistDashboard()),
+                        ),
+                      ],
+                    ),
 
-            // Communication Section
-            _buildSectionHeader("Communication", Icons.chat_bubble_outline),
-            _buildProfileOption(
-              icon: Icons.message_outlined,
-              title: "Messages",
-              subtitle: "Patient communications",
-              iconColor: accentTeal,
-              onTap: () => navigateTo(const MessagesPage()),
-            ),
-            _buildProfileOption(
-              icon: Icons.notifications_outlined,
-              title: "Notifications",
-              subtitle: "System alerts and updates",
-              iconColor: accentPurple,
-              onTap: () => navigateTo(const NotificationsPage()),
-            ),
-            _buildProfileOption(
-              icon: Icons.feedback_outlined,
-              title: "Feedback",
-              subtitle: "Patient and system feedback",
-              iconColor: accentOrange,
-              onTap: () => navigateTo(const TherapistDashboard()),
-            ),
+                    // Business Management Section
+                    _buildMenuSection(
+                      title: 'Business Management',
+                      items: [
+                        MenuItemData(
+                          icon: Icons.payment_outlined,
+                          title: 'Transactions',
+                          subtitle: 'Payment and billing records',
+                          iconColor: Colors.green,
+                          onTap: () =>
+                              navigateTo(const AdminTransactionsPage()),
+                        ),
+                      ],
+                    ),
 
-            // Business Section
-            _buildSectionHeader(
-              "Business Management",
-              Icons.business_center_outlined,
-            ),
-            _buildProfileOption(
-              icon: Icons.payment_outlined,
-              title: "Transactions",
-              subtitle: "Payment and billing records",
-              iconColor: const Color(0xFF27AE60),
-              onTap: () => navigateTo(const AdminTransactionsPage()),
-            ),
+                    // Account Settings Section
+                    _buildMenuSection(
+                      title: 'Account Settings',
+                      items: [
+                        MenuItemData(
+                          icon: Icons.person_outline,
+                          title: 'Update Profile',
+                          subtitle: 'Edit professional information',
+                          iconColor: primaryBlue,
+                          onTap: () =>
+                              navigateTo(UpdateProfilePage(userData: userData)),
+                        ),
+                        MenuItemData(
+                          icon: Icons.logout_outlined,
+                          title: 'Sign Out',
+                          subtitle: 'Logout from therapist account',
+                          iconColor: Colors.red,
+                          onTap: () => navigateTo(const LogoutPage()),
+                        ),
+                      ],
+                    ),
 
-            // Account Actions
-            _buildSectionHeader(
-              "Account Actions",
-              Icons.account_circle_outlined,
+                    const SizedBox(height: 32),
+                  ],
+                ),
+              ),
             ),
-            _buildProfileOption(
-              icon: Icons.logout_outlined,
-              title: "Logout",
-              subtitle: "Sign out of therapist account",
-              iconColor: const Color(0xFFE74C3C),
-              onTap: () => navigateTo(const LogoutPage()),
-            ),
-
-            const SizedBox(height: 32),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+}
+
+class MenuItemData {
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final Color iconColor;
+  final VoidCallback onTap;
+
+  MenuItemData({
+    required this.icon,
+    required this.title,
+    this.subtitle,
+    required this.iconColor,
+    required this.onTap,
+  });
 }

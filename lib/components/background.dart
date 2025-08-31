@@ -7,34 +7,47 @@ class Background extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final isKeyboardVisible = keyboardHeight > 0;
+
+    // Reduce header height when keyboard is visible
+    final headerHeight = isKeyboardVisible ? 180.0 : 240.0;
+    final logoTopPosition = isKeyboardVisible ? 40.0 : 60.0;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F2F0), // Warm off-white from Freud UI
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true, // Allow UI to resize for keyboard
       body: SizedBox(
         width: double.infinity,
-        height: MediaQuery.of(context).size.height,
+        height: screenHeight,
         child: Stack(
           children: <Widget>[
-            // Curved top section with Freud UI green
+            // Curved top section with Freud UI green - responsive height
             Positioned(
               top: 0,
               left: 0,
               right: 0,
               child: CustomPaint(
-                size: Size(MediaQuery.of(context).size.width, 300),
+                size: Size(MediaQuery.of(context).size.width, headerHeight),
                 painter: CurvedTopPainter(),
               ),
             ),
 
-            // Logo/Brand section
-            Positioned(top: 80, left: 0, right: 0, child: _buildLogoSection()),
+            // Logo/Brand section - responsive positioning
+            Positioned(
+              top: logoTopPosition,
+              left: 0,
+              right: 0,
+              child: _buildLogoSection(isKeyboardVisible),
+            ),
 
-            // Main content
+            // Main content - responsive top padding
             SafeArea(
               child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 300,
-                ), // Space for curved section
+                padding: EdgeInsets.only(
+                  top: headerHeight - 20, // Reduced space for curved section
+                ),
                 child: child,
               ),
             ),
@@ -44,35 +57,37 @@ class Background extends StatelessWidget {
     );
   }
 
-  Widget _buildLogoSection() {
+  Widget _buildLogoSection([bool isCompact = false]) {
     return Column(
       children: [
-        // Four-dot logo inspired by Freud UI
+        // Logo from assets - responsive size
         Container(
-          width: 80,
-          height: 80,
+          width: isCompact ? 60 : 80,
+          height: isCompact ? 60 : 80,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(isCompact ? 15 : 20),
             color: Colors.white.withOpacity(0.2),
             border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
           ),
           child: Center(
-            child: CustomPaint(
-              size: const Size(32, 32),
-              painter: FourDotLogoPainter(),
+            child: Image.asset(
+              'assets/images/logo.png',
+              width: isCompact ? 24 : 32,
+              height: isCompact ? 24 : 32,
+              fit: BoxFit.contain,
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: isCompact ? 12 : 20),
 
-        // App name with elegant typography
+        // App name with elegant typography - responsive size
         Text(
           'Mind Aware',
           style: TextStyle(
-            fontSize: 24,
+            fontSize: isCompact ? 20 : 24,
             fontWeight: FontWeight.w300,
             color: Colors.white,
-            letterSpacing: 2,
+            letterSpacing: isCompact ? 1.5 : 2,
           ),
         ),
       ],
@@ -89,8 +104,8 @@ class CurvedTopPainter extends CustomPainter {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          const Color(0xFF9CAF7F), // Main green from Freud UI
-          const Color(0xFF9CAF7F).withOpacity(0.8),
+          const Color.fromARGB(255, 15, 40, 20), // Professional Blue
+          const Color.fromARGB(255, 15, 40, 20), // Professional Blue
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
 
@@ -126,35 +141,6 @@ class CurvedTopPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-// Custom painter for the four-dot logo
-class FourDotLogoPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.fill;
-
-    final dotRadius = size.width * 0.12;
-    final center = Offset(size.width / 2, size.height / 2);
-    final spacing = size.width * 0.25;
-
-    // Draw four dots in a diamond/cross pattern
-    final positions = [
-      Offset(center.dx, center.dy - spacing), // Top
-      Offset(center.dx + spacing, center.dy), // Right
-      Offset(center.dx, center.dy + spacing), // Bottom
-      Offset(center.dx - spacing, center.dy), // Left
-    ];
-
-    for (final position in positions) {
-      canvas.drawCircle(position, dotRadius, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
-}
-
 // Alternative background with subtle pattern
 class BackgroundWithPattern extends StatelessWidget {
   final Widget child;
@@ -162,12 +148,20 @@ class BackgroundWithPattern extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final isKeyboardVisible = keyboardHeight > 0;
+
+    // Reduce header height when keyboard is visible
+    final headerHeight = isKeyboardVisible ? 180.0 : 240.0;
+    final logoTopPosition = isKeyboardVisible ? 40.0 : 60.0;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F2F0),
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true, // Allow UI to resize for keyboard
       body: Container(
         width: double.infinity,
-        height: MediaQuery.of(context).size.height,
+        height: screenHeight,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -185,24 +179,29 @@ class BackgroundWithPattern extends StatelessWidget {
             // Subtle dot pattern
             Positioned.fill(child: CustomPaint(painter: DotPatternPainter())),
 
-            // Main curved section
+            // Main curved section - responsive height
             Positioned(
               top: 0,
               left: 0,
               right: 0,
               child: CustomPaint(
-                size: Size(MediaQuery.of(context).size.width, 280),
+                size: Size(MediaQuery.of(context).size.width, headerHeight),
                 painter: CurvedTopPainter(),
               ),
             ),
 
-            // Logo section
-            Positioned(top: 80, left: 0, right: 0, child: _buildLogoSection()),
+            // Logo section - responsive positioning
+            Positioned(
+              top: logoTopPosition,
+              left: 0,
+              right: 0,
+              child: _buildLogoSection(isKeyboardVisible),
+            ),
 
-            // Main content
+            // Main content - responsive top padding
             SafeArea(
               child: Padding(
-                padding: const EdgeInsets.only(top: 160),
+                padding: EdgeInsets.only(top: headerHeight - 60),
                 child: child,
               ),
             ),
@@ -212,40 +211,42 @@ class BackgroundWithPattern extends StatelessWidget {
     );
   }
 
-  Widget _buildLogoSection() {
+  Widget _buildLogoSection([bool isCompact = false]) {
     return Column(
       children: [
         Container(
-          width: 80,
-          height: 80,
+          width: isCompact ? 60 : 80,
+          height: isCompact ? 60 : 80,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(isCompact ? 15 : 20),
             color: Colors.white.withOpacity(0.15),
             border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
             boxShadow: [
               BoxShadow(
                 color: Colors.white.withOpacity(0.2),
                 spreadRadius: 0,
-                blurRadius: 20,
+                blurRadius: isCompact ? 15 : 20,
                 offset: const Offset(0, 8),
               ),
             ],
           ),
           child: Center(
-            child: CustomPaint(
-              size: const Size(32, 32),
-              painter: FourDotLogoPainter(),
+            child: Image.asset(
+              'assets/images/logo.png',
+              width: isCompact ? 24 : 32,
+              height: isCompact ? 24 : 32,
+              fit: BoxFit.contain,
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: isCompact ? 12 : 20),
         Text(
           'mind.aware',
           style: TextStyle(
-            fontSize: 24,
+            fontSize: isCompact ? 20 : 24,
             fontWeight: FontWeight.w300,
             color: Colors.white,
-            letterSpacing: 2,
+            letterSpacing: isCompact ? 1.5 : 2,
             shadows: [
               Shadow(
                 color: Colors.black.withOpacity(0.1),

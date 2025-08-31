@@ -102,12 +102,12 @@ class _SimpleMoodTrackerPageState extends State<SimpleMoodTrackerPage> {
             const Text(
               'How are you feeling today?',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 10,
                 fontWeight: FontWeight.bold,
                 color: primaryGreen,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -140,7 +140,7 @@ class _SimpleMoodTrackerPageState extends State<SimpleMoodTrackerPage> {
                             Text(
                               mood['label'],
                               style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w600,
                               ),
                               textAlign: TextAlign.center,
@@ -148,7 +148,7 @@ class _SimpleMoodTrackerPageState extends State<SimpleMoodTrackerPage> {
                             Text(
                               '${mood['score']}/10',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 10,
                                 color: Colors.grey.shade600,
                               ),
                             ),
@@ -160,7 +160,7 @@ class _SimpleMoodTrackerPageState extends State<SimpleMoodTrackerPage> {
                 },
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             // Simple mood history
             StreamBuilder<QuerySnapshot>(
               stream: _fire
@@ -193,7 +193,7 @@ class _SimpleMoodTrackerPageState extends State<SimpleMoodTrackerPage> {
                     const Text(
                       'Recent Moods:',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -217,7 +217,7 @@ class _SimpleMoodTrackerPageState extends State<SimpleMoodTrackerPage> {
                             Text(
                               data['date'] ?? 'Unknown date',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 10,
                                 color: Colors.grey.shade600,
                               ),
                             ),

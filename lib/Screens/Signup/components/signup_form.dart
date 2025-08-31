@@ -22,7 +22,8 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   String? _gender;
   String? _role;
@@ -68,7 +69,9 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
         return _firstNameController.text.isNotEmpty &&
             _lastNameController.text.isNotEmpty &&
             _emailController.text.isNotEmpty &&
-            RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_emailController.text);
+            RegExp(
+              r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$',
+            ).hasMatch(_emailController.text);
       case 1:
         return _countryController.text.isNotEmpty &&
             _cityController.text.isNotEmpty &&
@@ -191,29 +194,35 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final isKeyboardVisible = keyboardHeight > 0;
+
     return FadeTransition(
       opacity: _fadeAnimation,
       child: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          padding: EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: isKeyboardVisible
+                ? 8
+                : 12, // Reduce padding when keyboard is visible
+          ),
           child: Form(
             key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildHeader(),
-                const SizedBox(height: 24),
+                _buildHeader(isKeyboardVisible),
+                SizedBox(height: isKeyboardVisible ? 12 : 16),
                 _buildProgressIndicator(),
-                const SizedBox(height: 32),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  child: _buildStepContent(),
-                ),
-                const SizedBox(height: 24),
+                SizedBox(height: isKeyboardVisible ? 16 : 20),
+                _buildStepContent(isKeyboardVisible),
+                SizedBox(height: isKeyboardVisible ? 16 : 20),
                 _buildNavigationButtons(),
-                const SizedBox(height: 16),
-                _buildFooterLinks(),
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
+                if (!isKeyboardVisible)
+                  _buildFooterLinks(), // Hide footer when keyboard is visible
+                const SizedBox(height: 12),
               ],
             ),
           ),
@@ -222,29 +231,32 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader([bool isCompact = false]) {
     return Column(
       children: [
         Text(
           _getStepTitle(),
-          style: const TextStyle(
-            fontSize: 28,
+          style: TextStyle(
+            fontSize: isCompact
+                ? 20
+                : 22, // Smaller font when keyboard is visible
             fontWeight: FontWeight.w700,
             color: Color(0xFF3C2414),
             letterSpacing: -0.5,
           ),
           textAlign: TextAlign.center,
         ),
-        const SizedBox(height: 8),
-        Text(
-          _getStepSubtitle(),
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey.shade600,
-            height: 1.4,
+        SizedBox(height: isCompact ? 4 : 6),
+        if (!isCompact) // Hide subtitle when keyboard is visible to save space
+          Text(
+            _getStepSubtitle(),
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey.shade600,
+              height: 1.4,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
       ],
     );
   }
@@ -281,7 +293,7 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
         final isActive = index <= _currentStep;
         return Expanded(
           child: Container(
-            margin: EdgeInsets.only(right: index < _totalSteps - 1 ? 8 : 0),
+            margin: EdgeInsets.only(right: index < _totalSteps - 1 ? 6 : 0),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
               height: 4,
@@ -298,15 +310,27 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildStepContent() {
-    return PageView(
-      controller: _pageController,
-      physics: const NeverScrollableScrollPhysics(),
-      children: [
-        _buildPersonalInfoStep(),
-        _buildLocationPreferencesStep(),
-        _buildPasswordStep(),
-      ],
+  Widget _buildStepContent([bool isCompact = false]) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+
+    // Calculate available height more intelligently
+    final availableHeight = isCompact
+        ? screenHeight *
+              0.35 // Smaller when keyboard is visible
+        : screenHeight * 0.45;
+
+    return SizedBox(
+      height: availableHeight,
+      child: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          _buildPersonalInfoStep(),
+          _buildLocationPreferencesStep(),
+          _buildPasswordStep(),
+        ],
+      ),
     );
   }
 
@@ -326,7 +350,7 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
                   validator: (value) => value!.isEmpty ? 'Required' : null,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               Expanded(
                 child: _buildTextField(
                   controller: _lastNameController,
@@ -338,7 +362,7 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           _buildTextField(
             controller: _emailController,
             label: 'Email Address',
@@ -356,8 +380,9 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
         ],
       ),
     );
-  } 
- Widget _buildLocationPreferencesStep() {
+  }
+
+  Widget _buildLocationPreferencesStep() {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -373,7 +398,7 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
                   validator: (value) => value!.isEmpty ? 'Required' : null,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               Expanded(
                 child: _buildTextField(
                   controller: _cityController,
@@ -385,7 +410,7 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           _buildTextField(
             controller: _phoneController,
             label: 'Phone Number',
@@ -394,7 +419,7 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
             keyboardType: TextInputType.phone,
             validator: (value) => value!.isEmpty ? 'Required' : null,
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           _buildDropdownField(
             label: 'Gender',
             value: _gender,
@@ -402,7 +427,7 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
             onChanged: (val) => setState(() => _gender = val),
             icon: Icons.wc_outlined,
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           _buildDropdownField(
             label: 'Role',
             value: _role,
@@ -433,7 +458,7 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
               return null;
             },
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           _buildPasswordField(
             controller: _confirmPasswordController,
             label: 'Confirm Password',
@@ -450,7 +475,7 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
               return null;
             },
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           _buildPasswordStrengthIndicator(),
         ],
       ),
@@ -471,20 +496,20 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
         Text(
           label,
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 12,
             fontWeight: FontWeight.w600,
             color: Color(0xFF3C2414),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
                 color: const Color(0xFF9CAF7F).withOpacity(0.1),
                 spreadRadius: 0,
-                blurRadius: 8,
+                blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
             ],
@@ -493,48 +518,48 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
             controller: controller,
             keyboardType: keyboardType,
             textInputAction: TextInputAction.next,
-            style: const TextStyle(fontSize: 16, color: Color(0xFF3C2414)),
+            style: const TextStyle(fontSize: 12, color: Color(0xFF3C2414)),
             validator: validator,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(color: Colors.grey.shade400),
+              hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
               prefixIcon: Container(
-                margin: const EdgeInsets.all(12),
-                padding: const EdgeInsets.all(8),
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: const Color(0xFF9CAF7F).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, color: const Color(0xFF9CAF7F), size: 20),
+                child: Icon(icon, color: const Color(0xFF9CAF7F), size: 18),
               ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
                   color: const Color(0xFF9CAF7F).withOpacity(0.3),
                 ),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
                   color: const Color(0xFF9CAF7F).withOpacity(0.3),
                 ),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(
                   color: Color(0xFF9CAF7F),
-                  width: 2,
+                  width: 1.5,
                 ),
               ),
               errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(color: Color(0xFFE57373)),
               ),
               filled: true,
               fillColor: Colors.white,
               contentPadding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 16,
+                horizontal: 16,
+                vertical: 14,
               ),
             ),
           ),
@@ -556,20 +581,20 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
         Text(
           label,
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 12,
             fontWeight: FontWeight.w600,
             color: Color(0xFF3C2414),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
                 color: const Color(0xFF9CAF7F).withOpacity(0.1),
                 spreadRadius: 0,
-                blurRadius: 8,
+                blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
             ],
@@ -577,51 +602,58 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
           child: DropdownButtonFormField<String>(
             value: value,
             items: items
-                .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+                .map(
+                  (item) => DropdownMenuItem(
+                    value: item,
+                    child: Text(item, style: const TextStyle(fontSize: 14)),
+                  ),
+                )
                 .toList(),
             onChanged: onChanged,
             validator: (val) => val == null ? 'Please select $label' : null,
             decoration: InputDecoration(
               prefixIcon: Container(
-                margin: const EdgeInsets.all(12),
-                padding: const EdgeInsets.all(8),
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: const Color(0xFF9CAF7F).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, color: const Color(0xFF9CAF7F), size: 20),
+                child: Icon(icon, color: const Color(0xFF9CAF7F), size: 18),
               ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
                   color: const Color(0xFF9CAF7F).withOpacity(0.3),
                 ),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
                   color: const Color(0xFF9CAF7F).withOpacity(0.3),
                 ),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(
                   color: Color(0xFF9CAF7F),
-                  width: 2,
+                  width: 1.5,
                 ),
               ),
               filled: true,
               fillColor: Colors.white,
               contentPadding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 16,
+                horizontal: 16,
+                vertical: 14,
               ),
             ),
           ),
         ),
       ],
     );
-  }  Widget _buildPasswordField({
+  }
+
+  Widget _buildPasswordField({
     required TextEditingController controller,
     required String label,
     required String hint,
@@ -635,20 +667,20 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
         Text(
           label,
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 12,
             fontWeight: FontWeight.w600,
             color: Color(0xFF3C2414),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
                 color: const Color(0xFF9CAF7F).withOpacity(0.1),
                 spreadRadius: 0,
-                blurRadius: 8,
+                blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
             ],
@@ -656,69 +688,69 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
           child: TextFormField(
             controller: controller,
             obscureText: !isVisible,
-            style: const TextStyle(fontSize: 16, color: Color(0xFF3C2414)),
+            style: const TextStyle(fontSize: 12, color: Color(0xFF3C2414)),
             validator: validator,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(color: Colors.grey.shade400),
+              hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
               prefixIcon: Container(
-                margin: const EdgeInsets.all(12),
-                padding: const EdgeInsets.all(8),
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: const Color(0xFF9CAF7F).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(
                   Icons.lock_outline,
                   color: Color(0xFF9CAF7F),
-                  size: 20,
+                  size: 18,
                 ),
               ),
               suffixIcon: IconButton(
                 icon: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     isVisible
                         ? Icons.visibility_outlined
                         : Icons.visibility_off_outlined,
                     color: Colors.grey.shade600,
-                    size: 20,
+                    size: 18,
                   ),
                 ),
                 onPressed: onVisibilityToggle,
               ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
                   color: const Color(0xFF9CAF7F).withOpacity(0.3),
                 ),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
                   color: const Color(0xFF9CAF7F).withOpacity(0.3),
                 ),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(
                   color: Color(0xFF9CAF7F),
-                  width: 2,
+                  width: 1.5,
                 ),
               ),
               errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(color: Color(0xFFE57373)),
               ),
               filled: true,
               fillColor: Colors.white,
               contentPadding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 16,
+                horizontal: 16,
+                vertical: 14,
               ),
             ),
           ),
@@ -737,17 +769,17 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
         Text(
           'Password Strength',
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 10,
             fontWeight: FontWeight.w500,
             color: Colors.grey.shade700,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Row(
           children: List.generate(4, (index) {
             return Expanded(
               child: Container(
-                margin: EdgeInsets.only(right: index < 3 ? 4 : 0),
+                margin: EdgeInsets.only(right: index < 3 ? 3 : 0),
                 height: 4,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(2),
@@ -763,7 +795,7 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
         Text(
           _getStrengthText(strength),
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 11,
             color: _getStrengthColor(strength),
             fontWeight: FontWeight.w500,
           ),
@@ -825,32 +857,32 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
                   color: const Color(0xFF9CAF7F).withOpacity(0.5),
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: 14),
               ),
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.arrow_back, size: 18),
-                  SizedBox(width: 8),
-                  Text('Back', style: TextStyle(fontSize: 16)),
+                  Icon(Icons.arrow_back, size: 16),
+                  SizedBox(width: 6),
+                  Text('Back', style: TextStyle(fontSize: 14)),
                 ],
               ),
             ),
           ),
-        if (_currentStep > 0) const SizedBox(width: 16),
+        if (_currentStep > 0) const SizedBox(width: 12),
         Expanded(
           child: Container(
-            height: 56,
+            height: 48,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
                   color: const Color(0xFF8B4513).withOpacity(0.3),
                   spreadRadius: 0,
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
                 ),
               ],
             ),
@@ -858,20 +890,20 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
               onPressed: _isLoading
                   ? null
                   : (_currentStep == _totalSteps - 1
-                      ? _registerUser
-                      : _nextStep),
+                        ? _registerUser
+                        : _nextStep),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF8B4513),
                 foregroundColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
               child: _isLoading
                   ? const SizedBox(
-                      width: 24,
-                      height: 24,
+                      width: 20,
+                      height: 20,
                       child: CircularProgressIndicator(
                         color: Colors.white,
                         strokeWidth: 2,
@@ -885,12 +917,14 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
                               ? 'Create Account'
                               : 'Continue',
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        const Icon(Icons.arrow_forward, size: 18),
+                        if (_currentStep < _totalSteps - 1)
+                          const SizedBox(width: 6),
+                        if (_currentStep < _totalSteps - 1)
+                          const Icon(Icons.arrow_forward, size: 16),
                       ],
                     ),
             ),
@@ -901,27 +935,32 @@ class _SignUpFormState extends State<SignUpForm> with TickerProviderStateMixin {
   }
 
   Widget _buildFooterLinks() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
       children: [
-        Text(
-          'Already have an account? ',
-          style: TextStyle(color: Colors.grey.shade600),
-        ),
-        GestureDetector(
-          onTap: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginScreen()),
-            );
-          },
-          child: const Text(
-            'Sign In',
-            style: TextStyle(
-              color: Color(0xFF9CAF7F),
-              fontWeight: FontWeight.w600,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Already have an account? ',
+              style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
             ),
-          ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                );
+              },
+              child: const Text(
+                'Sign In',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF9CAF7F),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );

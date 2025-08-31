@@ -371,7 +371,7 @@ class _UserBookingPageState extends State<UserBookingPage>
           suffixIcon: suffixIcon,
           labelStyle: TextStyle(
             color: Colors.white.withOpacity(0.8),
-            fontSize: 14,
+            fontSize: 12,
           ),
           hintStyle: TextStyle(color: mainThemeColor.withOpacity(0.5)),
           filled: true,
@@ -417,7 +417,7 @@ class _UserBookingPageState extends State<UserBookingPage>
           labelText: label,
           labelStyle: TextStyle(
             color: Colors.white.withOpacity(0.8),
-            fontSize: 14,
+            fontSize: 12,
           ),
           filled: true,
           fillColor: primaryBackground,
@@ -504,7 +504,7 @@ class _UserBookingPageState extends State<UserBookingPage>
                             'Book Therapy Session',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 20,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -512,7 +512,7 @@ class _UserBookingPageState extends State<UserBookingPage>
                             'Schedule your appointment',
                             style: TextStyle(
                               color: Colors.white70,
-                              fontSize: 14,
+                              fontSize: 12,
                             ),
                           ),
                         ],
@@ -696,7 +696,7 @@ class _UserBookingPageState extends State<UserBookingPage>
                                   Text(
                                     'Submit Booking Request',
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -781,7 +781,7 @@ class _UserBookingPageState extends State<UserBookingPage>
                   style: TextStyle(
                     color: statusColor,
                     fontWeight: FontWeight.bold,
-                    fontSize: 12,
+                    fontSize: 10,
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -817,7 +817,7 @@ class _UserBookingPageState extends State<UserBookingPage>
                             data['sessionType'] ?? 'Therapy Session',
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -826,7 +826,7 @@ class _UserBookingPageState extends State<UserBookingPage>
                             data['reason'] ?? 'No reason provided',
                             style: TextStyle(
                               color: Colors.white.withOpacity(0.8),
-                              fontSize: 14,
+                              fontSize: 12,
                               height: 1.3,
                             ),
                             maxLines: 2,
@@ -914,7 +914,7 @@ class _UserBookingPageState extends State<UserBookingPage>
                   'Please sign in to continue',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -1089,7 +1089,7 @@ Widget _buildUpcomingSession() {
           "Upcoming Session",
           style: TextStyle(
             color: mainThemeColor,
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -1111,7 +1111,7 @@ Widget _buildUpcomingSession() {
                     "Sahana V",
                     style: TextStyle(
                       color: mainThemeColor,
-                      fontSize: 16,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -1129,11 +1129,11 @@ Widget _buildUpcomingSession() {
           "7:30 PM - 8:30 PM",
           style: TextStyle(
             color: mainThemeColor,
-            fontSize: 16,
+            fontSize: 12,
             fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 15),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
@@ -1177,7 +1177,7 @@ Widget _buildSessionFilter() {
                 "All Sessions",
                 style: TextStyle(
                   color: mainThemeColor,
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -1250,7 +1250,7 @@ Widget _buildTherapistCard(QueryDocumentSnapshot booking) {
                     "Sahana V",
                     style: TextStyle(
                       color: mainThemeColor,
-                      fontSize: 16,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -1371,7 +1371,7 @@ Widget _buildTherapistCard(QueryDocumentSnapshot booking) {
                       style: TextStyle(
                         color: Colors.orange,
                         fontWeight: FontWeight.w600,
-                        fontSize: 12,
+                        fontSize: 10,
                       ),
                     ),
                   ),
@@ -1407,7 +1407,7 @@ Widget _buildErrorState() {
             'Error loading sessions',
             style: TextStyle(
               color: mainThemeColor,
-              fontSize: 18,
+              fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -1446,12 +1446,12 @@ Widget _buildEmptyState() {
               color: accentGreen,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
           Text(
             'No sessions yet',
             style: TextStyle(
               color: mainThemeColor,
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),

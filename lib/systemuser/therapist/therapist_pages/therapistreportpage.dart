@@ -28,7 +28,7 @@ class _TherapistReportPageState extends State<TherapistReportPage>
   int _completedQuestions = 0;
 
   // Refined balanced color palette
-  static const Color primaryDark =   Color.fromARGB(
+  static const Color primaryDark = Color.fromARGB(
     255,
     15,
     40,
@@ -157,7 +157,7 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                   child: Text(
                     "Report submitted successfully",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                     ),
@@ -284,7 +284,7 @@ class _TherapistReportPageState extends State<TherapistReportPage>
               Text(
                 "Assessment Progress",
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: primaryDark,
                 ),
@@ -301,7 +301,7 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                 child: Text(
                   "$_completedQuestions/${questions.length}",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: accentTeal,
                   ),
@@ -375,7 +375,7 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                 Text(
                   "Therapy Assessment",
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.w700,
                     color: primaryDark,
                   ),
@@ -394,7 +394,7 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                   child: Text(
                     "Patient: ${widget.userName}",
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: primaryDark,
                     ),
@@ -404,7 +404,7 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                 Text(
                   "${questions.length} comprehensive questions",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 12,
                     color: mediumGrey,
                     fontWeight: FontWeight.w500,
                   ),
@@ -495,7 +495,7 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                       Text(
                         questions[index],
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: isRisk ? errorColor : primaryDark,
                           height: 1.3,
@@ -581,7 +581,7 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                       child: Text(
                         "This is a critical risk assessment question",
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 10,
                           color: errorColor,
                           fontWeight: FontWeight.w500,
                         ),
@@ -606,7 +606,7 @@ class _TherapistReportPageState extends State<TherapistReportPage>
           "Assessment Report",
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 18,
+            fontSize: 14,
             color: Colors.white,
           ),
         ),
@@ -677,7 +677,7 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                       "Submitting Report",
                       style: TextStyle(
                         color: primaryDark,
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -697,7 +697,7 @@ class _TherapistReportPageState extends State<TherapistReportPage>
                 children: [
                   _buildHeader(),
                   _buildProgressIndicator(),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
                   Expanded(
                     child: Form(
                       key: _formKey,
@@ -745,7 +745,7 @@ class _TherapistReportPageState extends State<TherapistReportPage>
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
-                fontSize: 16,
+                fontSize: 12,
               ),
             ),
             backgroundColor: accentTeal,

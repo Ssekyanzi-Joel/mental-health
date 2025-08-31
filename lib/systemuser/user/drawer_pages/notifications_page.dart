@@ -35,7 +35,7 @@ class NotificationsPage extends StatelessWidget {
             const Text(
               'No Notifications Yet',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 10,
                 fontWeight: FontWeight.bold,
                 color: Color.fromRGBO(25, 53, 30, 1.0),
               ),
@@ -44,7 +44,7 @@ class NotificationsPage extends StatelessWidget {
             Text(
               'You\'re all caught up! New notifications will appear here.',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 12,
                 color: Colors.grey.shade600,
                 height: 1.4,
               ),
@@ -88,7 +88,7 @@ class NotificationsPage extends StatelessWidget {
           const Text(
             'Loading notifications...',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 12,
               color: Color.fromRGBO(25, 53, 30, 1.0),
             ),
           ),
@@ -171,7 +171,7 @@ class NotificationsPage extends StatelessWidget {
                 title,
                 style: TextStyle(
                   fontWeight: read ? FontWeight.w500 : FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 12,
                   color: read
                       ? Colors.grey.shade700
                       : const Color.fromRGBO(25, 53, 30, 1.0),
@@ -200,7 +200,7 @@ class NotificationsPage extends StatelessWidget {
             Text(
               body,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 12,
                 color: Colors.grey.shade600,
                 height: 1.3,
               ),
@@ -212,7 +212,7 @@ class NotificationsPage extends StatelessWidget {
               Text(
                 timeAgo,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 10,
                   color: Colors.grey.shade500,
                   fontWeight: FontWeight.w500,
                 ),
@@ -279,7 +279,7 @@ class NotificationsPage extends StatelessWidget {
                 const Text(
                   'Notifications',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -290,7 +290,7 @@ class NotificationsPage extends StatelessWidget {
                       ? '$unreadCount unread of $totalCount total'
                       : 'All $totalCount notifications read',
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 12,
                     color: Colors.white.withOpacity(0.9),
                   ),
                 ),
@@ -309,7 +309,7 @@ class NotificationsPage extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: 12,
                 ),
               ),
             ),

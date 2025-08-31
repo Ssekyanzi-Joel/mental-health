@@ -383,7 +383,7 @@
 //                     '★',
 //                     style: TextStyle(
 //                       color: Color(0xFFa5d6a7), // Brighter green
-//                       fontSize: 24,
+//                        fontSize: 10,
 //                       fontWeight: FontWeight.normal,
 //                       shadows: [
 //                         Shadow(
@@ -412,7 +412,7 @@
 //                     '★',
 //                     style: TextStyle(
 //                       color: Color(0xFF81c784), // Bright green
-//                       fontSize: 20,
+//                        fontSize: 18,
 //                       fontWeight: FontWeight.normal,
 //                       shadows: [
 //                         Shadow(
@@ -657,7 +657,7 @@
 //                     : Text(
 //                         "GET STARTED",
 //                         style: GoogleFonts.inter(
-//                           fontSize: 14,
+//                           fontSize: 12,
 //                           fontWeight: FontWeight.w600,
 //                           letterSpacing: 1.2,
 //                         ),
@@ -796,7 +796,7 @@
 //         Text(
 //           'Welcome to',
 //           style: GoogleFonts.inter(
-//             fontSize: 20,
+//              fontSize: 18,
 //             fontWeight: FontWeight.w300,
 //             color: Color(0xFFa5d6a7),
 //             letterSpacing: 2.0,
@@ -859,7 +859,7 @@
 //             child: Text(
 //               'Awareness • Growth • Strength',
 //               style: GoogleFonts.playfairDisplay(
-//                 fontSize: 16,
+//                 fontSize: 12,
 //                 fontStyle: FontStyle.italic,
 //                 fontWeight: FontWeight.w400,
 //                 color: Colors.white,
@@ -1000,7 +1000,7 @@
 //                         '★',
 //                         style: TextStyle(
 //                           color: Color(0xFFa5d6a7),
-//                           fontSize: 20,
+//                            fontSize: 18,
 //                           fontWeight: FontWeight.bold,
 //                           shadows: [
 //                             Shadow(
@@ -1044,7 +1044,7 @@
 //                         '★',
 //                         style: TextStyle(
 //                           color: Color(0xFF81c784),
-//                           fontSize: 18,
+//                           fontSize: 14,
 //                           fontWeight: FontWeight.bold,
 //                           shadows: [
 //                             Shadow(

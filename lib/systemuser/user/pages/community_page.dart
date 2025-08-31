@@ -260,7 +260,7 @@ class _CommunityPageState extends State<CommunityPage>
                       "Comments",
                       style: TextStyle(
                         color: mainThemeColor,
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -330,12 +330,12 @@ class _CommunityPageState extends State<CommunityPage>
                                 color: accentGreen.withOpacity(0.7),
                               ),
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 15),
                             Text(
                               "No comments yet",
                               style: TextStyle(
                                 color: mainThemeColor,
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -345,7 +345,7 @@ class _CommunityPageState extends State<CommunityPage>
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: mainThemeColor.withOpacity(0.6),
-                                fontSize: 14,
+                                fontSize: 12,
                               ),
                             ),
                           ],
@@ -385,7 +385,7 @@ class _CommunityPageState extends State<CommunityPage>
                                       style: TextStyle(
                                         color: mainThemeColor,
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 14,
+                                        fontSize: 12,
                                       ),
                                     ),
                                   ),
@@ -400,7 +400,7 @@ class _CommunityPageState extends State<CommunityPage>
                                           style: TextStyle(
                                             color: mainThemeColor,
                                             fontWeight: FontWeight.w600,
-                                            fontSize: 14,
+                                            fontSize: 12,
                                           ),
                                         ),
                                         Text(
@@ -409,7 +409,7 @@ class _CommunityPageState extends State<CommunityPage>
                                             color: mainThemeColor.withOpacity(
                                               0.5,
                                             ),
-                                            fontSize: 12,
+                                            fontSize: 10,
                                           ),
                                         ),
                                       ],
@@ -422,7 +422,7 @@ class _CommunityPageState extends State<CommunityPage>
                                 data['text'] ?? "",
                                 style: TextStyle(
                                   color: mainThemeColor,
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   height: 1.4,
                                 ),
                               ),
@@ -481,7 +481,7 @@ class _CommunityPageState extends State<CommunityPage>
                             hintText: "Add a supportive comment...",
                             hintStyle: TextStyle(
                               color: mainThemeColor.withOpacity(0.5),
-                              fontSize: 14,
+                              fontSize: 12,
                             ),
                             border: InputBorder.none,
                             contentPadding: const EdgeInsets.symmetric(
@@ -588,7 +588,7 @@ class _CommunityPageState extends State<CommunityPage>
                         "Connect, share, and support each other",
                         style: TextStyle(
                           color: mainThemeColor.withOpacity(0.7),
-                          fontSize: 14,
+                          fontSize: 12,
                         ),
                       ),
                     ],
@@ -704,7 +704,7 @@ class _CommunityPageState extends State<CommunityPage>
                                 "${group['members']} members",
                                 style: TextStyle(
                                   color: group['color'] as Color,
-                                  fontSize: 12,
+                                  fontSize: 10,
                                   fontWeight: FontWeight.w600,
                                 ),
                                 overflow: TextOverflow.ellipsis,
@@ -718,7 +718,7 @@ class _CommunityPageState extends State<CommunityPage>
                         group['name'] as String,
                         style: TextStyle(
                           color: mainThemeColor,
-                          fontSize: 16,
+                          fontSize: 12,
                           fontWeight: FontWeight.w600,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -730,7 +730,7 @@ class _CommunityPageState extends State<CommunityPage>
                           group['description'] as String,
                           style: TextStyle(
                             color: mainThemeColor.withOpacity(0.6),
-                            fontSize: 12,
+                            fontSize: 10,
                             height: 1.3,
                           ),
                           overflow: TextOverflow.ellipsis,
@@ -777,9 +777,9 @@ class _CommunityPageState extends State<CommunityPage>
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
           _buildCreatePostCard(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
           _buildFeedPosts(),
         ],
       ),
@@ -836,7 +836,7 @@ class _CommunityPageState extends State<CommunityPage>
                       "Share your thoughts with the community...",
                       style: TextStyle(
                         color: mainThemeColor.withOpacity(0.6),
-                        fontSize: 14,
+                        fontSize: 12,
                       ),
                     ),
                   ),
@@ -972,11 +972,11 @@ class _CommunityPageState extends State<CommunityPage>
               color: accentGreen,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
           Text(
             "Welcome to the Community!",
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
               color: mainThemeColor,
             ),
@@ -987,7 +987,7 @@ class _CommunityPageState extends State<CommunityPage>
             textAlign: TextAlign.center,
             style: TextStyle(
               color: mainThemeColor.withOpacity(0.6),
-              fontSize: 14,
+              fontSize: 12,
               height: 1.4,
             ),
           ),
@@ -1030,7 +1030,7 @@ class _CommunityPageState extends State<CommunityPage>
                   style: TextStyle(
                     color: mainThemeColor,
                     fontWeight: FontWeight.w600,
-                    fontSize: 14,
+                    fontSize: 12,
                   ),
                 ),
               ),
@@ -1044,14 +1044,14 @@ class _CommunityPageState extends State<CommunityPage>
                       style: TextStyle(
                         color: mainThemeColor,
                         fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                        fontSize: 12,
                       ),
                     ),
                     Text(
                       _formatTimeAgo(data['createdAt']),
                       style: TextStyle(
                         color: mainThemeColor.withOpacity(0.5),
-                        fontSize: 12,
+                        fontSize: 10,
                       ),
                     ),
                   ],
@@ -1066,7 +1066,7 @@ class _CommunityPageState extends State<CommunityPage>
               data['content'],
               style: TextStyle(
                 color: mainThemeColor,
-                fontSize: 14,
+                fontSize: 12,
                 height: 1.4,
               ),
             ),
@@ -1123,7 +1123,7 @@ class _CommunityPageState extends State<CommunityPage>
                             color: isLiked
                                 ? accentGreen
                                 : mainThemeColor.withOpacity(0.6),
-                            fontSize: 12,
+                            fontSize: 10,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -1160,7 +1160,7 @@ class _CommunityPageState extends State<CommunityPage>
                         "Comment",
                         style: TextStyle(
                           color: mainThemeColor.withOpacity(0.6),
-                          fontSize: 12,
+                          fontSize: 10,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

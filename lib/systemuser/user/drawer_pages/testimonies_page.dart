@@ -504,7 +504,7 @@ class _TestimoniesPageState extends State<TestimoniesPage> {
                   return const Center(
                     child: Text(
                       'No testimonies posted yet.',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                   );
                 }

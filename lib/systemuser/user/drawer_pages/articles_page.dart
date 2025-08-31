@@ -115,7 +115,7 @@ class ArticlesPage extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
-                  fontSize: 20,
+                  fontSize: 18,
                 ),
               ),
               background: Container(
@@ -256,7 +256,7 @@ class ArticlesPage extends StatelessWidget {
                       article['title']!,
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
-                        fontSize: 18,
+                        fontSize: 14,
                         color: primaryGreen,
                         height: 1.3,
                       ),
@@ -268,7 +268,7 @@ class ArticlesPage extends StatelessWidget {
                       child: Text(
                         article['description']!,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 12,
                           color: Colors.grey[600],
                           height: 1.4,
                         ),
@@ -310,7 +310,7 @@ class ArticlesPage extends StatelessWidget {
                               'Read Article',
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 14,
+                                fontSize: 12,
                               ),
                             ),
                             SizedBox(width: 8),
@@ -440,7 +440,7 @@ class ArticleDetailPage extends StatelessWidget {
                             category,
                             style: TextStyle(
                               color: accentGreen,
-                              fontSize: 12,
+                              fontSize: 10,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -458,7 +458,7 @@ class ArticleDetailPage extends StatelessWidget {
                               readTime,
                               style: TextStyle(
                                 color: Colors.grey[600],
-                                fontSize: 12,
+                                fontSize: 10,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -466,7 +466,7 @@ class ArticleDetailPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 15),
                     Text(
                       title,
                       style: TextStyle(
@@ -480,7 +480,7 @@ class ArticleDetailPage extends StatelessWidget {
                     Text(
                       content,
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 12,
                         height: 1.6,
                         color: Colors.grey[800],
                         letterSpacing: 0.3,

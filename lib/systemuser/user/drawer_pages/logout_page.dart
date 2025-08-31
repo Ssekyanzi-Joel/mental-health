@@ -37,18 +37,11 @@ class LogoutPage extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
-                Icons.logout,
-                size: 60,
-                color: Colors.green,
-              ),
-              const SizedBox(height: 20),
+              const Icon(Icons.logout, size: 60, color: Colors.green),
+              const SizedBox(height: 15),
               const Text(
                 'Are you sure you want to logout?',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
@@ -57,14 +50,16 @@ class LogoutPage extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 50, vertical: 15),
+                    horizontal: 50,
+                    vertical: 15,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
                 child: const Text(
                   'Logout',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: TextStyle(fontSize: 14, color: Colors.white),
                 ),
               ),
             ],

@@ -13,7 +13,7 @@ class UpdateProfilePage extends StatefulWidget {
 
 class _UpdateProfilePageState extends State<UpdateProfilePage> {
   // Consistent color scheme with the main profile page
-  static const Color primaryBlue =  Color.fromARGB(
+  static const Color primaryBlue = Color.fromARGB(
     255,
     15,
     40,
@@ -158,7 +158,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         validator: validator,
         keyboardType: keyboardType,
         style: const TextStyle(
-          fontSize: 16,
+          fontSize: 12,
           color: textDark,
           fontWeight: FontWeight.w500,
         ),
@@ -166,7 +166,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           labelText: label,
           labelStyle: TextStyle(
             color: textLight,
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: FontWeight.w500,
           ),
           prefixIcon: Container(
@@ -262,7 +262,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
               const SizedBox(width: 48), // Balance the back button
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
@@ -280,7 +280,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   style: TextStyle(
                     color: cardWhite,
                     fontWeight: FontWeight.w600,
-                    fontSize: 14,
+                    fontSize: 12,
                   ),
                 ),
               ],
@@ -327,7 +327,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                           const Text(
                             'Personal Information',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 14,
                               fontWeight: FontWeight.w700,
                               color: textDark,
                               letterSpacing: 0.2,
@@ -386,7 +386,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                           const Text(
                             'Location Information',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 14,
                               fontWeight: FontWeight.w700,
                               color: textDark,
                               letterSpacing: 0.2,
@@ -410,7 +410,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                       keyboardType: TextInputType.text,
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 15),
 
                     // Update Button
                     Container(
@@ -459,7 +459,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                       Text(
                                         'Update Profile',
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.w600,
                                           color: Colors.white,
                                           letterSpacing: 0.5,

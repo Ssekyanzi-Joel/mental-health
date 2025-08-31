@@ -64,7 +64,6 @@ class _FeedbackPageState extends State<FeedbackPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(defaultPadding),
         child: Column(
@@ -77,9 +76,9 @@ class _FeedbackPageState extends State<FeedbackPage> {
             const SizedBox(height: 10),
             const Text(
               "Please let us know how we can improve your experience and provide better support.",
-              style: TextStyle(fontSize: 16, height: 1.5),
+              style: TextStyle(fontSize: 12, height: 1.5),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             Form(
               key: _formKey,
               child: Column(
@@ -110,18 +109,20 @@ class _FeedbackPageState extends State<FeedbackPage> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   _buildStarRating(),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
                   ElevatedButton(
                     onPressed: _isLoading ? null : _submitFeedback,
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                     ),
                     child: _isLoading
                         ? const CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
                           )
                         : const Text("Submit Feedback"),
                   ),
@@ -152,12 +153,14 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
                     final data =
-                        snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                        snapshot.data!.docs[index].data()
+                            as Map<String, dynamic>;
                     return Card(
                       elevation: 2,
                       margin: const EdgeInsets.symmetric(vertical: 5),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       child: ListTile(
                         leading: Icon(Icons.feedback, color: kPrimaryColor),
                         title: Text(data['feedback'] ?? ''),

@@ -82,7 +82,7 @@ class GalleryPage extends StatelessWidget {
                                 "Discover knowledge and insights",
                                 style: TextStyle(
                                   color: secondaryText,
-                                  fontSize: 16,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
@@ -146,7 +146,7 @@ class GalleryPage extends StatelessWidget {
                             "Loading content...",
                             style: TextStyle(
                               color: secondaryText,
-                              fontSize: 14,
+                              fontSize: 12,
                             ),
                           ),
                         ],
@@ -192,7 +192,7 @@ class GalleryPage extends StatelessWidget {
                         Text(
                           'No content available yet',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: primaryText,
                           ),
@@ -200,7 +200,7 @@ class GalleryPage extends StatelessWidget {
                         const SizedBox(height: 8),
                         Text(
                           'Educational content will appear here when published',
-                          style: TextStyle(fontSize: 14, color: secondaryText),
+                          style: TextStyle(fontSize: 12, color: secondaryText),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -265,12 +265,12 @@ class GalleryPage extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
               color: primaryText,
             ),
           ),
-          Text(subtitle, style: TextStyle(fontSize: 12, color: secondaryText)),
+          Text(subtitle, style: TextStyle(fontSize: 10, color: secondaryText)),
         ],
       ),
     );
@@ -369,7 +369,7 @@ class GalleryPage extends StatelessWidget {
                       child: Text(
                         title,
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 18,
                           fontWeight: FontWeight.w700,
                           color: primaryText,
                           height: 1.3,
@@ -462,7 +462,7 @@ class GalleryPage extends StatelessWidget {
                                         "Read More",
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 14,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -510,7 +510,7 @@ class GalleryPage extends StatelessWidget {
                                         "View Image",
                                         style: TextStyle(
                                           color: primaryText,
-                                          fontSize: 14,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -831,7 +831,7 @@ class FullScreenImageView extends StatelessWidget {
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w600,
-              fontSize: 16,
+              fontSize: 12,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -911,7 +911,7 @@ class FullContentView extends StatelessWidget {
                 title,
                 style: TextStyle(
                   color: primaryText,
-                  fontSize: 18,
+                  fontSize: 14,
                   fontWeight: FontWeight.w700,
                 ),
                 maxLines: 2,
@@ -972,7 +972,7 @@ class FullContentView extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 10,
                       fontWeight: FontWeight.w800,
                       color: primaryText,
                       height: 1.3,
@@ -991,7 +991,7 @@ class FullContentView extends StatelessWidget {
                     child: Text(
                       content,
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 12,
                         color: primaryText,
                         height: 1.6,
                         letterSpacing: 0.1,

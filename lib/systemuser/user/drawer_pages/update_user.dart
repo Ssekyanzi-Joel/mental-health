@@ -182,7 +182,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     const Text(
                       'Update Your Information',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 10,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -191,7 +191,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     Text(
                       'Keep your profile information up to date',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 12,
                         color: Colors.white.withOpacity(0.9),
                       ),
                     ),
@@ -223,7 +223,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                       Text(
                         'Personal Information',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: const Color.fromRGBO(25, 53, 30, 1.0),
                         ),
@@ -240,7 +240,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                             : null,
                       ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 15),
 
                       // Last Name Field
                       _buildModernTextField(
@@ -251,7 +251,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                             val!.isEmpty ? 'Please enter your last name' : null,
                       ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 15),
 
                       // Phone Field
                       _buildModernTextField(
@@ -264,7 +264,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                             : null,
                       ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 15),
 
                       // City Field
                       _buildModernTextField(
@@ -273,7 +273,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                         icon: Icons.location_city_outlined,
                       ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 15),
 
                       // Country Field
                       _buildModernTextField(
@@ -321,7 +321,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                     Text(
                                       'Update Profile',
                                       style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),

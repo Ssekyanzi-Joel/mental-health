@@ -214,7 +214,7 @@
 //           "Loading your experience...",
 //           style: TextStyle(
 //             color: const Color(0xFF1b5e20).withOpacity(0.8),
-//             fontSize: 16,
+//             fontSize: 12,
 //             fontWeight: FontWeight.w500,
 //             letterSpacing: 0.5,
 //           ),

@@ -175,21 +175,21 @@ class _MessagesPageState extends State<MessagesPage>
                         Text(
                           'Messages',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 10,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
                         Text(
                           'Connect with your therapists',
-                          style: TextStyle(fontSize: 14, color: Colors.white70),
+                          style: TextStyle(fontSize: 12, color: Colors.white70),
                         ),
                       ],
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
               TextField(
                 controller: _searchController,
                 style: const TextStyle(color: Colors.white),
@@ -262,7 +262,7 @@ class _MessagesPageState extends State<MessagesPage>
                       const Text(
                         'No users found',
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: Color.fromRGBO(25, 53, 30, 1.0),
                         ),
@@ -271,7 +271,7 @@ class _MessagesPageState extends State<MessagesPage>
                       Text(
                         'Try adjusting your search terms',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 12,
                           color: Colors.grey.shade600,
                         ),
                       ),
@@ -322,14 +322,14 @@ class _MessagesPageState extends State<MessagesPage>
                         data['name'] ?? 'Unknown User',
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize: 16,
+                          fontSize: 12,
                         ),
                       ),
                       subtitle: Text(
                         data['role'] ?? 'User',
                         style: TextStyle(
                           color: Colors.grey.shade600,
-                          fontSize: 14,
+                          fontSize: 12,
                         ),
                       ),
                       trailing: Container(
@@ -404,14 +404,14 @@ class _MessagesPageState extends State<MessagesPage>
                 Text(
                   selectedUserName ?? 'Unknown User',
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
                 ),
                 const Text(
                   'Online',
-                  style: TextStyle(fontSize: 12, color: Colors.white70),
+                  style: TextStyle(fontSize: 10, color: Colors.white70),
                 ),
               ],
             ),
@@ -466,7 +466,7 @@ class _MessagesPageState extends State<MessagesPage>
                 msg['text'],
                 style: TextStyle(
                   color: isMe ? Colors.white : Colors.black87,
-                  fontSize: 16,
+                  fontSize: 12,
                   height: 1.3,
                 ),
               ),
@@ -691,7 +691,7 @@ class _MessagesPageState extends State<MessagesPage>
                               const Text(
                                 'Start the conversation!',
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                   color: Color.fromRGBO(25, 53, 30, 1.0),
                                 ),
@@ -700,7 +700,7 @@ class _MessagesPageState extends State<MessagesPage>
                               Text(
                                 'Send your first message below',
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   color: Colors.grey.shade600,
                                 ),
                               ),

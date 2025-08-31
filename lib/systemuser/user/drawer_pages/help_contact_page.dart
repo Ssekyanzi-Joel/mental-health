@@ -68,7 +68,6 @@ class _HelpContactPageState extends State<HelpContactPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(defaultPadding),
         child: Column(
@@ -76,7 +75,7 @@ class _HelpContactPageState extends State<HelpContactPage> {
           children: [
             const Text(
               "Frequently Asked Questions",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             _buildHelpCard(
@@ -99,10 +98,10 @@ class _HelpContactPageState extends State<HelpContactPage> {
               Icons.support_agent,
               "Troubleshoot app issues, notifications, and device compatibility.",
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             const Text(
               "Contact Us Directly",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             Form(
@@ -180,21 +179,22 @@ class _HelpContactPageState extends State<HelpContactPage> {
                       minimumSize: const Size.fromHeight(50),
                     ),
                     child: _isSubmitting
-                        ? const CircularProgressIndicator(
-                            color: Colors.white,
-                          )
+                        ? const CircularProgressIndicator(color: Colors.white)
                         : const Text(
                             "Send Message",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             const Text(
               "Quick Contact",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             Row(
@@ -216,9 +216,7 @@ class _HelpContactPageState extends State<HelpContactPage> {
                   },
                   icon: const Icon(Icons.email),
                   label: const Text("Email"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                  ),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 ),
                 ElevatedButton.icon(
                   onPressed: () {

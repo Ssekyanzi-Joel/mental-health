@@ -477,8 +477,18 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            const Color.fromARGB(255, 253, 255, 254).withOpacity(0.1),
-                            const Color.fromARGB(255, 250, 250, 250).withOpacity(0.05),
+                            const Color.fromARGB(
+                              255,
+                              253,
+                              255,
+                              254,
+                            ).withOpacity(0.1),
+                            const Color.fromARGB(
+                              255,
+                              250,
+                              250,
+                              250,
+                            ).withOpacity(0.05),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -503,11 +513,11 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                                 child: const Icon(
                                   Icons.psychology_rounded,
                                   color: Color.fromARGB(
-    255,
-    15,
-    40,
-    20,
-  ),// Professional Blue
+                                    255,
+                                    15,
+                                    40,
+                                    20,
+                                  ), // Professional Blue
                                   size: 28,
                                 ),
                               ),
@@ -520,7 +530,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                                       _getGreeting(),
                                       style: TextStyle(
                                         color: darkText.withOpacity(0.8),
-                                        fontSize: 16,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -629,7 +639,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
               value,
               style: TextStyle(
                 color: darkText,
-                fontSize: 24,
+                fontSize: 10,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -638,7 +648,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
               label,
               style: TextStyle(
                 color: darkText.withOpacity(0.7),
-                fontSize: 12,
+                fontSize: 10,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -656,7 +666,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
           'Quick Actions',
           style: TextStyle(
             color: darkText,
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -743,7 +753,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
               label,
               style: TextStyle(
                 color: darkText,
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: FontWeight.w700,
               ),
               textAlign: TextAlign.center,
@@ -813,7 +823,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                           ? "Edit Post"
                           : "Create New Post",
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 10,
                         fontWeight: FontWeight.w800,
                         color: darkText,
                       ),
@@ -905,7 +915,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                                   ? "Update Post"
                                   : "Publish Post"),
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 12,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -944,7 +954,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
           label,
           style: TextStyle(
             color: darkText,
-            fontSize: 16,
+            fontSize: 12,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -954,7 +964,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
           maxLines: maxLines,
           style: TextStyle(
             color: darkText,
-            fontSize: 16,
+            fontSize: 12,
             fontWeight: FontWeight.w500,
           ),
           decoration: InputDecoration(
@@ -1006,7 +1016,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
             'Category',
             style: TextStyle(
               color: darkText,
-              fontSize: 16,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -1064,7 +1074,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                           style: TextStyle(
                             color: isSelected ? category['color'] : darkText,
                             fontWeight: FontWeight.w600,
-                            fontSize: 14,
+                            fontSize: 12,
                           ),
                         ),
                       ],
@@ -1088,7 +1098,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
             'Attached Media',
             style: TextStyle(
               color: darkText,
-              fontSize: 16,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -1365,7 +1375,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                 'Your Posts',
                 style: TextStyle(
                   color: darkText,
-                  fontSize: 24,
+                  fontSize: 10,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -1409,7 +1419,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
             ],
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 15),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.7,
           child: _buildPostsList(context),
@@ -1462,12 +1472,12 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                           color: Colors.red.shade400,
                           size: 64,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         Text(
                           'Error loading posts',
                           style: TextStyle(
                             color: darkText,
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -1476,11 +1486,11 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                           '${snapshot.error}',
                           style: TextStyle(
                             color: darkText.withOpacity(0.7),
-                            fontSize: 14,
+                            fontSize: 12,
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         ElevatedButton.icon(
                           onPressed: () => setState(() => _initializeStream()),
                           icon: const Icon(Icons.refresh_rounded),
@@ -1576,7 +1586,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
         controller: state.searchController,
         style: TextStyle(
           color: darkText,
-          fontSize: 16,
+          fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
         decoration: InputDecoration(
@@ -1659,7 +1669,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
               isSearching ? 'No results found' : 'No posts yet',
               style: TextStyle(
                 color: darkText,
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -1671,7 +1681,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: darkText.withOpacity(0.6),
-                fontSize: 16,
+                fontSize: 12,
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -1743,7 +1753,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                         style: TextStyle(
                           color: categoryData['color'],
                           fontWeight: FontWeight.w600,
-                          fontSize: 12,
+                          fontSize: 10,
                         ),
                       ),
                     ],
@@ -1764,7 +1774,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                       '${(data['createdAt'] as Timestamp).toDate().day}/${(data['createdAt'] as Timestamp).toDate().month}/${(data['createdAt'] as Timestamp).toDate().year}',
                       style: TextStyle(
                         color: mediumText,
-                        fontSize: 12,
+                        fontSize: 10,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -1846,7 +1856,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
               data['notes'] ?? 'No Content',
               style: TextStyle(
                 color: darkText.withOpacity(0.8),
-                fontSize: 16,
+                fontSize: 12,
                 fontWeight: FontWeight.w400,
                 height: 1.5,
               ),
@@ -1854,7 +1864,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
               overflow: hasMedia ? TextOverflow.ellipsis : null,
             ),
             if (hasMedia) ...[
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Container(
@@ -1891,7 +1901,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
                 ),
               ),
             ],
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -1929,7 +1939,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
           value,
           style: TextStyle(
             color: darkText,
-            fontSize: 16,
+            fontSize: 12,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -1938,7 +1948,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
           label,
           style: TextStyle(
             color: darkText.withOpacity(0.6),
-            fontSize: 12,
+            fontSize: 10,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -1966,7 +1976,7 @@ class _TherapyPageContentState extends State<_TherapyPageContent>
           'Are you sure you want to delete this post? This action cannot be undone.',
           style: TextStyle(
             color: darkText.withOpacity(0.8),
-            fontSize: 16,
+            fontSize: 12,
             height: 1.4,
           ),
         ),

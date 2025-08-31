@@ -24,35 +24,60 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage>
-    with SingleTickerProviderStateMixin {
-  // Consistent color scheme
+    with TickerProviderStateMixin {
+  // Modern color palette
   static const Color primaryGreen = Color(0xFF2E7D32);
   static const Color lightGreen = Color(0xFF4CAF50);
   static const Color accentGreen = Color(0xFF81C784);
   static const Color darkGreen = Color(0xFF1B5E20);
   static const Color surfaceGreen = Color(0xFFF1F8E9);
+  static const Color cardBackground = Color(0xFFFFFFFF);
+  static const Color backgroundGray = Color(0xFFF8FAF9);
 
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
 
   Map<String, dynamic> userData = {};
   bool isLoading = true;
-  late AnimationController _animationController;
+  late AnimationController _fadeController;
+  late AnimationController _slideController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
     fetchUserData();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+    _initializeAnimations();
+  }
+
+  void _initializeAnimations() {
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    _animationController.forward();
+    _slideController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut),
+    );
+
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(parent: _slideController, curve: Curves.elasticOut),
+        );
+
+    _fadeController.forward();
+    _slideController.forward();
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _fadeController.dispose();
+    _slideController.dispose();
     super.dispose();
   }
 
@@ -78,199 +103,227 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   void navigateTo(Widget page) {
-    Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildModernProfileHeader() {
     return Container(
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [primaryGreen, lightGreen],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+        gradient: LinearGradient(
+          colors: [primaryGreen, lightGreen.withOpacity(0.9)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(32),
-          bottomRight: Radius.circular(32),
+      ),
+      child: SafeArea(
+        child: Column(
+          children: [
+            // Header with settings icon
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Profile',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.settings_outlined,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                      onPressed: () =>
+                          navigateTo(UpdateProfilePage(userData: userData)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Profile Avatar and Info
+            FadeTransition(
+              opacity: _fadeAnimation,
+              child: Column(
+                children: [
+                  // Avatar with status indicator
+                  Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 20,
+                              spreadRadius: 5,
+                            ),
+                          ],
+                        ),
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.white,
+                          child: CircleAvatar(
+                            radius: 46,
+                            backgroundColor: accentGreen,
+                            child: Text(
+                              (userData['firstName']?[0] ?? 'A').toUpperCase() +
+                                  (userData['lastName']?[0] ?? 'D')
+                                      .toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: 32,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Online status indicator
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 3),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Name and Role
+                  Text(
+                    '${userData['firstName'] ?? 'Admin'} ${userData['lastName'] ?? 'User'}',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  // Role Badge
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.admin_panel_settings,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          userData['role']?.toString().toUpperCase() ?? 'ADMIN',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Quick Stats Cards
+                  _buildQuickStatsRow(),
+
+                  const SizedBox(height: 24),
+                ],
+              ),
+            ),
+          ],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: primaryGreen.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
+      ),
+    );
+  }
+
+  Widget _buildQuickStatsRow() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildStatCard('Users', '1.2K', Icons.people_outline),
+          _buildStatCard('Sessions', '248', Icons.psychology_outlined),
+          _buildStatCard('Reviews', '4.8', Icons.star_outline),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+    );
+  }
+
+  Widget _buildStatCard(String label, String value, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+      ),
       child: Column(
         children: [
-          const SizedBox(height: 20),
-
-          // Role badge
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.3),
-                width: 1,
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.admin_panel_settings,
-                  color: Colors.white,
-                  size: 14,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  userData['role']?.toString().toUpperCase() ?? 'ADMIN',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 11,
-                    letterSpacing: 1,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // Profile avatar
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white.withOpacity(0.2),
-                  blurRadius: 20,
-                  spreadRadius: 5,
-                ),
-              ],
-            ),
-            child: CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.white.withOpacity(0.2),
-              child: Text(
-                (userData['firstName']?[0] ?? 'A').toUpperCase() +
-                    (userData['lastName']?[0] ?? 'D').toUpperCase(),
-                style: const TextStyle(
-                  fontSize: 28,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // User name
+          Icon(icon, color: Colors.white, size: 20),
+          const SizedBox(height: 8),
           Text(
-            '${userData['firstName'] ?? 'Admin'} ${userData['lastName'] ?? 'User'}',
+            value,
             style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
               color: Colors.white,
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          // Contact info cards
-          if (userData['email'] != null) ...[
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              margin: const EdgeInsets.only(bottom: 8),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.2),
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.email_outlined,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      userData['email'] ?? '',
-                      style: const TextStyle(fontSize: 14, color: Colors.white),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-
-          if (userData['phone'] != null &&
-              userData['phone'].toString().isNotEmpty) ...[
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.2),
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.phone_outlined,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      userData['phone'] ?? '',
-                      style: const TextStyle(fontSize: 14, color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(String title, IconData icon) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: surfaceGreen,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, color: primaryGreen, size: 18),
-          ),
-          const SizedBox(width: 12),
-          Text(
-            title,
-            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: darkGreen,
+            ),
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.8),
+              fontSize: 12,
             ),
           ),
         ],
@@ -278,56 +331,121 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildProfileOption({
-    required IconData icon,
+  Widget _buildMenuSection({
     required String title,
-    required Color iconColor,
-    required VoidCallback onTap,
-    String? subtitle,
+    required List<MenuItemData> items,
   }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+    return SlideTransition(
+      position: _slideAnimation,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        decoration: BoxDecoration(
+          color: cardBackground,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.08),
+              blurRadius: 10,
+              spreadRadius: 1,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: darkGreen,
+                ),
+              ),
+            ),
+            ...items.asMap().entries.map((entry) {
+              final index = entry.key;
+              final item = entry.value;
+              return _buildModernMenuItem(
+                item: item,
+                isLast: index == items.length - 1,
+              );
+            }).toList(),
+          ],
+        ),
       ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: Container(
-          padding: const EdgeInsets.all(10),
+    );
+  }
+
+  Widget _buildModernMenuItem({
+    required MenuItemData item,
+    bool isLast = false,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: item.onTap,
+        borderRadius: BorderRadius.vertical(
+          bottom: isLast ? const Radius.circular(16) : Radius.zero,
+        ),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           decoration: BoxDecoration(
-            color: iconColor.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(10),
+            border: !isLast
+                ? Border(
+                    bottom: BorderSide(
+                      color: Colors.grey.withOpacity(0.1),
+                      width: 1,
+                    ),
+                  )
+                : null,
           ),
-          child: Icon(icon, color: iconColor, size: 20),
-        ),
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
+          child: Row(
+            children: [
+              // Icon container
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: item.iconColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(item.icon, color: item.iconColor, size: 22),
+              ),
+
+              const SizedBox(width: 16),
+
+              // Title and subtitle
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    if (item.subtitle != null) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        item.subtitle!,
+                        style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+
+              // Arrow icon
+              Icon(Icons.chevron_right, color: Colors.grey[400], size: 20),
+            ],
           ),
         ),
-        subtitle: subtitle != null
-            ? Text(
-                subtitle,
-                style: const TextStyle(fontSize: 13, color: Colors.grey),
-              )
-            : null,
-        trailing: const Icon(
-          Icons.arrow_forward_ios,
-          color: Colors.grey,
-          size: 14,
-        ),
-        onTap: onTap,
       ),
     );
   }
@@ -336,149 +454,189 @@ class _ProfilePageState extends State<ProfilePage>
   Widget build(BuildContext context) {
     if (isLoading) {
       return Scaffold(
-        backgroundColor: Colors.grey[50],
-        body: const Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(primaryGreen),
+        backgroundColor: backgroundGray,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(primaryGreen),
+                strokeWidth: 3,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Loading profile...',
+                style: TextStyle(color: Colors.grey[600], fontSize: 16),
+              ),
+            ],
           ),
         ),
       );
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildProfileHeader(),
+      backgroundColor: backgroundGray,
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(child: _buildModernProfileHeader()),
+          SliverToBoxAdapter(
+            child: Transform.translate(
+              offset: const Offset(0, -20),
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: backgroundGray,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 32),
 
-            // Account Settings Section
-            _buildSectionHeader("Account Settings", Icons.settings),
-            _buildProfileOption(
-              icon: Icons.person_outline,
-              title: "Update Profile",
-              subtitle: "Edit profile information",
-              iconColor: primaryGreen,
-              onTap: () => navigateTo(UpdateProfilePage(userData: userData)),
-            ),
-            _buildProfileOption(
-              icon: Icons.notifications_outlined,
-              title: "Notifications",
-              subtitle: "Manage notification preferences",
-              iconColor: Colors.blue,
-              onTap: () => navigateTo(const NotificationsPage()),
-            ),
+                    // Management Section
+                    _buildMenuSection(
+                      title: 'Management',
+                      items: [
+                        MenuItemData(
+                          icon: Icons.people_outline,
+                          title: 'User Management',
+                          subtitle: 'Manage all users',
+                          iconColor: primaryGreen,
+                          onTap: () => navigateTo(const UserManagementPage()),
+                        ),
+                        MenuItemData(
+                          icon: Icons.psychology_outlined,
+                          title: 'Therapist Management',
+                          subtitle: 'Manage therapists',
+                          iconColor: primaryGreen,
+                          onTap: () =>
+                              navigateTo(const AdminTherapistDashboard()),
+                        ),
+                        MenuItemData(
+                          icon: Icons.person_add_outlined,
+                          title: 'Latest Users',
+                          subtitle: 'Recent registrations',
+                          iconColor: Colors.blue,
+                          onTap: () => navigateTo(const AdminLatestUsersPage()),
+                        ),
+                      ],
+                    ),
 
-            // Management Section
-            _buildSectionHeader(
-              "User & System Management",
-              Icons.manage_accounts,
-            ),
-            _buildProfileOption(
-              icon: Icons.people_outline,
-              title: "User Management",
-              subtitle: "Manage registered users",
-              iconColor: Colors.blue,
-              onTap: () => navigateTo(const UserManagementPage()),
-            ),
-            _buildProfileOption(
-              icon: Icons.psychology_outlined,
-              title: "Therapist Management",
-              subtitle: "Manage therapist accounts",
-              iconColor: Colors.blue,
-              onTap: () => navigateTo(const AdminTherapistDashboard()),
-            ),
-            _buildProfileOption(
-              icon: Icons.person_add_outlined,
-              title: "Latest Users",
-              subtitle: "View recently registered users",
-              iconColor: Colors.orange,
-              onTap: () => navigateTo(const AdminLatestUsersPage()),
-            ),
+                    // Analytics Section
+                    _buildMenuSection(
+                      title: 'Analytics & Reports',
+                      items: [
+                        MenuItemData(
+                          icon: Icons.analytics_outlined,
+                          title: 'System Reports',
+                          subtitle: 'View analytics',
+                          iconColor: Colors.purple,
+                          onTap: () => navigateTo(const AdminReportsPage()),
+                        ),
+                        MenuItemData(
+                          icon: Icons.book_online_outlined,
+                          title: 'Appointment Bookings',
+                          subtitle: 'Manage sessions',
+                          iconColor: Colors.orange,
+                          onTap: () => navigateTo(const BookingPage()),
+                        ),
+                        MenuItemData(
+                          icon: Icons.payment_outlined,
+                          title: 'Transactions',
+                          subtitle: 'Payment monitoring',
+                          iconColor: Colors.green,
+                          onTap: () =>
+                              navigateTo(const AdminTransactionsPage()),
+                        ),
+                      ],
+                    ),
 
-            // Operations Section
-            _buildSectionHeader("Operations & Analytics", Icons.analytics),
-            _buildProfileOption(
-              icon: Icons.assessment_outlined,
-              title: "Reports",
-              subtitle: "View system analytics and reports",
-              iconColor: Colors.blue,
-              onTap: () => navigateTo(const AdminReportsPage()),
-            ),
-            _buildProfileOption(
-              icon: Icons.book_online_outlined,
-              title: "Bookings",
-              subtitle: "Manage appointment bookings",
-              iconColor: Colors.orange,
-              onTap: () => navigateTo(const BookingPage()),
-            ),
-            _buildProfileOption(
-              icon: Icons.payment_outlined,
-              title: "Transactions",
-              subtitle: "Monitor payment transactions",
-              iconColor: Colors.orange,
-              onTap: () => navigateTo(const AdminTransactionsPage()),
-            ),
+                    // Content & Communication
+                    _buildMenuSection(
+                      title: 'Content & Communication',
+                      items: [
+                        MenuItemData(
+                          icon: Icons.photo_library_outlined,
+                          title: 'Media Gallery',
+                          subtitle: 'Manage content',
+                          iconColor: Colors.teal,
+                          onTap: () => navigateTo(const GalleryPage()),
+                        ),
+                        MenuItemData(
+                          icon: Icons.star_outline,
+                          title: 'Testimonials',
+                          subtitle: 'User reviews',
+                          iconColor: Colors.amber,
+                          onTap: () =>
+                              navigateTo(const AdminPostTestimonyPage()),
+                        ),
+                        MenuItemData(
+                          icon: Icons.message_outlined,
+                          title: 'Messages',
+                          subtitle: 'User communications',
+                          iconColor: Colors.blue,
+                          onTap: () => navigateTo(const MessagesPage()),
+                        ),
+                        MenuItemData(
+                          icon: Icons.feedback_outlined,
+                          title: 'Feedback',
+                          subtitle: 'User suggestions',
+                          iconColor: Colors.indigo,
+                          onTap: () => navigateTo(const TherapistDashboard()),
+                        ),
+                      ],
+                    ),
 
-            // Content Management Section
-            _buildSectionHeader("Content Management", Icons.content_paste),
-            _buildProfileOption(
-              icon: Icons.photo_library_outlined,
-              title: "Gallery",
-              subtitle: "Manage image galleries",
-              iconColor: accentGreen,
-              onTap: () => navigateTo(const GalleryPage()),
-            ),
-            _buildProfileOption(
-              icon: Icons.star_outline,
-              title: "Testimonials",
-              subtitle: "Manage user testimonials",
-              iconColor: Colors.amber,
-              onTap: () => navigateTo(const AdminPostTestimonyPage()),
-            ),
+                    // Settings & Support
+                    _buildMenuSection(
+                      title: 'Settings & Support',
+                      items: [
+                        MenuItemData(
+                          icon: Icons.notifications_outlined,
+                          title: 'Notifications',
+                          subtitle: 'Manage alerts',
+                          iconColor: Colors.cyan,
+                          onTap: () => navigateTo(const NotificationsPage()),
+                        ),
+                        MenuItemData(
+                          icon: Icons.emergency_outlined,
+                          title: 'Emergency Resources',
+                          subtitle: 'Crisis support tools',
+                          iconColor: Colors.red,
+                          onTap: () => navigateTo(const AdminDashboard()),
+                        ),
+                        MenuItemData(
+                          icon: Icons.logout_outlined,
+                          title: 'Sign Out',
+                          subtitle: 'Logout from account',
+                          iconColor: Colors.red,
+                          onTap: () => navigateTo(const LogoutPage()),
+                        ),
+                      ],
+                    ),
 
-            // Communication Section
-            _buildSectionHeader("Communication", Icons.message),
-            _buildProfileOption(
-              icon: Icons.message_outlined,
-              title: "Messages",
-              subtitle: "View user messages",
-              iconColor: Colors.orange,
-              onTap: () => navigateTo(const MessagesPage()),
+                    const SizedBox(height: 32),
+                  ],
+                ),
+              ),
             ),
-            _buildProfileOption(
-              icon: Icons.feedback_outlined,
-              title: "Feedback",
-              subtitle: "Review user feedback",
-              iconColor: Colors.orange,
-              onTap: () => navigateTo(const TherapistDashboard()),
-            ),
-
-            // Emergency & Support Section
-            _buildSectionHeader("Emergency & Support", Icons.emergency),
-            _buildProfileOption(
-              icon: Icons.emergency_outlined,
-              title: "Emergency Resources",
-              subtitle: "Manage crisis support resources",
-              iconColor: Colors.red,
-              onTap: () => navigateTo(const AdminDashboard()),
-            ),
-
-            // Account Actions Section
-            _buildSectionHeader("Account Actions", Icons.account_circle),
-            _buildProfileOption(
-              icon: Icons.logout,
-              title: "Logout",
-              subtitle: "Sign out of account",
-              iconColor: Colors.red,
-              onTap: () => navigateTo(const LogoutPage()),
-            ),
-
-            const SizedBox(height: 40),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+}
+
+class MenuItemData {
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final Color iconColor;
+  final VoidCallback onTap;
+
+  MenuItemData({
+    required this.icon,
+    required this.title,
+    this.subtitle,
+    required this.iconColor,
+    required this.onTap,
+  });
 }

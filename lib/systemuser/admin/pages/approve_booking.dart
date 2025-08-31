@@ -306,7 +306,7 @@ class BookingPageState extends State<BookingPage>
                       SizedBox(height: 4),
                       Text(
                         "Take the first step towards better mental health",
-                        style: TextStyle(fontSize: 14, color: Colors.white70),
+                        style: TextStyle(fontSize: 12, color: Colors.white70),
                       ),
                     ],
                   ),
@@ -427,7 +427,7 @@ class BookingPageState extends State<BookingPage>
                         child: Text(
                           "Have you had therapy before?",
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -501,7 +501,7 @@ class BookingPageState extends State<BookingPage>
                               Text(
                                 "Submit Booking",
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -509,7 +509,7 @@ class BookingPageState extends State<BookingPage>
                           ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
               ],
             ),
           ),
@@ -533,7 +533,7 @@ class BookingPageState extends State<BookingPage>
         Text(
           title,
           style: const TextStyle(
-            fontSize: 18,
+            fontSize: 14,
             fontWeight: FontWeight.bold,
             color: darkGreen,
           ),
@@ -586,7 +586,7 @@ class BookingPageState extends State<BookingPage>
                       Text(
                         "My Bookings",
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: darkGreen,
                         ),
@@ -601,7 +601,7 @@ class BookingPageState extends State<BookingPage>
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
 
           StreamBuilder<QuerySnapshot>(
             stream: _firestore
@@ -641,11 +641,11 @@ class BookingPageState extends State<BookingPage>
                             color: accentGreen,
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         const Text(
                           "No bookings yet",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: Colors.grey,
                           ),
@@ -716,7 +716,7 @@ class BookingPageState extends State<BookingPage>
                                       booking['therapyType'] ??
                                           'Therapy Session',
                                       style: const TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -736,7 +736,7 @@ class BookingPageState extends State<BookingPage>
                                         status,
                                         style: TextStyle(
                                           color: _getStatusColor(status),
-                                          fontSize: 12,
+                                          fontSize: 10,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -813,7 +813,7 @@ class BookingPageState extends State<BookingPage>
                                   const Text(
                                     "Main Concern:",
                                     style: TextStyle(
-                                      fontSize: 12,
+                                      fontSize: 10,
                                       fontWeight: FontWeight.w600,
                                       color: Colors.grey,
                                     ),

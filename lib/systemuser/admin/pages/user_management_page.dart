@@ -149,7 +149,7 @@ class _UserManagementPageState extends State<UserManagementPage>
                     Text(
                       id == null ? 'Create New User' : 'Update User',
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: darkGreen,
                       ),
@@ -251,7 +251,7 @@ class _UserManagementPageState extends State<UserManagementPage>
                               child: const Text(
                                 'Cancel',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.grey,
                                 ),
@@ -314,7 +314,7 @@ class _UserManagementPageState extends State<UserManagementPage>
                               child: Text(
                                 id == null ? 'Create User' : 'Update User',
                                 style: const TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -322,7 +322,7 @@ class _UserManagementPageState extends State<UserManagementPage>
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 15),
                     ],
                   ),
                 ),
@@ -499,7 +499,7 @@ class _UserManagementPageState extends State<UserManagementPage>
                   Text(
                     _getRoleBadgeText(data['role']),
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 10,
                       color: _getRoleColor(data['role']),
                       fontWeight: FontWeight.w600,
                     ),
@@ -756,7 +756,7 @@ class _UserManagementPageState extends State<UserManagementPage>
                             'Total Users',
                             style: TextStyle(
                               color: Colors.white70,
-                              fontSize: 14,
+                              fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -765,7 +765,7 @@ class _UserManagementPageState extends State<UserManagementPage>
                             totalUsers.toString(),
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 24,
+                              fontSize: 10,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -783,21 +783,21 @@ class _UserManagementPageState extends State<UserManagementPage>
                               'Admins: $adminCount',
                               style: const TextStyle(
                                 color: Colors.white70,
-                                fontSize: 12,
+                                fontSize: 10,
                               ),
                             ),
                             Text(
                               'Therapists: $therapistCount',
                               style: const TextStyle(
                                 color: Colors.white70,
-                                fontSize: 12,
+                                fontSize: 10,
                               ),
                             ),
                             Text(
                               'Users: ${totalUsers - adminCount - therapistCount}',
                               style: const TextStyle(
                                 color: Colors.white70,
-                                fontSize: 12,
+                                fontSize: 10,
                               ),
                             ),
                           ],
@@ -942,7 +942,7 @@ class _UserManagementPageState extends State<UserManagementPage>
                         const Text(
                           'No users found',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: Colors.grey,
                           ),
@@ -1002,7 +1002,7 @@ class _UserManagementPageState extends State<UserManagementPage>
                                   .substring(0, 1)
                                   .toUpperCase(),
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 color: _getRoleColor(role),
                               ),
@@ -1017,7 +1017,7 @@ class _UserManagementPageState extends State<UserManagementPage>
                                     .trim(),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                                  fontSize: 12,
                                 ),
                               ),
                             ),

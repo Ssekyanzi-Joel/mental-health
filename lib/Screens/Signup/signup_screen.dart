@@ -37,23 +37,21 @@ class MobileSignupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         Row(
           children: [
             const Spacer(),
             Expanded(
               flex: 8,
-              child: Container(
-                constraints: const BoxConstraints(maxHeight: 600),
-                child: const SignUpForm(),
-              ),
+              child:
+                  const SignUpForm(), // Removed height constraint for better keyboard handling
             ),
             const Spacer(),
           ],
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
       ],
     );
   }

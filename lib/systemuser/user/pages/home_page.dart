@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     _getGreeting(),
                     style: TextStyle(
                       color: mainThemeColor.withOpacity(0.7),
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -152,7 +152,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         ? 'U'
                         : '${userData['firstName']?[0] ?? 'U'}${userData['lastName']?[0] ?? ''}',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 12,
                       color: mainThemeColor,
                       fontWeight: FontWeight.w600,
                     ),
@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             "How are you feeling?",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -204,7 +204,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white.withOpacity(0.9),
-              fontSize: 16,
+              fontSize: 12,
             ),
           ),
         ],
@@ -221,12 +221,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Text(
             "Today's Focus",
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 10,
               fontWeight: FontWeight.w700,
               color: mainThemeColor,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
           // Grid of wellness activities
           GridView.count(
             shrinkWrap: true,
@@ -311,7 +311,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               title,
               style: TextStyle(
                 color: mainThemeColor,
-                fontSize: 16,
+                fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -320,7 +320,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               subtitle,
               style: TextStyle(
                 color: mainThemeColor.withOpacity(0.6),
-                fontSize: 12,
+                fontSize: 10,
               ),
             ),
           ],
@@ -356,7 +356,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               Text(
                 "Breathing Exercise",
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 10,
                   fontWeight: FontWeight.w700,
                   color: mainThemeColor,
                 ),
@@ -366,7 +366,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 "Follow the circle to breathe mindfully",
                 style: TextStyle(
                   color: mainThemeColor.withOpacity(0.7),
-                  fontSize: 16,
+                  fontSize: 12,
                 ),
               ),
               const Spacer(),
@@ -439,7 +439,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               Text(
                 "Daily Reflection",
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 10,
                   fontWeight: FontWeight.w700,
                   color: mainThemeColor,
                 ),
@@ -449,7 +449,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 "What are three things you're grateful for today?",
                 style: TextStyle(
                   color: mainThemeColor.withOpacity(0.7),
-                  fontSize: 16,
+                  fontSize: 12,
                 ),
               ),
               const SizedBox(height: 24),
@@ -545,12 +545,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Text(
             "Mindful Moments",
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 10,
               fontWeight: FontWeight.w700,
               color: mainThemeColor,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
           // Display 2 rotating mindful moments
           ...List.generate(2, (index) {
             final moment =
@@ -606,7 +606,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 child: Text(
                   title,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: mainThemeColor,
                   ),
@@ -618,7 +618,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Text(
             tip,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 12,
               color: mainThemeColor.withOpacity(0.7),
               height: 1.5,
               fontStyle: FontStyle.italic,
@@ -637,7 +637,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         body: Center(
           child: Text(
             "Please sign in to continue",
-            style: TextStyle(fontSize: 18, color: mainThemeColor),
+            style: TextStyle(fontSize: 14, color: mainThemeColor),
           ),
         ),
       );

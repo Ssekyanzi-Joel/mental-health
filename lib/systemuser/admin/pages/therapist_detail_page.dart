@@ -8,8 +8,9 @@ class TherapistDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final therapistRef =
-        FirebaseFirestore.instance.collection("therapists").doc(therapistId);
+    final therapistRef = FirebaseFirestore.instance
+        .collection("therapists")
+        .doc(therapistId);
 
     return Scaffold(
       appBar: AppBar(
@@ -30,25 +31,35 @@ class TherapistDetailPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("${data['firstName']} ${data['lastName']}",
-                    style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold)),
+                Text(
+                  "${data['firstName']} ${data['lastName']}",
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 8),
                 Text("Email: ${data['email']}"),
                 Text("Phone: ${data['phone']}"),
                 Text("Gender: ${data['gender']}"),
                 Text("City: ${data['city']}, Country: ${data['country']}"),
                 const Divider(height: 24),
-                Text("Qualification: ${data['qualification']}",
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  "Qualification: ${data['qualification']}",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
                 Text("Specialization: ${data['specialization']}"),
                 Text("Availability: ${data['availability']}"),
                 Text("Experience: ${data['experience']} years"),
                 Text("Bio: ${data['bio']}"),
                 const Divider(height: 24),
-                Text("Documents / Certificates",
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(
+                  "Documents / Certificates",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 8),
                 ...(data['documents'] as List<dynamic>).map((doc) {
                   return ListTile(

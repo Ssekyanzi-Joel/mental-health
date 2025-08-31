@@ -313,7 +313,7 @@ class _AdminTherapyPageState extends State<AdminTherapyPage> {
                         Text(
                           "Create Therapy Content",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: primaryGreen,
                           ),
@@ -376,7 +376,7 @@ class _AdminTherapyPageState extends State<AdminTherapyPage> {
                     Text(
                       "Add an Image",
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: primaryGreen.withOpacity(0.8),
                       ),
@@ -386,7 +386,7 @@ class _AdminTherapyPageState extends State<AdminTherapyPage> {
                       "Upload an inspiring or educational image",
                       style: TextStyle(
                         color: primaryGreen.withOpacity(0.6),
-                        fontSize: 14,
+                        fontSize: 12,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -444,7 +444,7 @@ class _AdminTherapyPageState extends State<AdminTherapyPage> {
                             "Publishing Post...",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 16,
+                              fontSize: 12,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -457,7 +457,7 @@ class _AdminTherapyPageState extends State<AdminTherapyPage> {
                       label: const Text(
                         "Publish Post",
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

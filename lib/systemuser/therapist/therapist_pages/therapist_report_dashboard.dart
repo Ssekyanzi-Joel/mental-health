@@ -103,7 +103,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                   style: TextStyle(
                     color: isSelected ? Colors.white : mediumGrey,
                     fontWeight: FontWeight.w600,
-                    fontSize: 14,
+                    fontSize: 12,
                   ),
                 ),
                 selected: isSelected,
@@ -176,7 +176,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                     "No reports available for analysis",
                     style: TextStyle(
                       color: mediumGrey,
-                      fontSize: 16,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -252,7 +252,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                           Text(
                             "Analytics Overview",
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 18,
                               fontWeight: FontWeight.w700,
                               color: primaryDark,
                             ),
@@ -260,7 +260,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                           Text(
                             "$total total reports",
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 12,
                               color: mediumGrey,
                               fontWeight: FontWeight.w500,
                             ),
@@ -276,7 +276,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                 Text(
                   "Status Distribution",
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: primaryDark,
                   ),
@@ -294,7 +294,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                           radius: touchedIndex == 0 ? 75 : 65,
                           titleStyle: const TextStyle(
                             color: Colors.white,
-                            fontSize: 14,
+                            fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -305,7 +305,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                           radius: touchedIndex == 1 ? 75 : 65,
                           titleStyle: const TextStyle(
                             color: Colors.white,
-                            fontSize: 14,
+                            fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -316,7 +316,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                           radius: touchedIndex == 2 ? 75 : 65,
                           titleStyle: const TextStyle(
                             color: Colors.white,
-                            fontSize: 14,
+                            fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -360,7 +360,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                 Text(
                   "Reports Trend (Last 4 Weeks)",
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: primaryDark,
                   ),
@@ -390,7 +390,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                               const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 12,
+                                fontSize: 10,
                               ),
                             );
                           },
@@ -493,7 +493,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
         Text(
           "$label ($count)",
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 10,
             color: mediumGrey,
             fontWeight: FontWeight.w500,
           ),
@@ -576,7 +576,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                               "Report for $userName",
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 16,
+                                fontSize: 12,
                                 color: primaryDark,
                               ),
                             ),
@@ -646,7 +646,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
           "Report Dashboard",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -726,11 +726,11 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                               color: mediumGrey,
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 15),
                           Text(
                             "No reports submitted yet",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: primaryDark,
                             ),
@@ -738,7 +738,7 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                           const SizedBox(height: 8),
                           Text(
                             "Your submitted reports will appear here",
-                            style: TextStyle(fontSize: 14, color: mediumGrey),
+                            style: TextStyle(fontSize: 12, color: mediumGrey),
                           ),
                         ],
                       ),
@@ -787,11 +787,11 @@ class _TherapistReportDashboardState extends State<TherapistReportDashboard>
                               color: mediumGrey,
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 15),
                           Text(
                             "No $selectedFilter reports found",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: primaryDark,
                             ),
@@ -908,7 +908,7 @@ class _ReportDetailPageState extends State<ReportDetailPage>
           "Report Details",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -988,7 +988,7 @@ class _ReportDetailPageState extends State<ReportDetailPage>
                             style: TextStyle(
                               color: _statusColor(status),
                               fontWeight: FontWeight.w600,
-                              fontSize: 12,
+                              fontSize: 10,
                             ),
                           ),
                         ),
@@ -1045,13 +1045,13 @@ class _ReportDetailPageState extends State<ReportDetailPage>
                           "Report Content",
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            fontSize: 20,
+                            fontSize: 18,
                             color: primaryDark,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 15),
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
@@ -1105,7 +1105,7 @@ class _ReportDetailPageState extends State<ReportDetailPage>
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: mediumGrey,
-                fontSize: 14,
+                fontSize: 12,
               ),
             ),
           ),
@@ -1114,7 +1114,7 @@ class _ReportDetailPageState extends State<ReportDetailPage>
               value,
               style: TextStyle(
                 color: primaryDark,
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
             ),

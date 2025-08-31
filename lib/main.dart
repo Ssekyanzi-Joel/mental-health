@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'l10n/app_localizations.dart';
 // ignore: duplicate_import
 import 'package:mind_aware_application/l10n/app_localizations.dart';
@@ -76,6 +77,9 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primaryColor: const Color(0xFF4caf50),
             scaffoldBackgroundColor: const Color(0xFF19351e),
+            textTheme: GoogleFonts.poppinsTextTheme(
+              Theme.of(context).textTheme,
+            ),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
                 elevation: 0,
@@ -84,6 +88,10 @@ class MyApp extends StatelessWidget {
                 shape: const StadiumBorder(),
                 maximumSize: const Size(double.infinity, 56),
                 minimumSize: const Size(double.infinity, 56),
+                textStyle: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             inputDecorationTheme: InputDecorationTheme(
@@ -98,6 +106,15 @@ class MyApp extends StatelessWidget {
               border: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(30)),
                 borderSide: BorderSide.none,
+              ),
+              labelStyle: GoogleFonts.poppins(),
+              hintStyle: GoogleFonts.poppins(),
+            ),
+            appBarTheme: AppBarTheme(
+              titleTextStyle: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
               ),
             ),
           ),

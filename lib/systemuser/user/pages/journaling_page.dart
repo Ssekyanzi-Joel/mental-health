@@ -269,7 +269,7 @@ class _JournalingPageState extends State<JournalingPage>
                     "New Entry",
                     style: TextStyle(
                       color: mainThemeColor,
-                      fontSize: 18,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -318,14 +318,14 @@ class _JournalingPageState extends State<JournalingPage>
                               maxLines: 5,
                               style: TextStyle(
                                 color: mainThemeColor,
-                                fontSize: 14,
+                                fontSize: 12,
                               ),
                               decoration: InputDecoration(
                                 hintText:
                                     "What's on your mind today? Share your thoughts, feelings, or experiences...",
                                 hintStyle: TextStyle(
                                   color: mainThemeColor.withOpacity(0.5),
-                                  fontSize: 14,
+                                  fontSize: 12,
                                 ),
                                 border: InputBorder.none,
                                 contentPadding: const EdgeInsets.all(16),
@@ -521,7 +521,7 @@ class _JournalingPageState extends State<JournalingPage>
                           : 'Just now',
                       style: TextStyle(
                         color: mainThemeColor.withOpacity(0.8),
-                        fontSize: 12,
+                        fontSize: 10,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -640,12 +640,12 @@ class _JournalingPageState extends State<JournalingPage>
                   color: mainThemeColor.withOpacity(0.7),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
               Text(
                 "Please sign in to continue",
                 style: TextStyle(
                   color: mainThemeColor,
-                  fontSize: 18,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -702,7 +702,7 @@ class _JournalingPageState extends State<JournalingPage>
                             "Capture your thoughts and memories",
                             style: TextStyle(
                               color: mainThemeColor.withOpacity(0.7),
-                              fontSize: 14,
+                              fontSize: 12,
                             ),
                           ),
                         ],
@@ -749,7 +749,7 @@ class _JournalingPageState extends State<JournalingPage>
                             "Error loading entries",
                             style: TextStyle(
                               color: mainThemeColor,
-                              fontSize: 16,
+                              fontSize: 12,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -808,12 +808,12 @@ class _JournalingPageState extends State<JournalingPage>
                               color: accentGreen.withOpacity(0.7),
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 15),
                           Text(
                             "No journal entries yet",
                             style: TextStyle(
                               color: mainThemeColor,
-                              fontSize: 18,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -823,10 +823,10 @@ class _JournalingPageState extends State<JournalingPage>
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: mainThemeColor.withOpacity(0.6),
-                              fontSize: 14,
+                              fontSize: 12,
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 15),
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16,
@@ -849,7 +849,7 @@ class _JournalingPageState extends State<JournalingPage>
                                   "Tap above to create your first entry",
                                   style: TextStyle(
                                     color: accentGreen,
-                                    fontSize: 12,
+                                    fontSize: 10,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),

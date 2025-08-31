@@ -11,12 +11,13 @@ class EmergenciesPage extends StatelessWidget {
     }
   }
 
-  Widget _buildEmergencyCard(
-      {required IconData icon,
-      required String title,
-      required String description,
-      required VoidCallback onTap,
-      Color color = kPrimaryColor}) {
+  Widget _buildEmergencyCard({
+    required IconData icon,
+    required String title,
+    required String description,
+    required VoidCallback onTap,
+    Color color = kPrimaryColor,
+  }) {
     return Card(
       elevation: 4,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
@@ -27,9 +28,10 @@ class EmergenciesPage extends StatelessWidget {
           backgroundColor: color.withOpacity(0.2),
           child: Icon(icon, color: color),
         ),
-        title: Text(title,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 18)),
+        title: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        ),
         subtitle: Text(description),
         trailing: const Icon(Icons.arrow_forward_ios),
       ),
@@ -39,7 +41,6 @@ class EmergenciesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
- 
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(defaultPadding),
         child: Column(
@@ -47,14 +48,14 @@ class EmergenciesPage extends StatelessWidget {
           children: [
             const Text(
               "Emergency Contacts",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 22),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
             ),
             const SizedBox(height: 15),
             _buildEmergencyCard(
               icon: Icons.call,
               title: "Call Helpline",
-              description: "Direct call to trained mental health professionals.",
+              description:
+                  "Direct call to trained mental health professionals.",
               onTap: () => _launchURL("tel:+256700000000"),
               color: Colors.red,
             ),
@@ -62,28 +63,31 @@ class EmergenciesPage extends StatelessWidget {
               icon: Icons.message,
               title: "Send SMS",
               description: "Quickly send a text message for assistance.",
-              onTap: () => _launchURL("sms:+256700000000?body=I need urgent help"),
+              onTap: () =>
+                  _launchURL("sms:+256700000000?body=I need urgent help"),
               color: Colors.orange,
             ),
             _buildEmergencyCard(
               icon: Icons.chat,
               title: "WhatsApp",
               description: "Reach our support team on WhatsApp.",
-              onTap: () => _launchURL("https://wa.me/256700000000?text=I need urgent help"),
+              onTap: () => _launchURL(
+                "https://wa.me/256700000000?text=I need urgent help",
+              ),
               color: Colors.green,
             ),
             _buildEmergencyCard(
               icon: Icons.email,
               title: "Email Support",
               description: "Send an email and we will respond promptly.",
-              onTap: () => _launchURL("mailto:support@mindaware.com?subject=Emergency"),
+              onTap: () =>
+                  _launchURL("mailto:support@mindaware.com?subject=Emergency"),
               color: Colors.blue,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             const Text(
               "Tips During Crisis",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 20),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             const SizedBox(height: 10),
             const Text(
@@ -91,7 +95,7 @@ class EmergenciesPage extends StatelessWidget {
               "2. Reach out to a trusted friend or family member.\n"
               "3. Use our emergency contact methods above.\n"
               "4. If you feel unsafe, call local emergency services immediately.",
-              style: TextStyle(fontSize: 16, height: 1.5),
+              style: TextStyle(fontSize: 12, height: 1.5),
             ),
           ],
         ),

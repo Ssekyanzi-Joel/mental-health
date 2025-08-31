@@ -193,7 +193,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
                       child: Text(
                         selectedLabel,
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: moodColors[selectedScore],
                         ),
@@ -271,7 +271,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
                               'Maybe Later',
                               style: TextStyle(
                                 color: Colors.grey.shade600,
-                                fontSize: 16,
+                                fontSize: 12,
                               ),
                             ),
                           ),
@@ -338,7 +338,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
                             child: const Text(
                               'Save Mood',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -425,7 +425,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
               const Text(
                 'Start Your Journey',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 10,
                   fontWeight: FontWeight.bold,
                   color: primaryGreen,
                 ),
@@ -436,7 +436,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
               ElevatedButton.icon(
                 onPressed: _showEnhancedMoodDialog,
                 style: ElevatedButton.styleFrom(
@@ -521,7 +521,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
                       const Text(
                         'Current Mood',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 12,
                           color: Colors.grey,
                           fontWeight: FontWeight.w500,
                         ),
@@ -529,7 +529,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
                       Text(
                         latestLabel,
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: moodColors[latestScore],
                         ),
@@ -556,7 +556,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
               ],
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
 
             // Weekly average
             Container(
@@ -572,7 +572,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
                   Text(
                     '7-day average: ${avgMood.toStringAsFixed(1)}/10',
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: primaryGreen,
                     ),
@@ -580,7 +580,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
                   const Spacer(),
                   Text(
                     '${docs.length} entries',
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
                   ),
                 ],
               ),
@@ -606,7 +606,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
               const SizedBox(height: 16),
               Text(
                 'Please sign in to track your mood',
-                style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+                style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
               ),
             ],
           ),
@@ -646,7 +646,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
                         Text(
                           'Error loading mood data',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             color: Colors.red.shade600,
                           ),
                         ),
@@ -743,7 +743,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
                                 const Text(
                                   'Recent Entries',
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     color: primaryGreen,
                                   ),
@@ -753,7 +753,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
                                   'Last 10',
                                   style: TextStyle(
                                     color: Colors.grey.shade600,
-                                    fontSize: 14,
+                                    fontSize: 12,
                                   ),
                                 ),
                               ],
@@ -823,7 +823,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         color: moodColors[score],
-                                        fontSize: 16,
+                                        fontSize: 12,
                                       ),
                                     ),
                                     subtitle: Column(
@@ -835,7 +835,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
                                           timeDisplay,
                                           style: TextStyle(
                                             color: Colors.grey.shade600,
-                                            fontSize: 12,
+                                            fontSize: 10,
                                           ),
                                         ),
                                         const SizedBox(height: 4),
@@ -932,7 +932,7 @@ class _EnhancedMoodTrackerPageState extends State<EnhancedMoodTrackerPage>
                 const Text(
                   'Test Mode Active',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Colors.orange,
                   ),
