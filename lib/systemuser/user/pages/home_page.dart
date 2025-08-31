@@ -289,7 +289,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -304,23 +304,43 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 32)),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: TextStyle(
-                color: mainThemeColor,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
+            Flexible(
+              flex: 2,
+              child: Text(
+                emoji,
+                style: const TextStyle(fontSize: 28),
+                overflow: TextOverflow.visible,
               ),
             ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              style: TextStyle(
-                color: mainThemeColor.withOpacity(0.6),
-                fontSize: 10,
+            const SizedBox(height: 8),
+            Flexible(
+              flex: 1,
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: mainThemeColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            const SizedBox(height: 2),
+            Flexible(
+              flex: 1,
+              child: Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: mainThemeColor.withOpacity(0.6),
+                  fontSize: 10,
+                ),
               ),
             ),
           ],
